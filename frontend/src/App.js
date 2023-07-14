@@ -1,16 +1,35 @@
-import { Route, Routes } from "react-router-dom";
 
-import Signin from "./screens/Signin";
-import Signup from "./screens/Signup";
+
+import "./App.css";
+import Footer from "./component/Footer";
+import Navbar from "./component/Navbar";
+import "./scss/components.scss"
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" index element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-    </>
+    <div className="page-container">
+      <Navbar />
+      <div className="context">
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+        <p>lorem</p>
+
+
+        <p>lorem</p>
+        <p>lorem</p><p>lorem</p>
+        <p>lorem</p><p>lorem</p>
+        <p>lorem</p><p>lorem</p>
+      </div>
+      <Footer />
+
   );
 }
 
