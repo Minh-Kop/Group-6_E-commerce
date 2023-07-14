@@ -1,0 +1,7 @@
+@import "./colors.scss";
+
+.footer {
+  background-color: $footer-color;
+  height: 150px;
+  flex-shrink: 0;
+}
