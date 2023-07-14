@@ -1,3 +1,5 @@
+
+
 import "./App.css";
 import Footer from "./component/Footer";
 import Navbar from "./component/Navbar";
@@ -27,7 +29,7 @@ function App() {
         <p>lorem</p><p>lorem</p>
       </div>
       <Footer />
-    </div>
+
   );
 }
 
