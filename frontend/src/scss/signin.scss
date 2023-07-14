@@ -96,6 +96,7 @@
   min-height: 100vh;
 
   display: flex;
+
   flex-direction: column;
 
   &__header {
@@ -163,14 +164,5 @@
         align-items: center;
       }
     }
-  }
-
-  &__footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: $footer-color;
-    height: 150px;
   }
 }
