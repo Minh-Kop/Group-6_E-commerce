@@ -1,5 +1,6 @@
 import React from "react";
 import "../scss/components.scss";
+import { NavLink } from "react-router-dom";
 
 function Footer() {
   return (
@@ -50,34 +51,34 @@ function Footer() {
         </div>
 
         <div className="column">
-          <h4>Resources</h4>
-          <ul>
+          <h3>Resources</h3>
+          <ul className="column-content">
             <li>
               <a href="/">Track my order</a>
             </li>
             <li>
-              <a href="/">Return policy</a>
+              <a href="/refund_policy">Return policy</a>
             </li>
             <li>
-              <a href="/">Shipping policy</a>
+              <a href="/payment_security">Payment Security</a>
             </li>
             <li>
-              <a href="/">Coupon policy and price guarantee</a>
+              <a href="/customer_security">Coupon policy and price guarantee</a>
             </li>
             <li>
-              <a href="/">Terms and conditions</a>
+              <NavLink to="/term_of_use">Terms and conditions</NavLink>
             </li>
           </ul>
         </div>
 
         <div className="column">
-          <h4>Contact Info</h4>
-          <ul>
+          <h3>Contact Info</h3>
+          <ul className="column-content">
             <li>Address:</li>
             <li>225 Nguyen Tri Phuong</li>
             <li>District 5</li>
             <li>Ho Chi Minh City</li>
-            <li>Phone:(+84)974 506 002</li>
+            <li>Phone:(+84) 974 506 002</li>
           </ul>
         </div>
       </div>

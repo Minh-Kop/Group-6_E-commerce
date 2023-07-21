@@ -8,7 +8,7 @@ const Signin = () => {
     <div className="signin">
       <header className="signin__header"></header>
       <div className="signin__form">
-        <div className="signin__form__welcome"> Welcome to our website</div>
+        <div className="signin__form__welcome">Welcome to our website</div>
         <div className="signin__form__enter">
           <div className="signin__form__enter__cover">
             <div className="signin__form__enter__cover__name">Tài khoản</div>
@@ -27,7 +27,12 @@ const Signin = () => {
         </div>
 
         <div className="signin__form__btnsCover">
-          <button className="signin__form__btnsCover__btn DN">Đăng nhập</button>
+          <NavLink
+            to={"/home_page"}
+            className="signin__form__btnsCover__btn DN"
+          >
+            Đăng nhập
+          </NavLink>
           <NavLink to={"/signup"} className="signin__form__btnsCover__btn DK">
             Đăng ký
           </NavLink>

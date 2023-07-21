@@ -5,6 +5,11 @@
   height: 5rem;
 }
 
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
 .navbar-container {
   background-color: #27374d;
   justify-content: center;
@@ -29,6 +34,7 @@
     button.navbar-search-button {
       height: 51%;
       background-color: #9db2bf;
+      border-color: #9db2bf;
 
       img {
         height: 16px;
@@ -40,12 +46,14 @@
       display: flex;
       position: relative;
       height: 51%;
+      width: 150px;
 
       button {
-        border-radius: 8px;
+        border-radius: 8px 0px 0px 8px;
         width: 100%;
         margin-left: 30%;
         background-color: #9db2bf;
+        border-color: #9db2bf;
       }
 
       ul.navbar-category {
@@ -131,7 +139,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
-
+  flex-shrink: 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
   a {
     img {
       width: 32px;
@@ -173,6 +184,15 @@
     text-decoration: none;
     color: white;
   }
+
+  ul.column-content {
+    margin-top: -5px;
+    height: 110px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
 }
 
 .social-icon {
@@ -180,6 +200,7 @@
   margin-right: 8px;
 }
 
+//----------Popup----------\\
 .popup {
   font-family: "Roboto", sans-serif;
   position: fixed;

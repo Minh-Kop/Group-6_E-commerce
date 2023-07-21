@@ -32,8 +32,12 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-brand">
-          <img src={require("../assets/logo.png")} alt="Logo" />
           <a className="navbar-logo" href="/">
+            <img
+              style={{ marginRight: " 10px" }}
+              src={require("../assets/logo.png")}
+              alt="Logo"
+            />
             Hachiko
           </a>
         </div>
