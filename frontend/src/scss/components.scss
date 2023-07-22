@@ -1,6 +1,13 @@
+@import "./colors.scss";
+
 .navbar {
   background-color: #526d82;
   height: 5rem;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
 }
 
 .navbar-container {
@@ -27,6 +34,7 @@
     button.navbar-search-button {
       height: 51%;
       background-color: #9db2bf;
+      border-color: #9db2bf;
 
       img {
         height: 16px;
@@ -38,12 +46,14 @@
       display: flex;
       position: relative;
       height: 51%;
+      width: 150px;
 
       button {
-        border-radius: 8px;
+        border-radius: 8px 0px 0px 8px;
         width: 100%;
         margin-left: 30%;
         background-color: #9db2bf;
+        border-color: #9db2bf;
       }
 
       ul.navbar-category {
@@ -129,7 +139,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
-
+  flex-shrink: 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
   a {
     img {
       width: 32px;
@@ -171,9 +184,76 @@
     text-decoration: none;
     color: white;
   }
+
+  ul.column-content {
+    margin-top: -5px;
+    height: 110px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
 }
 
 .social-icon {
   border-radius: 2px;
   margin-right: 8px;
+}
+
+//----------Popup----------\\
+.popup {
+  font-family: "Roboto", sans-serif;
+  position: fixed;
+  bottom: 100;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 80vh;
+  background-color: #f8f8f856;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  header.header {
+    background-color: #27374d;
+    width: 300px;
+    height: 30px;
+    border-radius: 10px 10px 0px 0px;
+  }
+  &__inner {
+    background-color: #ffffff;
+    width: 300px;
+    height: 170px;
+    border-radius: 0px 0px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    div.title {
+      font-size: 24px;
+      font-style: bold;
+      font-weight: 700;
+    }
+
+    div.content {
+      font-size: 20px;
+    }
+
+    button.comfirmBtn {
+      font-size: 20px;
+      width: 150px;
+      height: 35px;
+      color: $sidebar-color;
+      background-color: #27374d;
+      border-color: #27374d;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: hsla(215, 33%, 23%, 0.5);
+        border-color: hsla(215, 33%, 23%, 0.5);
+      }
+    }
+  }
 }

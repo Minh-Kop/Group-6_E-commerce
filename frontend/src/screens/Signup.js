@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "../scss/signin.scss";
 import { NavLink } from "react-router-dom";
-import Footer from "../components/footer";
+import Footer from "../components/Footer";
+import Popup from "../components/popup";
 
 const Signup = () => {
+  const [Click, setClick] = useState(false);
+
+  const handleClick = () => {
+    if (Click) setClick(!Click);
+  };
+
   return (
-    <div className="signup">
+    <div onClick={() => handleClick()} className="signup">
       <header className="signup__header"></header>
       <div className="signup__form">
         <div className="signup__form__title"> Sign up</div>
@@ -45,12 +52,21 @@ const Signup = () => {
             />
           </div>
         </div>
-
+        <Popup
+          title="Thành công"
+          content="Bạn đã đăng kí thành công"
+          trigger={Click}
+        />
         <div className="signup__form__btnsCover">
           <NavLink to={"/"} className="signup__form__btnsCover__btn DN">
             Trở lại
           </NavLink>
-          <button className="signup__form__btnsCover__btn DK">Đăng ký</button>
+          <button
+            onClick={() => setClick(true)}
+            className="signup__form__btnsCover__btn DK"
+          >
+            Đăng ký
+          </button>
         </div>
       </div>
       <Footer />
