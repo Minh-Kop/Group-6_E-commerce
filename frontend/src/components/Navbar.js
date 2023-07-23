@@ -1,32 +1,22 @@
 import React, { useState } from "react";
 import "../scss/components.scss";
+import CategoryPopUp from "./CategoryPopup";
 
 function Navbar() {
-  let name = "Mike";
-  const [openCategory, setOpenCategory] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(false);
-  const handleCategoryClick = () => setOpenCategory(!openCategory);
+  const [btnCategory, setBtnCategory] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [openUserItem, setUserItem] = useState(false);
+  const handleUserHover = ()=> setUserItem(!openUserItem);
+  const userItem=["Thông tin cá nhân","Theo dõi đơn hàng","Lịch sử mua hàng","Đăng xuất"];
 
+  //Test data\\
+  let name = "Mike";
   const categoryList = ["Novel", "Comic", "Horror"];
   const subCategoryList = [
     ["1asdasdadddddddddddddddddsd", "2asdasd", "3asdasd"],
     ["4asdas", "5asdasd", "6asdasd"],
     ["7asdada", "8asdasda", "9"],
   ];
-
-  function SubCategoryShow(index) {
-    return (
-      <>
-        <ul className="navbar-sub-category">
-          {subCategoryList[index].map((subC) => (
-            <li>
-              <a href="/">{subC}</a>
-            </li>
-          ))}
-        </ul>
-      </>
-    );
-  }
 
   return (
     <nav className="navbar">
@@ -43,28 +33,9 @@ function Navbar() {
         </div>
 
         <form className="navbar-search">
-          <div className="navbar-category-dropdown">
-            <button type="button" onClick={handleCategoryClick}>
-              Category
-            </button>
-
-            {openCategory && (
-              <ul className="navbar-category">
-                {categoryList.map((category, index) => (
-                  <>
-                    <li
-                      onMouseOver={() => {
-                        setSelectedIndex(index);
-                      }}
-                    >
-                      <a href="/">{category}</a>
-                    </li>
-                    {selectedIndex === index && SubCategoryShow(index)}
-                  </>
-                ))}
-              </ul>
-            )}
-          </div>
+          <button className="navbar-search-category" type="button" onClick={()=> setBtnCategory(true)}>
+            Category
+          </button>
           <input></input>
           <button className="navbar-search-button" type="submit">
             <img src={require("../assets/search.png")} alt="Search" />
@@ -75,12 +46,36 @@ function Navbar() {
           <a className="navbar-cart" href="/">
             <img src={require("../assets/cart.png")} alt="Cart" />
           </a>
-          <a className="navbar-user" href="/">
-            {name}
-          </a>
+          <div className="navbar-user">
+            <a className="navbar-user-name" href="/" onMouseOver={handleUserHover}>
+              {name}
+            </a>
+            {openUserItem &&(
+              <ul className="navbar-user-items-dropdown">
+                {userItem.map((item, index) => (
+                    <li>
+                      <a key={index} href="/">{item}</a>
+                    </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <img src={require("../assets/user.png")} alt="UserIcon" />
         </div>
       </div>
+
+      <CategoryPopUp trigger = {btnCategory} setTrigger = {setBtnCategory}>
+        <div className="main-category">
+          {categoryList.map((category, index) => (
+            <div onMouseOver={()=> setSelectedCategory(index)}><a href="/">{category}</a></div>
+          ))}
+        </div>
+        <div className="sub-category">
+          {subCategoryList[selectedCategory].map((subCategory, subIndex) => (
+            <div><a href="/">{subCategory}</a></div>
+          ))}
+        </div>
+      </CategoryPopUp>
     </nav>
   );
 }
