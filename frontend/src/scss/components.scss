@@ -1,5 +1,5 @@
 @import "./colors.scss";
-
+//Header\\
 .navbar {
   background-color: #526d82;
   height: 5rem;
@@ -11,13 +11,13 @@
 }
 
 .navbar-container {
-  background-color: #27374d;
-  justify-content: center;
-  display: flex;
   height: 75%;
-  align-items: stretch;
   gap: 2rem;
   padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background-color: #27374d;
 
   form.navbar-search {
     display: flex;
@@ -27,48 +27,63 @@
 
     input {
       width: 75%;
-      height: 40%;
+      height: 45%;
+      border: none;
       background-color: #d9d9d9;
     }
 
-    button.navbar-search-button {
-      height: 51%;
+    button.navbar-search-category {
+      width: 6rem;
+      height: 50%;
+      border: none;
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px;
       background-color: #9db2bf;
-      border-color: #9db2bf;
+      color: white;
+    }
 
+    button.navbar-search-button {
+      width: 2.5rem;
+      height: 50%;
+      border: none;
+      padding: 7px;
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px;
+      background-color: #9db2bf;
       img {
         height: 16px;
         width: 16px;
       }
     }
+  }
 
-    div.navbar-category-dropdown {
-      display: flex;
-      position: relative;
-      height: 51%;
-      width: 150px;
 
-      button {
-        border-radius: 8px 0px 0px 8px;
-        width: 100%;
-        margin-left: 30%;
-        background-color: #9db2bf;
-        border-color: #9db2bf;
-      }
+  div.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
 
-      ul.navbar-category {
+  div.navbar-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .navbar-user {
+      ul.navbar-user-items-dropdown {
         position: absolute;
-        left: 0;
-        top: 25%;
+        top: 5%;
+        right: 2rem;
         background-color: white;
         padding: 0.75rem;
-        margin-left: 30%;
+        margin-left: 0;
         border-radius: 0.25rem;
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0.1);
         list-style: none;
 
         display: flex;
         flex-direction: column;
+        gap: 5px;
 
         li {
           &:hover {
@@ -82,34 +97,7 @@
           }
         }
       }
-
-      ul.navbar-sub-category {
-        display: flex;
-        flex-direction: column;
-        list-style: none;
-        list-style-type: none;
-
-        li {
-          a {
-            color: black;
-            text-decoration: none;
-            font-size: medium;
-          }
-        }
-      }
     }
-  }
-
-  div.navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  div.navbar-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
   }
 
   a {
@@ -124,16 +112,100 @@
   }
 }
 
-.page-container {
+
+
+//Category Popup\\
+.category-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: hsla(215, 33%, 23%, 0.5);
+
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  justify-content: center;
+  
+  
+  .category-popup-inner {
+    position: relative;
+    padding: 32px;
+    margin-top: 5rem;
+    width: 75%;
+    height: fit-content;
+    background-color: white;
+
+    .close-button {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      height: 32px;
+      width: 32px;
+      background-color: white;
+      border: none;
+    }
+
+    .category-popup-children {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+
+      .main-category { 
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 25%;
+
+        div {
+          position: relative;
+          text-align: center;
+          justify-content: center;
+          height: 3rem;
+          
+          &:hover {
+            background-color: #9db2bf;
+          }
+
+          a {
+            color: black;
+            position: relative;
+            top: 30%;
+            text-decoration: none;
+          }
+        }
+      }
+
+      .sub-category {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 25%;
+
+        div {
+          position: relative;
+          text-align: center;
+          justify-content: center;
+          height: 3rem;
+          
+          &:hover {
+            a {
+              color: orange;
+            } 
+          }
+
+          a {
+            color: black;
+            position: relative;
+            top: 30%;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
 }
 
-.context {
-  flex: 1;
-}
-
+//Footer\\
 .footer-container {
   background-color: #526d82;
   display: flex;
