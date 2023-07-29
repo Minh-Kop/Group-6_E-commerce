@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../scss/signin.scss";
 import { NavLink } from "react-router-dom";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import Popup from "../components/popup";
 
 const Signup = () => {
