@@ -1,7 +1,7 @@
 import React from "react";
 import "../scss/homepage.scss";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "../components/footer";
 import book from "../assets/SGK.jpg";
 
 const items = [
