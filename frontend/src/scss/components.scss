@@ -1,4 +1,17 @@
 @import "./colors.scss";
+//Sidebar\\
+.sidebar-container{
+  // position: absolute;
+  // left: 0;
+  height: 100%;
+  width: 10%;
+  
+  .sidebar-inner{
+    background-color: azure;
+    height: 50%;
+  }
+}
+
 //Header\\
 .navbar {
   background-color: #526d82;
@@ -69,6 +82,10 @@
     gap: 1rem;
 
     .navbar-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
       ul.navbar-user-items-dropdown {
         position: absolute;
         top: 5%;
@@ -85,6 +102,8 @@
         gap: 5px;
 
         li {
+          font-size: large;
+          margin-top: 0.5rem;
           &:hover {
             background-color: lightblue;
             width: 100%;

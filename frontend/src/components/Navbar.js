@@ -74,8 +74,8 @@ function Navbar() {
                 ))}
               </ul>
             )}
+            <img src={require("../assets/user.png")} alt="UserIcon" />
           </div>
-          <img src={require("../assets/user.png")} alt="UserIcon" />
         </div>
       </div>
 

@@ -63,11 +63,7 @@ function ProductDetail() {
       <div className="product-detail-container">
         <div className="product-detail">
           <div className="product-general-detail">
-            <img
-              className="product-general-img"
-              src={book}
-              alt={productGeneralInfo[0]}
-            />
+            <img src={book} alt={productGeneralInfo[0]} />
             <div className="product-general-info">
               <h3>{productGeneralInfo[0]}</h3>
               <p>The loai: {productGeneralInfo[1]}</p>
@@ -85,6 +81,7 @@ function ProductDetail() {
               </div>
             </div>
           </div>
+
           <div className="product-detail-info">
             <h2>Thong tin san pham</h2>
             {productDetailTag.map((x, index) => (
@@ -97,6 +94,7 @@ function ProductDetail() {
             Go Back
           </button>
         </div>
+
         <div className="similar-product-container">
           <h1>San pham tuong tu</h1>
           <div className="similar-product-list">
