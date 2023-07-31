@@ -56,8 +56,6 @@ const similarProduct = [
 
 function ProductDetail() {
   return (
-    <>
-    <Navbar />
     <div className='product-detail-container'>
         <div className='product-detail'>
             <div className='product-general-detail'>
@@ -98,8 +96,6 @@ function ProductDetail() {
             </div>
         </div>
     </div>
-    <Footer />
-    </>
   )
 }
 
