@@ -8,6 +8,7 @@ import RefundPolicy from "./screens/RefundPolicy";
 import PaymentSecurity from "./screens/PaymentSecurity";
 import HomePage from "./screens/HomePage";
 
+import ProductDetail from "./screens/ProductDetail";
 function App() {
   return (
     <>
@@ -18,7 +19,11 @@ function App() {
         <Route path="/customer_security" element={<CustomerSecurity />} />
         <Route path="/refund_policy" element={<RefundPolicy />} />
         <Route path="/payment_security" element={<PaymentSecurity />} />
-        <Route path="/home_page" element={<HomePage />} />
+
+        <Route path="/home_page">
+          <Route index element={<HomePage />} />
+          <Route path=":id" element={<ProductDetail />} />
+        </Route>
       </Routes>
     </>
   );

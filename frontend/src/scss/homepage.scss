@@ -1,6 +1,14 @@
 @import "./colors.scss";
 
 .homepage {
+  height: 100%;
+  &__banner {
+    height: 700px;
+    width: 100%;
+    background-image: url("../assets//6896439.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
   &__cover {
     min-height: 100vh;
   }
@@ -31,7 +39,7 @@
       display: inline-flex;
       justify-content: flex-end;
       float: right;
-      margin: 15px 15px;
+      margin: 15px 25px;
     }
     &__cover {
       display: flex;
