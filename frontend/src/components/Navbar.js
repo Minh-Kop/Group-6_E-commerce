@@ -5,8 +5,9 @@ import CategoryPopUp from "./CategoryPopup";
 function Navbar() {
   const [btnCategory, setBtnCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [openUserItem, setUserItem] = useState(false);
-  const handleUserHover = ()=> setUserItem(!openUserItem);
+  let [openUserItem, setUserItem] = useState(false);
+  const handleUserHover = ()=> setUserItem(openUserItem = true);
+  const handleUserHoverLesft = ()=> setUserItem(openUserItem = false)
   const userItem=["Thông tin cá nhân","Theo dõi đơn hàng","Lịch sử mua hàng","Đăng xuất"];
 
   //Test data\\
@@ -46,12 +47,12 @@ function Navbar() {
           <a className="navbar-cart" href="/">
             <img src={require("../assets/cart.png")} alt="Cart" />
           </a>
-          <div className="navbar-user">
-            <a className="navbar-user-name" href="/" onMouseOver={handleUserHover}>
+          <div className="navbar-user" onMouseOver={handleUserHover}>
+            <a className="navbar-user-name" href="/">
               {name}
             </a>
             {openUserItem &&(
-              <ul className="navbar-user-items-dropdown">
+              <ul className="navbar-user-items-dropdown" onMouseLeave={handleUserHoverLesft}>
                 {userItem.map((item, index) => (
                     <li>
                       <a key={index} href="/">{item}</a>
@@ -59,8 +60,9 @@ function Navbar() {
                 ))}
               </ul>
             )}
+            <img src={require("../assets/user.png")} alt="UserIcon" />
           </div>
-          <img src={require("../assets/user.png")} alt="UserIcon" />
+          
         </div>
       </div>
 
