@@ -40,3 +40,9 @@ declare @i int
 exec @i = sp_Test 'Khoi', @k out
 print(@i)
 print(@k)
+
+select * from AUTHOR
+
+insert into AUTHOR values('AUT001', N'Nhà xuất bản Kim Đồng')
+insert into AUTHOR values('AUT002', N'Nhà xuất bản Nhã Nam')
+insert into AUTHOR values('AUT003', N'Nhà xuất bản Sự Thật')
