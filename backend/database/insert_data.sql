@@ -1,29 +1,29 @@
 -- ========== CATEGORY ==========
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA01', N'Manga - Comic', 2)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA02', N'Comic - Truyện Tranh', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA03', N'Manga', 1)
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA01', N'Manga - Comic')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA02', N'Comic - Truyện Tranh')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA03', N'Manga')
 update CATEGORY set PARENT_ID = 'CA01' where CATE_ID IN ('CA02', 'CA03')
 
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA04', N'Tâm Lý - Kỹ Năng Sống', 2)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA05', N'Kỹ Năng Sống', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA06', N'Sách Cho Tuổi Mới Lớn', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA07', N'Tâm Lý', 1)
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA04', N'Tâm Lý - Kỹ Năng Sống')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA05', N'Kỹ Năng Sống')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA06', N'Sách Cho Tuổi Mới Lớn')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA07', N'Tâm Lý')
 update CATEGORY set PARENT_ID = 'CA04' where CATE_ID IN ('CA05', 'CA06', 'CA07') 
 
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA08', N'Thiếu nhi', 2)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA09', N'Kiến Thức - Kỹ Năng Sống Cho Trẻ', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA10', N'Kiến Thức Bách Khoa', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA11', N'Truyện Thiếu Nhi', 1)
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA08', N'Thiếu nhi')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA09', N'Kiến Thức - Kỹ Năng Sống Cho Trẻ')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA10', N'Kiến Thức Bách Khoa')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA11', N'Truyện Thiếu Nhi')
 update CATEGORY set PARENT_ID = 'CA08' where CATE_ID IN ('CA09', 'CA10', 'CA11') 
 
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA12', N'Văn Học', 2)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA13', N'Light Novel', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA14', N'Tiểu Thuyết', 1)
-insert into CATEGORY(CATE_ID, CATE_NAME, CATE_RANK) values('CA15', N'Truyện Ngắn - Tản Văn', 1)
-update CATEGORY set PARENT_ID = 'CA12' where CATE_ID IN ('CA13', 'CA14', 'CA15') 
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA12', N'Văn Học')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA13', N'Light Novel')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA14', N'Tiểu Thuyết')
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA15', N'Truyện Ngắn - Tản Văn')
+update CATEGORY set PARENT_ID = 'CA12' where CATE_ID IN ('CA13', 'CA14', 'CA15')
 
--- DELETE from CATEGORY;
--- select * from CATEGORY
+insert into CATEGORY(CATE_ID, CATE_NAME) values('CA16', N'Sách Tiếng Việt')
+update CATEGORY set PARENT_ID = 'CA16' where CATE_ID IN ('CA01', 'CA04', 'CA08', 'CA12')
 
 -- ========== AUTHOR ==========
 INSERT into AUTHOR values('AU01', N'René Goscinny')
@@ -73,8 +73,6 @@ INSERT into AUTHOR values('AU45', N'Hạ Mer')
 INSERT into AUTHOR values('AU46', N'Kim Ho Yeon')
 INSERT into AUTHOR values('AU47', N'Châu Sa Đáy Mắt')
 
--- select * from AUTHOR
-
 -- ========== PUBLISHER ==========
 INSERT into PUBLISHER values('PB01', N'Kim Đồng')
 INSERT into PUBLISHER values('PB02', N'Dân Trí')
@@ -87,8 +85,6 @@ INSERT into PUBLISHER values('PB08', N'Lao Động')
 INSERT into PUBLISHER values('PB09', N'Phụ Nữ Việt Nam')
 INSERT into PUBLISHER values('PB10', N'Văn Học')
 INSERT into PUBLISHER values('PB11', N'Hội Nhà Văn')
-
--- select * from PUBLISHER
 
 -- ========== BOOK ==========
 INSERT into BOOK (BOOK_ID, CATE_ID, BOOK_NAME, BOOK_PRICE, BOOK_PATH, BOOK_FILENAME, AVG_RATING, COUNT_RATING, STOCK, DISCOUNTED_NUMBER, BOOK_DISCOUNTED_PRICE, SOFT_DELETE) VALUES('BK00001', 'CA02', N'Mèo Mốc Black Book - Tập 4', 45000, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690968058/hachiko/product/BK00001-1.jpg', 'hachiko/product/BK00001-1.jpg', 0, 0, 50, 15, 38250, 0)
@@ -296,7 +292,3 @@ INSERT into WRITTEN_BY (BOOK_ID, AUTHOR_ID) VALUES('BK00033', 'AU45')
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) VALUES('BK00033', 2, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00033-2.png', 'hachiko/product/BK00033-2.png')
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) VALUES('BK00033', 3, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00033-3.png', 'hachiko/product/BK00033-3.png')
 
-select b.*, c.CATE_NAME from BOOK b join CATEGORY c on c.CATE_ID = b.CATE_ID where BOOK_ID = 'BK00033'
-select b.*, p.PUB_NAME from BOOK_DETAIL b join PUBLISHER p on b.PUB_ID = p.PUB_ID where BOOK_ID = 'BK00033'
-select * from BOOK_IMAGES where BOOK_ID = 'BK00033'
-select b.BOOK_NAME, a.AUTHOR_NAME from BOOK b join WRITTEN_BY w on b.BOOK_ID = w.BOOK_ID join AUTHOR a on a.AUTHOR_ID = w.AUTHOR_ID where b.BOOK_ID = 'BK00033'

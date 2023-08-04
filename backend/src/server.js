@@ -1,5 +1,5 @@
 require('dotenv').config();
-const sql = require('mssql');
+// const sql = require('mssql');
 
 const config = require('./config');
 
@@ -11,32 +11,19 @@ process.on('uncaughtException', (err) => {
 
 const app = require('./app');
 
-// Create connection pool
-// const appPool = new sql.ConnectionPool({
+// new sql.ConnectionPool({
 //     server: config.DATABASE.server,
 //     user: config.DATABASE.user,
 //     password: config.DATABASE.password,
 //     database: config.DATABASE.database,
-// });
+// })
+//     .connect()
+//     .then((pool) => {
+//         app.locals.db = pool;
+//         console.log('DB connection successful!');
+//     });
 
-// (async () => {
-//     app.locals.db = await appPool.connect();
-//     console.log('DB connection successful!');
-// })();
-
-new sql.ConnectionPool({
-    server: config.DATABASE.server,
-    user: config.DATABASE.user,
-    password: config.DATABASE.password,
-    database: config.DATABASE.database,
-})
-    .connect()
-    .then((pool) => {
-        app.locals.db = pool;
-        console.log('DB connection successful!');
-    });
-
-const port = process.env.PORT || 3001;
+const port = config.PORT || 3001;
 const server = app.listen(port, () => {
     console.log(`App is running on port ${port}...`);
 });

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2/8/2023 11:10:54 pm                         */
+/* Created on:     4/8/2023 12:26:54 am                         */
 /*==============================================================*/
 
 
@@ -800,7 +800,6 @@ create table CATEGORY (
    PARENT_ID            char(4)              null,
    CATE_NAME            nvarchar(50)          null,
    CATE_DESC            nvarchar(100)         null,
-   CATE_RANK            int                  null,
    constraint PK_CATEGORY primary key nonclustered (CATE_ID)
 )
 go
