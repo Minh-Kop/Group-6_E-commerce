@@ -6,8 +6,13 @@ function Navbar() {
   const [btnCategory, setBtnCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [openUserItem, setUserItem] = useState(false);
-  const handleUserHover = ()=> setUserItem(!openUserItem);
-  const userItem=["Thông tin cá nhân","Theo dõi đơn hàng","Lịch sử mua hàng","Đăng xuất"];
+  const handleUserHover = () => setUserItem(!openUserItem);
+  const userItem = [
+    "Thông tin cá nhân",
+    "Theo dõi đơn hàng",
+    "Lịch sử mua hàng",
+    "Đăng xuất",
+  ];
 
   //Test data\\
   let name = "Mike";
@@ -33,7 +38,11 @@ function Navbar() {
         </div>
 
         <form className="navbar-search">
-          <button className="navbar-search-category" type="button" onClick={()=> setBtnCategory(true)}>
+          <button
+            className="navbar-search-category"
+            type="button"
+            onClick={() => setBtnCategory(true)}
+          >
             Category
           </button>
           <input></input>
@@ -47,32 +56,42 @@ function Navbar() {
             <img src={require("../assets/cart.png")} alt="Cart" />
           </a>
           <div className="navbar-user">
-            <a className="navbar-user-name" href="/" onMouseOver={handleUserHover}>
+            <a
+              className="navbar-user-name"
+              href="/"
+              onMouseOver={handleUserHover}
+            >
               {name}
             </a>
-            {openUserItem &&(
+            {openUserItem && (
               <ul className="navbar-user-items-dropdown">
                 {userItem.map((item, index) => (
-                    <li>
-                      <a key={index} href="/">{item}</a>
-                    </li>
+                  <li>
+                    <a key={index} href="/">
+                      {item}
+                    </a>
+                  </li>
                 ))}
               </ul>
             )}
+            <img src={require("../assets/user.png")} alt="UserIcon" />
           </div>
-          <img src={require("../assets/user.png")} alt="UserIcon" />
         </div>
       </div>
 
-      <CategoryPopUp trigger = {btnCategory} setTrigger = {setBtnCategory}>
+      <CategoryPopUp trigger={btnCategory} setTrigger={setBtnCategory}>
         <div className="main-category">
           {categoryList.map((category, index) => (
-            <div onMouseOver={()=> setSelectedCategory(index)}><a href="/">{category}</a></div>
+            <div onMouseOver={() => setSelectedCategory(index)}>
+              <a href="/">{category}</a>
+            </div>
           ))}
         </div>
         <div className="sub-category">
           {subCategoryList[selectedCategory].map((subCategory, subIndex) => (
-            <div><a href="/">{subCategory}</a></div>
+            <div>
+              <a href="/">{subCategory}</a>
+            </div>
           ))}
         </div>
       </CategoryPopUp>
