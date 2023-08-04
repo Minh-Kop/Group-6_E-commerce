@@ -1,19 +1,8 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     28/7/2023 11:32:51 am                        */
+/* Created on:     4/8/2023 12:26:54 am                         */
 /*==============================================================*/
 
-/*
-USE master
-go
-if DB_ID('DB_Hachiko') is not null
-	drop database DB_Hachiko
-GO 
-CREATE DATABASE DB_Hachiko
-GO
-USE DB_Hachiko
-GO
-*/
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
@@ -45,9 +34,9 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('BOOK_DETAIL') and o.name = 'FK_BOOK_DET_WRITTEN_B_AUTHOR')
-alter table BOOK_DETAIL
-   drop constraint FK_BOOK_DET_WRITTEN_B_AUTHOR
+   where r.fkeyid = object_id('BOOK_IMAGES') and o.name = 'FK_BOOK_IMA_HAS_IMAGE_BOOK')
+alter table BOOK_IMAGES
+   drop constraint FK_BOOK_IMA_HAS_IMAGE_BOOK
 go
 
 if exists (select 1
@@ -212,6 +201,20 @@ alter table WARD
 go
 
 if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('WRITTEN_BY') and o.name = 'FK_WRITTEN__WRITTEN_B_BOOK_DET')
+alter table WRITTEN_BY
+   drop constraint FK_WRITTEN__WRITTEN_B_BOOK_DET
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('WRITTEN_BY') and o.name = 'FK_WRITTEN__WRITTEN_B_AUTHOR')
+alter table WRITTEN_BY
+   drop constraint FK_WRITTEN__WRITTEN_B_AUTHOR
+go
+
+if exists (select 1
             from  sysobjects
            where  id = object_id('ACCOUNT')
             and   type = 'U')
@@ -251,15 +254,6 @@ go
 if exists (select 1
             from  sysindexes
            where  id    = object_id('BOOK_DETAIL')
-            and   name  = 'WRITTEN_BY_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index BOOK_DETAIL.WRITTEN_BY_FK
-go
-
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('BOOK_DETAIL')
             and   name  = 'PUBLISHED_BY_FK'
             and   indid > 0
             and   indid < 255)
@@ -271,6 +265,22 @@ if exists (select 1
            where  id = object_id('BOOK_DETAIL')
             and   type = 'U')
    drop table BOOK_DETAIL
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('BOOK_IMAGES')
+            and   name  = 'HAS_IMAGES_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index BOOK_IMAGES.HAS_IMAGES_FK
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('BOOK_IMAGES')
+            and   type = 'U')
+   drop table BOOK_IMAGES
 go
 
 if exists (select 1
@@ -597,16 +607,41 @@ if exists (select 1
    drop table WARD
 go
 
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('WRITTEN_BY')
+            and   name  = 'WRITTEN_BY2_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index WRITTEN_BY.WRITTEN_BY2_FK
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('WRITTEN_BY')
+            and   name  = 'WRITTEN_BY_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index WRITTEN_BY.WRITTEN_BY_FK
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('WRITTEN_BY')
+            and   type = 'U')
+   drop table WRITTEN_BY
+go
+
 /*==============================================================*/
 /* Table: ACCOUNT                                               */
 /*==============================================================*/
 create table ACCOUNT (
-   EMAIL                varchar(100)         not null,
-   FULLNAME             varchar(100)         null,
-   PASSWORD             varchar(100)         null,
-   AVATAR_PATH          varchar(100)         null,
-   AVATAR_FILENAME      varchar(100)         null,
-   ROLE                 int                  null,
+   EMAIL                nvarchar(100)         not null,
+   FULLNAME             nvarchar(50)          null,
+   ENC_PWD              nvarchar(100)         null,
+   AVATAR_PATH          nvarchar(500)         null,
+   AVATAR_FILENAME      nvarchar(100)         null,
+   HROLE                int                  null,
    VERIFIED             bit                  null,
    TOKEN                char(64)             null,
    constraint PK_ACCOUNT primary key nonclustered (EMAIL)
@@ -617,7 +652,7 @@ go
 /* Table: ACCOUNT_DETAIL                                        */
 /*==============================================================*/
 create table ACCOUNT_DETAIL (
-   EMAIL                varchar(100)         not null,
+   EMAIL                nvarchar(100)         not null,
    PHONE_NUMBER         char(10)             null,
    BIRTHDAY             datetime             null,
    GENER                bit                  null,
@@ -631,8 +666,8 @@ go
 /* Table: AUTHOR                                                */
 /*==============================================================*/
 create table AUTHOR (
-   AUTHOR_ID            char(13)             not null,
-   AUTHOR_NAME          varchar(50)          null,
+   AUTHOR_ID            char(6)              not null,
+   AUTHOR_NAME          nvarchar(50)          null,
    constraint PK_AUTHOR primary key nonclustered (AUTHOR_ID)
 )
 go
@@ -641,17 +676,18 @@ go
 /* Table: BOOK                                                  */
 /*==============================================================*/
 create table BOOK (
-   BOOK_ID              char(13)             not null,
-   ID                   int                  not null,
-   BOOK_NAME            varchar(50)          null,
+   BOOK_ID              char(7)              not null,
+   CATE_ID              char(4)              not null,
+   BOOK_NAME            nvarchar(100)         null,
    BOOK_PRICE           int                  null,
-   BOOK_PATH            varchar(50)          null,
-   BOOK_FILENAME        varchar(50)          null,
+   BOOK_PATH            nvarchar(500)         null,
+   BOOK_FILENAME        nvarchar(100)         null,
    AVG_RATING           float                null,
    COUNT_RATING         int                  null,
    STOCK                int                  null,
    DISCOUNTED_NUMBER    int                  null,
-   ATTRIBUTE_76         int                  null,
+   BOOK_DISCOUNTED_PRICE int                  null,
+   SOFT_DELETE          bit                  null,
    constraint PK_BOOK primary key nonclustered (BOOK_ID)
 )
 go
@@ -660,7 +696,7 @@ go
 /* Index: HAS_CATEGORY_FK                                       */
 /*==============================================================*/
 create index HAS_CATEGORY_FK on BOOK (
-ID ASC
+CATE_ID ASC
 )
 go
 
@@ -668,13 +704,13 @@ go
 /* Table: BOOK_DETAIL                                           */
 /*==============================================================*/
 create table BOOK_DETAIL (
-   BOOK_ID              char(13)             not null,
-   AUTHOR_ID            char(13)             not null,
-   PUB_ID               char(13)             not null,
-   FORMAT               varchar(50)          null,
+   BOOK_ID              char(7)              not null,
+   PUB_ID               char(4)              not null,
+   BOOK_FORMAT          nvarchar(50)          null,
    PUBLISHED_YEAR       int                  null,
    NUMBER_PAGE          int                  null,
-   WEIGHT               int                  null,
+   BOOK_WEIGHT          int                  null,
+   BOOK_DESC            nvarchar(2000)        null,
    constraint PK_BOOK_DETAIL primary key (BOOK_ID)
 )
 go
@@ -688,10 +724,22 @@ PUB_ID ASC
 go
 
 /*==============================================================*/
-/* Index: WRITTEN_BY_FK                                         */
+/* Table: BOOK_IMAGES                                           */
 /*==============================================================*/
-create index WRITTEN_BY_FK on BOOK_DETAIL (
-AUTHOR_ID ASC
+create table BOOK_IMAGES (
+   BOOK_ID              char(7)              not null,
+   IMAGE_ID             int                  not null,
+   BOOK_FILENAME        nvarchar(100)         null,
+   BOOK_PATH            nvarchar(500)         null,
+   constraint PK_BOOK_IMAGES primary key nonclustered (BOOK_ID, IMAGE_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: HAS_IMAGES_FK                                         */
+/*==============================================================*/
+create index HAS_IMAGES_FK on BOOK_IMAGES (
+BOOK_ID ASC
 )
 go
 
@@ -699,8 +747,8 @@ go
 /* Table: CART                                                  */
 /*==============================================================*/
 create table CART (
-   CART_ID              char(13)             not null,
-   EMAIL                varchar(100)         not null,
+   CART_ID              char(10)             not null,
+   EMAIL                nvarchar(100)         not null,
    CART_TOTAL           int                  null,
    CART_COUNT           int                  null,
    constraint PK_CART primary key nonclustered (CART_ID)
@@ -719,8 +767,8 @@ go
 /* Table: CART_DETAIL                                           */
 /*==============================================================*/
 create table CART_DETAIL (
-   CART_ID              char(13)             not null,
-   BOOK_ID              char(13)             not null,
+   CART_ID              char(10)             not null,
+   BOOK_ID              char(7)              not null,
    CART_QUANTITY        int                  null,
    CART_PRICE           int                  null,
    IS_CLICKED           bit                  null,
@@ -748,12 +796,11 @@ go
 /* Table: CATEGORY                                              */
 /*==============================================================*/
 create table CATEGORY (
-   ID                   int                  not null,
-   PARENT_ID            int                  null,
-   CATEGORY_NAME        varchar(50)          null,
-   DESCRIPTION          varchar(100)         null,
-   CATE_RANK            int                  null,
-   constraint PK_CATEGORY primary key nonclustered (ID)
+   CATE_ID              char(4)              not null,
+   PARENT_ID            char(4)              null,
+   CATE_NAME            nvarchar(50)          null,
+   CATE_DESC            nvarchar(100)         null,
+   constraint PK_CATEGORY primary key nonclustered (CATE_ID)
 )
 go
 
@@ -769,9 +816,9 @@ go
 /* Table: DISTRICT                                              */
 /*==============================================================*/
 create table DISTRICT (
-   DIST_ID              char(13)             not null,
-   PROV_ID              char(13)             not null,
-   DIST_NAME            varchar(50)          null,
+   DIST_ID              char(6)              not null,
+   PROV_ID              char(4)              not null,
+   DIST_NAME            nvarchar(50)          null,
    constraint PK_DISTRICT primary key nonclustered (DIST_ID)
 )
 go
@@ -788,8 +835,8 @@ go
 /* Table: HAS_VOUCHER                                           */
 /*==============================================================*/
 create table HAS_VOUCHER (
-   EMAIL                varchar(100)         not null,
-   VOUCHER_ID           char(13)             not null,
+   EMAIL                nvarchar(100)         not null,
+   VOUCHER_ID           char(7)              not null,
    constraint PK_HAS_VOUCHER primary key (EMAIL, VOUCHER_ID)
 )
 go
@@ -814,9 +861,9 @@ go
 /* Table: HPOINT_ACCUMULATION_YEAR                              */
 /*==============================================================*/
 create table HPOINT_ACCUMULATION_YEAR (
-   EMAIL                varchar(100)         not null,
+   EMAIL                nvarchar(100)         not null,
    SAVED_YEAR           int                  not null,
-   POINT                int                  null,
+   HPOINT               int                  null,
    constraint PK_HPOINT_ACCUMULATION_YEAR primary key (EMAIL, SAVED_YEAR)
 )
 go
@@ -825,11 +872,11 @@ go
 /* Table: HPOINT_HISTORY                                        */
 /*==============================================================*/
 create table HPOINT_HISTORY (
-   EMAIL                varchar(100)         not null,
+   EMAIL                nvarchar(100)         not null,
    CHANGED_TIME         datetime             not null,
    CHANGED_POINTS       int                  null,
    CHANGED_TYPE         int                  null,
-   CHANGED_REASON       varchar(100)         null,
+   CHANGED_REASON       nvarchar(100)         null,
    constraint PK_HPOINT_HISTORY primary key nonclustered (EMAIL, CHANGED_TIME)
 )
 go
@@ -847,9 +894,9 @@ go
 /*==============================================================*/
 create table H_ORDER (
    ORDER_ID             char(13)             not null,
-   EMAIL                varchar(100)         not null,
-   ADD_ID               char(13)             not null,
-   PAYMENT_ID           char(2)              not null,
+   EMAIL                nvarchar(100)         not null,
+   ADDR_ID              char(10)             not null,
+   PAYMENT_ID           char(4)              not null,
    ORDER_DATE           datetime             null,
    TOTAL_PRICE          int                  null,
    SHIPPING_PRICE       int                  null,
@@ -878,7 +925,7 @@ go
 /* Index: HAS_SHIPPING_ADDRESS_FK                               */
 /*==============================================================*/
 create index HAS_SHIPPING_ADDRESS_FK on H_ORDER (
-ADD_ID ASC
+ADDR_ID ASC
 )
 go
 
@@ -886,7 +933,7 @@ go
 /* Table: ORDER_DETAIL                                          */
 /*==============================================================*/
 create table ORDER_DETAIL (
-   BOOK_ID              char(13)             not null,
+   BOOK_ID              char(7)              not null,
    ORDER_ID             char(13)             not null,
    ORDER_QUANTITY       int                  null,
    ORDER_PRICE          int                  null,
@@ -915,9 +962,9 @@ go
 /*==============================================================*/
 create table ORDER_REVIEW (
    ORDER_ID             char(13)             not null,
-   BOOK_ID              char(13)             not null,
+   BOOK_ID              char(7)              not null,
    RATING               int                  null,
-   REVIEW               varchar(200)         null,
+   REVIEW               nvarchar(800)         null,
    CREATED_TIME         datetime             null,
    constraint PK_ORDER_REVIEW primary key (ORDER_ID, BOOK_ID)
 )
@@ -944,7 +991,7 @@ go
 /*==============================================================*/
 create table ORDER_STATE (
    ORDER_ID             char(13)             not null,
-   ORDER_STATE          varchar(50)          not null,
+   ORDER_STATE          int                  not null,
    CREATED_TIME         datetime             null,
    constraint PK_ORDER_STATE primary key nonclustered (ORDER_ID, ORDER_STATE)
 )
@@ -962,8 +1009,8 @@ go
 /* Table: PAYMENT                                               */
 /*==============================================================*/
 create table PAYMENT (
-   PAYMENT_ID           char(2)              not null,
-   PROVIDER             varchar(50)          null,
+   PAYMENT_ID           char(4)              not null,
+   PAYMENT_PROVIDER     nvarchar(50)          null,
    constraint PK_PAYMENT primary key nonclustered (PAYMENT_ID)
 )
 go
@@ -972,8 +1019,8 @@ go
 /* Table: PROVINCE                                              */
 /*==============================================================*/
 create table PROVINCE (
-   PROV_ID              char(13)             not null,
-   PROV_NAME            varchar(50)          null,
+   PROV_ID              char(4)              not null,
+   PROV_NAME            nvarchar(100)         null,
    constraint PK_PROVINCE primary key nonclustered (PROV_ID)
 )
 go
@@ -982,8 +1029,8 @@ go
 /* Table: PUBLISHER                                             */
 /*==============================================================*/
 create table PUBLISHER (
-   PUB_ID               char(13)             not null,
-   PUB_NAME             varchar(50)          null,
+   PUB_ID               char(4)              not null,
+   PUB_NAME             nvarchar(50)          null,
    constraint PK_PUBLISHER primary key nonclustered (PUB_ID)
 )
 go
@@ -992,13 +1039,13 @@ go
 /* Table: SHIPPING_ADDRESS                                      */
 /*==============================================================*/
 create table SHIPPING_ADDRESS (
-   ADD_ID               char(13)             not null,
-   EMAIL                varchar(100)         not null,
-   DIST_ID              char(13)             not null,
-   WARD_ID              char(13)             not null,
-   PROV_ID              char(13)             not null,
-   ATTRIBUTE_35         varchar(50)          null,
-   constraint PK_SHIPPING_ADDRESS primary key nonclustered (ADD_ID)
+   ADDR_ID              char(10)             not null,
+   EMAIL                nvarchar(100)         not null,
+   DIST_ID              char(6)              not null,
+   WARD_ID              char(8)              not null,
+   PROV_ID              char(4)              not null,
+   DETAILED_ADDR        nvarchar(100)         null,
+   constraint PK_SHIPPING_ADDRESS primary key nonclustered (ADDR_ID)
 )
 go
 
@@ -1038,9 +1085,9 @@ go
 /* Table: VOUCHER                                               */
 /*==============================================================*/
 create table VOUCHER (
-   VOUCHER_ID           char(13)             not null,
-   VOUCHER_TYPE_ID      char(3)              not null,
-   START_DATE           datetime             null,
+   VOUCHER_ID           char(7)              not null,
+   VOUCHER_TYPE_ID      char(4)              not null,
+   STARTED_DATE         datetime             null,
    END_DATE             datetime             null,
    MAXIMUM_AMOUNT       int                  null,
    REMAINING_AMOUNT     int                  null,
@@ -1063,8 +1110,8 @@ go
 /* Table: VOUCHER_TYPE                                          */
 /*==============================================================*/
 create table VOUCHER_TYPE (
-   VOUCHER_TYPE_ID      char(3)              not null,
-   VOUCHER_TYPE         varchar(50)          null,
+   VOUCHER_TYPE_ID      char(4)              not null,
+   VOUCHER_TYPE         nvarchar(100)         null,
    constraint PK_VOUCHER_TYPE primary key nonclustered (VOUCHER_TYPE_ID)
 )
 go
@@ -1073,9 +1120,9 @@ go
 /* Table: WARD                                                  */
 /*==============================================================*/
 create table WARD (
-   WARD_ID              char(13)             not null,
-   DIST_ID              char(13)             not null,
-   WARD_NAME            varchar(50)          null,
+   WARD_ID              char(8)              not null,
+   DIST_ID              char(6)              not null,
+   WARD_NAME            nvarchar(50)          null,
    constraint PK_WARD primary key nonclustered (WARD_ID)
 )
 go
@@ -1088,14 +1135,40 @@ DIST_ID ASC
 )
 go
 
+/*==============================================================*/
+/* Table: WRITTEN_BY                                            */
+/*==============================================================*/
+create table WRITTEN_BY (
+   BOOK_ID              char(7)              not null,
+   AUTHOR_ID            char(6)              not null,
+   constraint PK_WRITTEN_BY primary key (BOOK_ID, AUTHOR_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: WRITTEN_BY_FK                                         */
+/*==============================================================*/
+create index WRITTEN_BY_FK on WRITTEN_BY (
+BOOK_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Index: WRITTEN_BY2_FK                                        */
+/*==============================================================*/
+create index WRITTEN_BY2_FK on WRITTEN_BY (
+AUTHOR_ID ASC
+)
+go
+
 alter table ACCOUNT_DETAIL
    add constraint FK_ACCOUNT__INCLUDE_D_ACCOUNT foreign key (EMAIL)
       references ACCOUNT (EMAIL)
 go
 
 alter table BOOK
-   add constraint FK_BOOK_HAS_CATEG_CATEGORY foreign key (ID)
-      references CATEGORY (ID)
+   add constraint FK_BOOK_HAS_CATEG_CATEGORY foreign key (CATE_ID)
+      references CATEGORY (CATE_ID)
 go
 
 alter table BOOK_DETAIL
@@ -1108,9 +1181,9 @@ alter table BOOK_DETAIL
       references PUBLISHER (PUB_ID)
 go
 
-alter table BOOK_DETAIL
-   add constraint FK_BOOK_DET_WRITTEN_B_AUTHOR foreign key (AUTHOR_ID)
-      references AUTHOR (AUTHOR_ID)
+alter table BOOK_IMAGES
+   add constraint FK_BOOK_IMA_HAS_IMAGE_BOOK foreign key (BOOK_ID)
+      references BOOK (BOOK_ID)
 go
 
 alter table CART
@@ -1130,7 +1203,7 @@ go
 
 alter table CATEGORY
    add constraint FK_CATEGORY_HAVE_PARE_CATEGORY foreign key (PARENT_ID)
-      references CATEGORY (ID)
+      references CATEGORY (CATE_ID)
 go
 
 alter table DISTRICT
@@ -1169,8 +1242,8 @@ alter table H_ORDER
 go
 
 alter table H_ORDER
-   add constraint FK_H_ORDER_HAS_SHIPP_SHIPPING foreign key (ADD_ID)
-      references SHIPPING_ADDRESS (ADD_ID)
+   add constraint FK_H_ORDER_HAS_SHIPP_SHIPPING foreign key (ADDR_ID)
+      references SHIPPING_ADDRESS (ADDR_ID)
 go
 
 alter table ORDER_DETAIL
@@ -1226,5 +1299,15 @@ go
 alter table WARD
    add constraint FK_WARD_HAS_WARD_DISTRICT foreign key (DIST_ID)
       references DISTRICT (DIST_ID)
+go
+
+alter table WRITTEN_BY
+   add constraint FK_WRITTEN__WRITTEN_B_BOOK_DET foreign key (BOOK_ID)
+      references BOOK_DETAIL (BOOK_ID)
+go
+
+alter table WRITTEN_BY
+   add constraint FK_WRITTEN__WRITTEN_B_AUTHOR foreign key (AUTHOR_ID)
+      references AUTHOR (AUTHOR_ID)
 go
 

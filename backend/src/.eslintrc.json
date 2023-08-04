@@ -23,7 +23,8 @@
             "error",
             { "argsIgnorePattern": "req|res|next|val" }
         ],
-        "arrow-body-style": "off"
+        "arrow-body-style": "off",
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
         // , "parserOptions": {
         //     "sourceType": "module"
         // }
