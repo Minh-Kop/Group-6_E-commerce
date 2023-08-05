@@ -2,6 +2,19 @@ const sql = require('mssql');
 
 const database = require('../utils/database');
 
+exports.getBookImages = async (bookId) => {
+    try {
+        const sqlString = `select IMAGE_ID, BOOK_PATH from BOOK_IMAGES where BOOK_ID = '${bookId}'`;
+        const pool = await database.getConnectionPool();
+        const request = new sql.Request(pool);
+        const result = await request.query(sqlString);
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+};
+
 exports.getAllBooks = async (
     categoryIdList,
     priceRange,
@@ -55,6 +68,7 @@ exports.getAllBooks = async (
         if (check) {
             sortType = sortType.substring(1);
         }
+        sqlString += ' and b.stock > 0';
         sqlString += ` order by ${sortType} ${check ? 'desc' : 'asc'}`;
         sqlString += ` OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY`;
 
@@ -64,5 +78,28 @@ exports.getAllBooks = async (
         return result.recordset;
     } catch (err) {
         console.log(err);
+        return null;
     }
+};
+
+exports.getBookById = async (bookId) => {
+    let sqlString = 'sp_GetBook';
+    const pool = await database.getConnectionPool();
+
+    const request1 = new sql.Request(pool);
+    request1.input('BookId', sql.Char, bookId);
+    let result = await request1.execute(sqlString);
+    if (result.returnValue !== 1) {
+        return result.recordset[0];
+    }
+    result = result.recordset[0];
+
+    sqlString = 'sp_GetAuthors';
+    const request2 = new sql.Request(pool);
+    request2.input('BookId', sql.Char, bookId);
+    let authors = await request2.execute(sqlString);
+    // authors = authors.recordsets[0].map((el) => el.AUTHOR_NAME);
+    authors = authors.recordset.map((el) => el.AUTHOR_NAME).join(', ');
+    result.author = authors;
+    return result;
 };

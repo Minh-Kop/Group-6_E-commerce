@@ -72,13 +72,55 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
             image: item.BOOK_PATH,
         };
     });
-    const products = await Promise.all(promises);
+    const books = await Promise.all(promises);
 
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        message: 'Get products successfully',
-        numberOfProducts: products.length,
-        products,
+        numberOfProducts: books.length,
+        books,
+    });
+});
+
+exports.getBook = catchAsync(async (req, res, next) => {
+    const { bookId } = req.params;
+    const returnedBook = await bookModel.getBookById(bookId);
+
+    if (!returnedBook) {
+        return next(new AppError('No book found with that ID!', 404));
+    }
+
+    const imageList = await bookModel.getBookImages(bookId);
+    const images = imageList.map((item) => ({
+        id: item.IMAGE_ID,
+        path: item.BOOK_PATH,
+    }));
+
+    const category = await categoryModel.getAllCategory();
+    const categoryTree = buildCategoryRoot(category);
+    const selectedBranch = getParentBranch(categoryTree, returnedBook.CATE_ID);
+
+    res.status(200).json({
+        status: 'success',
+        book: {
+            bookId: returnedBook.BOOK_ID,
+            bookName: returnedBook.BOOK_NAME,
+            category: selectedBranch,
+            mainImage: returnedBook.BOOK_PATH,
+            otherImages: images,
+            originalPrice: returnedBook.BOOK_PRICE,
+            discountedNumber: returnedBook.DISCOUNTED_NUMBER,
+            discountedPrice: returnedBook.BOOK_DISCOUNTED_PRICE,
+            avgRating: returnedBook.AVG_RATING,
+            countRating: returnedBook.COUNT_RATING,
+            stock: returnedBook.STOCK,
+            author: returnedBook.author,
+            publisher: returnedBook.PUB_NAME,
+            publishedYear: returnedBook.PUBLISHED_YEAR,
+            weight: returnedBook.BOOK_WEIGHT,
+            numberPage: returnedBook.NUMBER_PAGE,
+            bookFormat: returnedBook.BOOK_FORMAT,
+            description: returnedBook.BOOK_DESC,
+        },
     });
 });
