@@ -109,7 +109,7 @@ const getParentBranch = (rootList, categoryId) => {
         }
         if (children) {
             const result = getParentBranch(children, categoryId);
-            if (result !== null) {
+            if (result) {
                 return {
                     ...rest,
                     children: result,

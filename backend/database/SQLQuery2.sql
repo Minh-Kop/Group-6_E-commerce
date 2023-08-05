@@ -1,10 +1,11 @@
-﻿select top 10 * from SalesLT.Customer
-USE DB_Hachiko
-SELECT COLUMN_NAME
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'h_ORDER';
+﻿select sum(od.order_quantity)
+						from order_detail od join order_state os on os.order_id = od.order_id 
+						where od.book_id = 'BK00001' and os.order_state = 3
 
-select * from district;
+select od.BOOK_ID, sum(od.order_quantity) as "Sold number"
+						from order_detail od join order_state os on os.order_id = od.order_id
+						where od.book_id = 'BK00001' and os.order_state = 3
+						group by od.BOOK_ID
 
 GO
 IF OBJECT_ID('sp_Test') IS NOT NULL
@@ -57,3 +58,6 @@ select * from PUBLISHER
 select * from AUTHOR
 SELECT * from BOOK_DETAIL
 select b.*, d.BOOK_DESC, d. from BOOK b join BOOK_DETAIL d on d.BOOK_ID = b.BOOK_ID order by BOOK_DISCOUNTED_PRICE desc OFFSET 24 ROWS FETCH NEXT 12 ROWS ONLY
+
+select IMAGE_ID, BOOK_PATH from BOOK_IMAGES where BOOK_ID = 'BK00001'
+select IMAGE_ID, BOOK_PATH from BOOK_IMAGES where BOOK_ID = 'BK00001'
