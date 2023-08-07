@@ -1,6 +1,19 @@
-const sql = require('mssql');
+const sql = require('mssql/msnodesqlv8');
 
 const database = require('../utils/database');
+
+exports.getNewBookId = async () => {
+    try {
+        const sqlString = `select dbo.f_CreateBookId()`;
+        const pool = await database.getConnectionPool();
+        const request = new sql.Request(pool);
+        const result = await request.query(sqlString);
+        return result.recordset[0][''];
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+};
 
 exports.getBookImages = async (bookId) => {
     try {
@@ -101,5 +114,20 @@ exports.getBookById = async (bookId) => {
     // authors = authors.recordsets[0].map((el) => el.AUTHOR_NAME);
     authors = authors.recordset.map((el) => el.AUTHOR_NAME).join(', ');
     result.author = authors;
+    return result;
+};
+
+exports.updateProduct = async (productId, entity) => {
+    const { productName, categoryId, description } = entity;
+    const result = await db('product')
+        .where({
+            id: productId,
+        })
+        .update({
+            product_name: productName,
+            description: description,
+            category_id: categoryId,
+        })
+        .select('id');
     return result;
 };

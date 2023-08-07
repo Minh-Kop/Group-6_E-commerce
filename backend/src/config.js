@@ -7,8 +7,8 @@ const config = {
 
     DATABASE: {
         server: process.env.DB_SERVER,
-        user: process.env.DB_USER,
-        password: process.env.DB_PWD,
+        // user: process.env.DB_USER,
+        // password: process.env.DB_PWD,
         database: process.env.DB_NAME,
     },
 
@@ -45,10 +45,11 @@ const config = {
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,
         api_secret: process.env.CLOUDINARY_API_SECRET,
+        secure: true,
     },
 
-    CLOUDINARY_PRODUCT_PATH: 'huimitu/product/',
-    CLOUDINARY_AVATAR_PATH: 'huimitu/avatar/',
+    CLOUDINARY_PRODUCT_PATH: 'hachiko/product/',
+    CLOUDINARY_AVATAR_PATH: 'hachiko/avatar/',
 
     JWT_EXP_TIME: 60 * 60,
     JWT_SECRET: process.env.JWT_SECRET,
@@ -70,7 +71,7 @@ const config = {
     OPENROUTESERVICE_API_KEY: process.env.OPENROUTESERVICE_API_KEY,
 
     BEST_SELLER_LIMIT: 4,
-    PRODUCT_IMAGE_NUMBER_LIMIT: 10,
+    PRODUCT_IMAGE_NUMBER_LIMIT: 1,
     RELATED_PRODUCT_LIMIT: 4,
     AVATAR_IMAGE_NUMBER_LIMIT: 1,
 
