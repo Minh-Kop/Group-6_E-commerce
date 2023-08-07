@@ -9,6 +9,8 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const categoryModel = require('../models/categoryModel');
 const bookModel = require('../models/bookModel');
+const { createUploader } = require('../utils/cloudinary');
+const config = require('../config');
 
 const getListCategoryId = async (categoryId) => {
     if (!categoryId) {
@@ -21,6 +23,33 @@ const getListCategoryId = async (categoryId) => {
     const categoryList = toListCategory(selectedNode);
     return categoryList ? categoryList.map((item) => item.id) : null;
 };
+
+const createImageName = async (req, file) => {
+    if (file.fieldname === 'coverImage') {
+        let { bookId } = req.params;
+        if (!bookId) {
+            bookId = await bookModel.getNewBookId();
+        }
+        return `${bookId}-1`;
+    }
+    if (file.fieldname === 'images') {
+        let { bookId } = req.params;
+        if (!bookId) {
+            bookId = await bookModel.getNewBookId();
+        }
+        return `${bookId}-${Date.now()}`;
+    }
+};
+
+const bookImageUploader = createUploader(
+    config.CLOUDINARY_PRODUCT_PATH,
+    createImageName,
+);
+
+exports.uploadBookImages = bookImageUploader.fields([
+    { name: 'coverImage', maxCount: 1 },
+    { name: 'images', maxCount: config.PRODUCT_IMAGE_NUMBER_LIMIT },
+]);
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
     let {
@@ -123,4 +152,52 @@ exports.getBook = catchAsync(async (req, res, next) => {
             description: returnedBook.BOOK_DESC,
         },
     });
+});
+
+exports.createBook = catchAsync(async (req, res, next) => {
+    const { bookName, description, categoryId } = req.body;
+    const { files } = req;
+
+    console.log(files);
+    files.coverImage.map((item) => {
+        console.log(item);
+        console.log('=======================================');
+        return 1;
+    });
+    files.images.map((item) => {
+        console.log(item);
+        console.log('=======================================');
+        return 1;
+    });
+
+    // Missing image
+    if (!files || files.length < 1) {
+        return next(new AppError("Missing book's images", 400));
+    }
+    res.status(200).json({
+        status: 'success',
+    });
+
+    // // Create entity to insert to database
+    // const entity = {
+    //     productName: productName,
+    //     description: description,
+    //     categoryId: categoryId,
+    // };
+    // const productId = await productModel.createProduct(entity);
+
+    // // Insert images
+    // const listPath = files.map((item) => ({
+    //     path: item.path,
+    //     filename: item.filename,
+    // }));
+    // listPath.forEach(async (element) => {
+    //     await productModel.insertImage(productId, element);
+    // });
+
+    // res.status(200).send({
+    //     exitcode: 0,
+    //     message: 'Create product successfully',
+    //     productId: productId,
+    // });
 });
