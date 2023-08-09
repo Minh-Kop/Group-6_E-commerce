@@ -16,3 +16,17 @@ select * from order_detail
 select * from order_state
 
 select dbo.f_CreateAuthorId()
+
+GO
+DELETE from BOOK_IMAGES where BOOK_ID = 'BK00034'
+go
+delete from WRITTEN_BY where BOOK_ID = 'BK00034'
+go
+delete from BOOK_DETAIL where BOOK_ID = 'BK00034'
+go
+delete from BOOK where BOOK_ID = 'BK00034'
+
+select * from BOOK where BOOK_ID = 'BK00034'
+select * from BOOK_DETAIL where BOOK_ID = 'BK00034'
+select w.*, a.AUTHOR_NAME from WRITTEN_BY w join AUTHOR a on w.AUTHOR_ID = a.AUTHOR_ID where BOOK_ID = 'BK00034'
+SELECT * from BOOK_IMAGES where BOOK_ID = 'BK00034'
