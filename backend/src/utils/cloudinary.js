@@ -34,7 +34,16 @@ const createUploader = (folder, publicId) => {
     return uploader;
 };
 
+const deleteCloudinaryImage = async (publicId) => {
+    try {
+        await cloudinary.uploader.destroy(publicId);
+    } catch (err) {
+        console.log(err);
+    }
+    return 1;
+};
+
 module.exports = {
     createUploader,
-    cloudinary,
+    deleteCloudinaryImage,
 };

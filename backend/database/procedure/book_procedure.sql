@@ -42,6 +42,46 @@ returns CHAR(7)
 GO
 	select dbo.f_CreateBookId()
 
+IF OBJECT_ID('sp_CreateBook') IS NOT NULL
+	DROP proc sp_CreateBook
+GO
+CREATE proc sp_CreateBook (
+		@categoryId char(4),
+        @bookName NVARCHAR(100),
+        @originalPrice int,
+        @imagePath NVARCHAR(500),
+		@imageFilename NVARCHAR(100),
+        @stock int,
+        @discountedNumber int,
+        @discountedPrice int,
+        @publisherId char(7),
+		@publishedYear int,
+        @weight int,
+        @numberPage int,
+        @bookFormat NVARCHAR(50),
+        @description NVARCHAR(2000))
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		DECLARE @bookId CHAR(7) = dbo.f_CreateBookId()
+		
+		INSERT into BOOK (BOOK_ID, CATE_ID, BOOK_NAME, BOOK_PRICE, BOOK_PATH, BOOK_FILENAME, STOCK, DISCOUNTED_NUMBER, BOOK_DISCOUNTED_PRICE, SOFT_DELETE) VALUES
+			(@bookId, @categoryId, @bookName, @originalPrice, @imagePath, @imageFilename, @stock, @discountedNumber, @discountedPrice, 0)
+		INSERT into BOOK_DETAIL (BOOK_ID, PUB_ID, BOOK_FORMAT, PUBLISHED_YEAR, NUMBER_PAGE, BOOK_WEIGHT, BOOK_DESC) VALUES
+			(@bookId, @publisherId, @bookFormat, @publishedYear, @numberPage, @weight, @description)
+		
+		select @bookId as id
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
 IF OBJECT_ID('sp_GetAuthors') IS NOT NULL
 	DROP proc sp_GetAuthors
 GO
@@ -76,7 +116,7 @@ BEGIN TRANSACTION
 			dbo.f_GetSoldNumber(b.BOOK_ID) as 'Sold_number'
 		from BOOK b join BOOK_DETAIL bd on bd.BOOK_ID = b.BOOK_ID
 			join PUBLISHER p on p.PUB_ID = bd.PUB_ID
-		where b.BOOK_ID = @BookId
+		where b.BOOK_ID = @BookId and b.SOFT_DELETE = 0
 	END TRY
 
 	BEGIN CATCH
@@ -87,8 +127,3 @@ BEGIN TRANSACTION
 COMMIT
 RETURN 1
 GO
-
-declare @k char(7) = 'BK00001'
-declare @i int
-exec @i = sp_GetBook @k
-print(@i)
