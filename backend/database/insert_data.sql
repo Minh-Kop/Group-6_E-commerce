@@ -304,7 +304,7 @@ INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('B
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('BK00029', 3, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00029-3.png', 'hachiko/product/BK00029-3.png')
 
 INSERT into BOOK (BOOK_ID, CATE_ID, BOOK_NAME, BOOK_PRICE, BOOK_PATH, BOOK_FILENAME, AVG_RATING, COUNT_RATING, STOCK, DISCOUNTED_NUMBER, BOOK_DISCOUNTED_PRICE, SOFT_DELETE) values ('BK00030', 'CA14', N'Cửa Hàng Tiện Lợi Bất Tiện', 139000, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690968058/hachiko/product/BK00030-1.jpg', 'hachiko/product/BK00030-1.jpg', 0, 0, 50, 15, 118150, 0)
-INSERT into BOOK_DETAIL (BOOK_ID, PUB_ID, BOOK_FORMAT, PUBLISHED_YEAR, NUMBER_PAGE, BOOK_WEIGHT, BOOK_DESC) values ('BK00030', 'PB02', N'Bìa Mềm', 2022, 300, 350)
+INSERT into BOOK_DETAIL (BOOK_ID, PUB_ID, BOOK_FORMAT, PUBLISHED_YEAR, NUMBER_PAGE, BOOK_WEIGHT) values ('BK00030', 'PB02', N'Bìa Mềm', 2022, 300, 350)
 INSERT into WRITTEN_BY (BOOK_ID, AUTHOR_ID) values ('BK00030', 'AU46')
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('BK00030', 2, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00030-2.png', 'hachiko/product/BK00030-2.png')
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('BK00030', 3, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00030-3.png', 'hachiko/product/BK00030-3.png')
