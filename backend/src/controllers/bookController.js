@@ -355,3 +355,35 @@ exports.updateBook = catchAsync(async (req, res, next) => {
         bookId,
     });
 });
+
+exports.deleteBookImage = async (req, res, next) => {
+    const { bookId } = req.params;
+    const { imageFilename } = req.body;
+
+    await bookModel.deleteBookImage(imageFilename);
+    const result = await deleteCloudinaryImage(imageFilename);
+    if (!result) {
+        return next(
+            new AppError(
+                `No ${imageFilename} image of book ${bookId} was found.`,
+                404,
+            ),
+        );
+    }
+    res.status(200).json({
+        status: 'success',
+        message: `Delete ${imageFilename} image of book ${bookId} successfully.`,
+    });
+};
+
+exports.deleteBook = async (req, res, next) => {
+    const { bookId } = req.params;
+    const result = await bookModel.deleteBook(bookId);
+    if (!result) {
+        return next(new AppError('No book found with that ID!', 404));
+    }
+    res.status(200).json({
+        status: 'success',
+        message: `Delete book ${bookId} successfully.`,
+    });
+};

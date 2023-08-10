@@ -40,7 +40,6 @@ const deleteCloudinaryImage = async (publicId) => {
     } catch (err) {
         console.log(err);
     }
-    return 1;
 };
 
 module.exports = {
