@@ -53,7 +53,6 @@ CREATE proc sp_CreateBook (
 		@imageFilename NVARCHAR(100),
         @stock int,
         @discountedNumber int,
-        @discountedPrice int,
         @publisherId char(7),
 		@publishedYear int,
         @weight int,
@@ -65,8 +64,8 @@ BEGIN TRANSACTION
 	BEGIN TRY
 		DECLARE @bookId CHAR(7) = dbo.f_CreateBookId()
 		
-		INSERT into BOOK (BOOK_ID, CATE_ID, BOOK_NAME, BOOK_PRICE, BOOK_PATH, BOOK_FILENAME, STOCK, DISCOUNTED_NUMBER, BOOK_DISCOUNTED_PRICE, SOFT_DELETE) VALUES
-			(@bookId, @categoryId, @bookName, @originalPrice, @imagePath, @imageFilename, @stock, @discountedNumber, @discountedPrice, 0)
+		INSERT into BOOK (BOOK_ID, CATE_ID, BOOK_NAME, BOOK_PRICE, BOOK_PATH, BOOK_FILENAME, STOCK, DISCOUNTED_NUMBER, SOFT_DELETE) VALUES
+			(@bookId, @categoryId, @bookName, @originalPrice, @imagePath, @imageFilename, @stock, @discountedNumber, 0)
 		INSERT into BOOK_DETAIL (BOOK_ID, PUB_ID, BOOK_FORMAT, PUBLISHED_YEAR, NUMBER_PAGE, BOOK_WEIGHT, BOOK_DESC) VALUES
 			(@bookId, @publisherId, @bookFormat, @publishedYear, @numberPage, @weight, @description)
 		

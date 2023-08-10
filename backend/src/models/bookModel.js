@@ -2,11 +2,26 @@ const sql = require('mssql/msnodesqlv8');
 
 const database = require('../utils/database');
 
-exports.insertImage = async (bookId, index, entity) => {
-    const sqlString = `insert into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('${bookId}', ${index}, '${entity.path}', '${entity.filename}')`;
+exports.insertImages = async (bookId, images) => {
     const pool = await database.getConnectionPool();
-    const request = new sql.Request(pool);
-    await request.query(sqlString);
+    const request1 = new sql.Request(pool);
+    let maxId = await request1.query(
+        `SELECT max(IMAGE_ID) as max_id from BOOK_IMAGES where BOOK_ID = '${bookId}'`,
+    );
+    if (maxId.recordset[0].max_id) {
+        maxId = maxId.recordset[0].max_id - 1;
+    } else {
+        maxId = 0;
+    }
+
+    let sqlString = `insert into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values `;
+    for (let i = 0; i < images.length; i++) {
+        sqlString += `('${bookId}', ${i + maxId + 2}, '${images[i].path}', '${
+            images[i].filename
+        }')${i !== images.length - 1 ? ', ' : ''}`;
+    }
+    const request2 = new sql.Request(pool);
+    await request2.query(sqlString);
 };
 
 exports.getNewBookId = async () => {
@@ -18,7 +33,7 @@ exports.getNewBookId = async () => {
 };
 
 exports.getBookImages = async (bookId) => {
-    const sqlString = `select IMAGE_ID, BOOK_PATH from BOOK_IMAGES where BOOK_ID = '${bookId}'`;
+    const sqlString = `select IMAGE_ID, BOOK_PATH, BOOK_FILENAME from BOOK_IMAGES where BOOK_ID = '${bookId}'`;
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);
     const result = await request.query(sqlString);
@@ -34,62 +49,57 @@ exports.getAllBooks = async (
     limit,
     offset,
 ) => {
-    try {
-        let sqlString =
-            'select b.* from BOOK b join BOOK_DETAIL d on d.BOOK_ID = b.BOOK_ID';
-        if (categoryIdList) {
-            let strList = '';
-            for (let i = 0; i < categoryIdList.length; i++) {
-                strList += `'${categoryIdList[i]}'`;
-                if (i !== categoryIdList.length - 1) {
-                    strList += ',';
-                }
+    let sqlString =
+        'select b.* from BOOK b join BOOK_DETAIL d on d.BOOK_ID = b.BOOK_ID';
+    if (categoryIdList) {
+        let strList = '';
+        for (let i = 0; i < categoryIdList.length; i++) {
+            strList += `'${categoryIdList[i]}'`;
+            if (i !== categoryIdList.length - 1) {
+                strList += ',';
             }
-            sqlString += ` where b.CATE_ID in (${strList})`;
         }
-        if (priceRange) {
-            sqlString += ` and b.BOOK_DISCOUNTED_PRICE >= ${priceRange[0]}`;
-            sqlString += ` and b.BOOK_DISCOUNTED_PRICE < ${priceRange[1]}`;
-        }
-        if (publisherId) {
-            let strList = '';
-            for (let i = 0; i < publisherId.length; i++) {
-                strList += `'${publisherId[i]}'`;
-                if (i !== publisherId.length - 1) {
-                    strList += ',';
-                }
-            }
-            sqlString += ` and d.PUB_ID in (${strList})`;
-        }
-        if (bookFormat) {
-            let strList = '';
-            for (let i = 0; i < bookFormat.length; i++) {
-                strList += `N'${bookFormat[i]}'`;
-                if (i !== bookFormat.length - 1) {
-                    strList += ',';
-                }
-            }
-            sqlString += ` and d.book_format in (${strList})`;
-        }
-        if (!/\bwhere\b/i.test(sqlString)) {
-            sqlString = sqlString.replace(/\band\b/i, 'where');
-        }
-        const check = sortType[0] === '-';
-        if (check) {
-            sortType = sortType.substring(1);
-        }
-        sqlString += ' and b.stock > 0 and b.SOFT_DELETE = 0';
-        sqlString += ` order by ${sortType} ${check ? 'desc' : 'asc'}`;
-        sqlString += ` OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY`;
-
-        const pool = await database.getConnectionPool();
-        const request = new sql.Request(pool);
-        const result = await request.query(sqlString);
-        return result.recordset;
-    } catch (err) {
-        console.log(err);
-        return null;
+        sqlString += ` where b.CATE_ID in (${strList})`;
     }
+    if (priceRange) {
+        sqlString += ` and b.BOOK_DISCOUNTED_PRICE >= ${priceRange[0]}`;
+        sqlString += ` and b.BOOK_DISCOUNTED_PRICE < ${priceRange[1]}`;
+    }
+    if (publisherId) {
+        let strList = '';
+        for (let i = 0; i < publisherId.length; i++) {
+            strList += `'${publisherId[i]}'`;
+            if (i !== publisherId.length - 1) {
+                strList += ',';
+            }
+        }
+        sqlString += ` and d.PUB_ID in (${strList})`;
+    }
+    if (bookFormat) {
+        let strList = '';
+        for (let i = 0; i < bookFormat.length; i++) {
+            strList += `N'${bookFormat[i]}'`;
+            if (i !== bookFormat.length - 1) {
+                strList += ',';
+            }
+        }
+        sqlString += ` and d.book_format in (${strList})`;
+    }
+    if (!/\bwhere\b/i.test(sqlString)) {
+        sqlString = sqlString.replace(/\band\b/i, 'where');
+    }
+    const check = sortType[0] === '-';
+    if (check) {
+        sortType = sortType.substring(1);
+    }
+    sqlString += ' and b.stock > 0 and b.SOFT_DELETE = 0';
+    sqlString += ` order by ${sortType} ${check ? 'desc' : 'asc'}`;
+    sqlString += ` OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY`;
+
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query(sqlString);
+    return result.recordset;
 };
 
 exports.getBookById = async (bookId) => {
@@ -120,7 +130,6 @@ exports.createBook = async (bookEntity) => {
         coverImage,
         stock,
         discountedNumber,
-        discountedPrice,
         authorId,
         publisherId,
         publishedYear,
@@ -140,7 +149,6 @@ exports.createBook = async (bookEntity) => {
     request.input('imageFilename', sql.NVarChar, coverImage.filename);
     request.input('stock', sql.Int, stock);
     request.input('discountedNumber', sql.Int, discountedNumber);
-    request.input('discountedPrice', sql.Int, discountedPrice);
     request.input('publisherId', sql.Char, publisherId);
     request.input('publishedYear', sql.Int, publishedYear);
     request.input('weight', sql.Int, weight);
@@ -166,6 +174,127 @@ exports.createBook = async (bookEntity) => {
     return bookId;
 };
 
-exports.updateProduct = async (productId, entity) => {
-    const { productName, categoryId, description } = entity;
+exports.updateBook = async (bookId, bookEntity) => {
+    const {
+        categoryId,
+        bookName,
+        originalPrice,
+        stock,
+        discountedNumber,
+        authorId,
+        publisherId,
+        publishedYear,
+        weight,
+        numberPage,
+        bookFormat,
+        description,
+    } = bookEntity;
+
+    const pool = await database.getConnectionPool();
+    const transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    let checkBook = false;
+    let checkBookDetail = false;
+    let checkInsertAuthor = false;
+    let checkDeleteAuthor = false;
+    let sqlStringBook = ``;
+    let sqlStringBookDetail = ``;
+    let sqlStringInsertAuthor = ``;
+    let sqlStringDeleteAuthor = ``;
+
+    // Create Book update string
+    if (categoryId) {
+        checkBook = true;
+        sqlStringBook += `CATE_ID = '${categoryId}',`;
+    }
+    if (bookName) {
+        checkBook = true;
+        sqlStringBook += `BOOK_NAME = N'${bookName}',`;
+    }
+    if (originalPrice) {
+        checkBook = true;
+        sqlStringBook += `BOOK_PRICE = ${+originalPrice},`;
+    }
+    if (discountedNumber) {
+        checkBook = true;
+        sqlStringBook += `DISCOUNTED_NUMBER = ${+discountedNumber},`;
+    }
+    if (stock) {
+        checkBook = true;
+        sqlStringBook += `STOCK = ${+stock},`;
+    }
+
+    // Create Book Detail update string
+    if (publisherId) {
+        checkBookDetail = true;
+        sqlStringBookDetail += `PUB_ID = '${publisherId}',`;
+    }
+    if (publishedYear) {
+        checkBookDetail = true;
+        sqlStringBookDetail += `PUBLISHED_YEAR = ${+publishedYear},`;
+    }
+    if (weight) {
+        checkBookDetail = true;
+        sqlStringBookDetail += `BOOK_WEIGHT = ${+weight},`;
+    }
+    if (numberPage) {
+        checkBookDetail = true;
+        sqlStringBookDetail += `NUMBER_PAGE = ${+numberPage},`;
+    }
+    if (bookFormat) {
+        checkBookDetail = true;
+        sqlStringBookDetail += `BOOK_FORMAT = N'${bookFormat}',`;
+    }
+    if (description) {
+        checkBookDetail = true;
+        sqlStringBookDetail += `BOOK_DESC = N'${description}',`;
+    }
+
+    if (checkBook) {
+        sqlStringBook = `update BOOK set ${sqlStringBook} where BOOK_ID = '${bookId}'`;
+        sqlStringBook = sqlStringBook.replace(/, w/, ' w');
+        const bookRequest = new sql.Request(transaction);
+        await bookRequest.query(sqlStringBook);
+    }
+    if (checkBookDetail) {
+        sqlStringBookDetail = `update BOOK_DETAIL set ${sqlStringBookDetail} where BOOK_ID = '${bookId}'`;
+        sqlStringBookDetail = sqlStringBookDetail.replace(/, w/, ' w');
+        const bookDetailRequest = new sql.Request(transaction);
+        await bookDetailRequest.query(sqlStringBookDetail);
+    }
+
+    if (authorId) {
+        const listAuthorId = authorId.split(',').map((el) => el.trim());
+        for (let i = 0; i < listAuthorId.length; i++) {
+            if (listAuthorId[i][0] === '-') {
+                checkDeleteAuthor = true;
+                sqlStringDeleteAuthor += `AUTHOR_ID = '${listAuthorId[i].slice(
+                    1,
+                )}' `;
+            } else {
+                checkInsertAuthor = true;
+                sqlStringInsertAuthor += `('${bookId}', '${listAuthorId[i]}')`;
+            }
+        }
+        if (checkDeleteAuthor) {
+            sqlStringDeleteAuthor = `delete from WRITTEN_BY where BOOK_ID = '${bookId}' AND (${sqlStringDeleteAuthor})`;
+            sqlStringDeleteAuthor = sqlStringDeleteAuthor.replace(
+                / AU/g,
+                ' or AU',
+            );
+            const deleteAuthorRequest = new sql.Request(transaction);
+            await deleteAuthorRequest.query(sqlStringDeleteAuthor);
+        }
+        if (checkInsertAuthor) {
+            sqlStringInsertAuthor = `insert into WRITTEN_BY (BOOK_ID, AUTHOR_ID) values ${sqlStringInsertAuthor}`;
+            sqlStringInsertAuthor = sqlStringInsertAuthor.replace(
+                /\)\(/g,
+                '),(',
+            );
+            const insertBookRequest = new sql.Request(transaction);
+            await insertBookRequest.query(sqlStringInsertAuthor);
+        }
+    }
+    await transaction.commit();
 };

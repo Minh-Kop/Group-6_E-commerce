@@ -1,0 +1,13 @@
+IF OBJECT_ID('t_UpdateDiscountedPrice') IS NOT NULL
+	DROP TRIGGER t_UpdateDiscountedPrice
+GO
+CREATE TRIGGER t_UpdateDiscountedPrice
+ON book
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    UPDATE BOOK
+    SET BOOK_DISCOUNTED_PRICE = i.BOOK_PRICE * (1 - i.DISCOUNTED_NUMBER / 100.0)
+    FROM BOOK b
+    JOIN inserted i ON b.BOOK_ID = i.BOOK_ID;
+END;

@@ -174,8 +174,12 @@ exports.createBook = catchAsync(async (req, res, next) => {
     } = req.body;
     let { coverImage, images } = req.files;
 
+    // Miss images
+    if (!coverImage && !images) {
+        return next(new AppError("Missing book's images!", 400));
+    }
     // Miss cover image
-    if (!coverImage || coverImage.length < 1) {
+    if (!coverImage) {
         Promise.all(
             images.map(async (el) => {
                 await deleteCloudinaryImage(el.filename);
@@ -184,7 +188,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
         return next(new AppError("Missing book's cover image!", 400));
     }
     // Miss sub image
-    if (!images || images.length < 1) {
+    if (!images) {
         deleteCloudinaryImage(coverImage[0].filename);
         return next(new AppError("Missing book's sub image!", 400));
     }
@@ -244,7 +248,6 @@ exports.createBook = catchAsync(async (req, res, next) => {
     }));
 
     // Create entity to insert to database
-    const discountedPrice = originalPrice * (1 - discountedNumber / 100);
     const bookEntity = {
         categoryId,
         bookName,
@@ -252,7 +255,6 @@ exports.createBook = catchAsync(async (req, res, next) => {
         coverImage,
         stock,
         discountedNumber,
-        discountedPrice,
         authorId,
         publisherId,
         publishedYear,
@@ -264,11 +266,89 @@ exports.createBook = catchAsync(async (req, res, next) => {
     const bookId = await bookModel.createBook(bookEntity);
 
     // Insert sub images
-    await Promise.all(
-        images.map(async (element, i) => {
-            await bookModel.insertImage(bookId, i + 2, element);
-        }),
-    );
+    await bookModel.insertImages(bookId, images);
+
+    res.status(200).json({
+        status: 'success',
+        bookId,
+    });
+});
+
+exports.updateBookImages = catchAsync(async (req, res, next) => {
+    const { bookId } = req.params;
+
+    // Get append images
+    let { images: uploadedSubImages } = req.files;
+
+    if (uploadedSubImages) {
+        uploadedSubImages = uploadedSubImages.map((item) => ({
+            path: item.path,
+            filename: item.filename,
+        }));
+
+        // Get current sub images
+        let subImages = await bookModel.getBookImages(bookId);
+
+        // If number of uploaded images reaches limit then delete the cloudinary images and cancel transaction
+        if (
+            subImages.length + uploadedSubImages.length >
+            config.PRODUCT_IMAGE_NUMBER_LIMIT
+        ) {
+            Promise.all(
+                uploadedSubImages.map(
+                    async (el) => await deleteCloudinaryImage(el.filename),
+                ),
+            );
+            return next(
+                new AppError(
+                    `Each product can only have ${config.PRODUCT_IMAGE_NUMBER_LIMIT} images.`,
+                    400,
+                ),
+            );
+        }
+        await bookModel.insertImages(bookId, uploadedSubImages);
+    }
+
+    res.status(200).json({
+        status: 'success',
+        bookId,
+    });
+});
+
+exports.updateBook = catchAsync(async (req, res, next) => {
+    const { bookId } = req.params;
+
+    let {
+        bookName,
+        categoryId,
+        originalPrice,
+        discountedNumber,
+        stock,
+        authorId,
+        publisherId,
+        publishedYear,
+        weight,
+        numberPage,
+        bookFormat,
+        description,
+    } = req.body;
+
+    // Create entity to insert to database
+    const bookEntity = {
+        categoryId,
+        bookName,
+        originalPrice,
+        stock,
+        discountedNumber,
+        authorId,
+        publisherId,
+        publishedYear,
+        weight,
+        numberPage,
+        bookFormat,
+        description,
+    };
+    await bookModel.updateBook(bookId, bookEntity);
 
     res.status(200).json({
         status: 'success',
