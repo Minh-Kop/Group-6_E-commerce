@@ -3,14 +3,10 @@ const sql = require('mssql/msnodesqlv8');
 const database = require('../utils/database');
 
 exports.getAllAuthors = async () => {
-    try {
-        const pool = await database.getConnectionPool();
-        const request = new sql.Request(pool);
-        const result = await request.query('select * from Author');
-        return result.recordset;
-    } catch (err) {
-        console.log(err);
-    }
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query('select * from Author');
+    return result.recordset;
 };
 
 exports.createAuthor = async (authorName) => {

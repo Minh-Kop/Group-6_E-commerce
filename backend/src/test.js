@@ -1,9 +1,7 @@
-const catchAsync = require('./utils/catchAsync');
-const AppError = require('./utils/appError');
 const bookModel = require('./models/bookModel');
 
 (async () => {
-    const id = await bookModel.getNewBookId();
-    // console.log(id['']);
-    console.log(id);
+    const test = `'1234'`;
+    const str = `update BOOK set ${test} where BOOK_ID = ''`;
+    console.log(str);
 })();
