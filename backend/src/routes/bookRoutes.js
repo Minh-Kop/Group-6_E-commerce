@@ -12,10 +12,12 @@ router
 router
     .route('/:bookId')
     .get(bookController.getBook)
-    .patch(bookController.uploadBookImages, bookController.updateBook);
+    .patch(bookController.uploadBookImages, bookController.updateBook)
+    .delete(bookController.deleteBook)
 
 router
     .route('/images/:bookId')
-    .patch(bookController.uploadBookImages, bookController.updateBookImages);
+    .patch(bookController.uploadBookImages, bookController.updateBookImages)
+    .delete(bookController.deleteBookImage);
 
 module.exports = router;

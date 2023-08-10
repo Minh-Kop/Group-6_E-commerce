@@ -24,6 +24,14 @@ exports.insertImages = async (bookId, images) => {
     await request2.query(sqlString);
 };
 
+exports.deleteBookImage = async (imageFilename) => {
+    const sqlString = `delete from BOOK_IMAGES where BOOK_FILENAME = '${imageFilename}'`;
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query(sqlString);
+    return result.rowsAffected[0];
+};
+
 exports.getNewBookId = async () => {
     const sqlString = `select dbo.f_CreateBookId()`;
     const pool = await database.getConnectionPool();
@@ -109,7 +117,7 @@ exports.getBookById = async (bookId) => {
     request1.input('BookId', sql.Char, bookId);
     let result = await request1.execute('sp_GetBook');
     if (result.returnValue !== 1) {
-        return result.recordset[0];
+        return null;
     }
     result = result.recordset[0];
 
@@ -297,4 +305,12 @@ exports.updateBook = async (bookId, bookEntity) => {
         }
     }
     await transaction.commit();
+};
+
+exports.deleteBook = async (bookId) => {
+    const sqlString = `update BOOK set SOFT_DELETE = 1 where BOOK_ID = '${bookId}'`;
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query(sqlString);
+    return result.rowsAffected[0];
 };

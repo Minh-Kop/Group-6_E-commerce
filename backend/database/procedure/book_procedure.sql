@@ -102,7 +102,7 @@ CREATE PROCEDURE sp_GetBook
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
-		if not exists(select 1 from BOOK where BOOK_ID = @BookId)
+		if not exists(select 1 from BOOK where BOOK_ID = @BookId) or exists(select 1 from BOOK where BOOK_ID = @BookId and SOFT_DELETE = 1)
 		BEGIN
 			PRINT N'Book ID isn''t valid!'
 			ROLLBACK
