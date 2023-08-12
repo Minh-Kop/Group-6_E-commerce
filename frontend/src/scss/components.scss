@@ -1,5 +1,33 @@
 @import "./colors.scss";
 
+//Admin Navbar
+.sidebar-nav-container{
+  position: absolute;
+  top: 30%;
+  left: 5%;
+
+  .sidebar-nav{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+
+    button{
+      width: 15rem;
+      height: 3rem;
+
+      font-size: large;
+      border: none;
+      background-color: #D9D9D9;
+      
+      &:active{
+        background-color: #EA8D88;
+      }
+    }
+  }
+}
+
 //Header\\
 .navbar {
   background-color: #526d82;
