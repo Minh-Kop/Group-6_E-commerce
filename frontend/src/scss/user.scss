@@ -155,4 +155,172 @@
             }
         }
     }
+
+    img{
+        height: 7rem;
+        width: auto;
+    }
+}
+
+//User Point Info
+.user-point-info-container{
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    gap: 2rem;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+
+    .user-point-total{
+        width: 75%;
+        margin: 0%;
+    }
+
+    .user-point-category{
+        width: 75%;
+
+        display: flex;
+        justify-content: space-between;
+
+        button{
+            height: 3rem;
+            width: 33%;
+
+            border: none;
+            background-color: #D9D9D9;
+        
+            &:hover{
+                background-color: #EA8D88;
+            }
+        }
+    }
+
+    .user-point-table{
+        width: 75%;
+
+        background-color: #DDE6ED;
+        border-radius: 7px;
+        font-size: large;
+
+        .point-table-header{
+            padding-left: 1rem;
+            padding-right: 1rem;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .table-header-1{
+                width: 10%;
+            }
+
+            .table-header-2{
+                width: 45%;
+            }
+
+            .table-header-3{
+                width: 15%;
+            }
+
+            .table-header-4{
+                width: 15%;
+            }
+        }
+
+        .point-table-data{
+            padding-left: 1rem;
+            padding-right: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .id-data{
+                width: 10%;
+                position: relative;
+                left: 1%;
+            }
+
+            .content-data{
+                width: 45%;
+            }
+
+            .date-data{
+                width: 15%;
+            }
+
+            .fluc-data{
+                width: 15%;
+            }
+        }
+
+        hr{
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
+//voucher
+.user-voucher-container{
+    height: 100vh;
+    width: 100%;
+    margin-top: 4%;
+    gap: 5%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .voucher-search{
+        width: 70%;
+        
+        form{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+
+            gap: 2rem;
+            width: 100%;
+
+            input{
+                width: 80%;
+
+                background-color: #EFEFEF;
+            }
+
+            button{
+                width: 20%;
+                height: 2rem;
+
+                background-color: #EA8D88;
+                color: white;
+                border: none;
+            }
+        }
+    }
+
+    .voucher-table{
+        display: grid;
+        margin-bottom: 5%;
+        position: relative;
+        
+        width: 70%;
+        background-color: #D9D9D9;
+        grid-template-columns: 50% 50%;
+
+        .voucher{
+            display: flex;
+            flex-direction: row;
+            background-color: white;
+
+            font-size: large;
+            margin: 1.5rem;
+            gap: 2rem;
+        }
+    }
 }
