@@ -1,5 +1,7 @@
 import book from "../assets/SGK.jpg";
-import '../scss/cart.scss'
+import "../scss/cart.scss";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const cartProduct = [
   {
@@ -37,23 +39,27 @@ const cartProduct = [
 ];
 
 function Payment() {
-  const sum = ()=> {
+  const sum = () => {
     var sum = 0;
-    for (var i = 0; i < cartProduct.length; i++ ){
+    for (var i = 0; i < cartProduct.length; i++) {
       sum += cartProduct[i].price * cartProduct[i].quantity;
     }
     return sum;
-  }
+  };
 
   return (
-    <div className='payment-container'>
+    <>
+      <Navbar />
+      <div className="payment-container">
         <h1>THANH TOÁN</h1>
-        <div className='payment-list'>
-          {cartProduct.map((p)=>(
-            <div className='payment-detail'>
-              <a href='/'><img src={p.img} alt='book'></img></a>
-              <div className='payment-item-description'>
-                <a href='/'>{p.book}</a>
+        <div className="payment-list">
+          {cartProduct.map((p) => (
+            <div className="payment-detail">
+              <a href="/cart">
+                <img src={p.img} alt="book"></img>
+              </a>
+              <div className="payment-item-description">
+                <a href="/cart">{p.book}</a>
                 <p>Giá: {p.price + " vnd"}</p>
                 <p>Số lượng: {p.quantity}</p>
               </div>
@@ -61,12 +67,18 @@ function Payment() {
           ))}
         </div>
         <h2>Thành tiền: {sum() + ".000 vnd"}</h2>
-        <div className='payment-buttons'>
-          <button className='accept-button' type='button'>Xác nhận</button>
-          <button className='deny-button' type='button'>Hủy bỏ</button>
+        <div className="payment-buttons">
+          <button className="accept-button" type="button">
+            Xác nhận
+          </button>
+          <button className="deny-button" type="button">
+            Hủy bỏ
+          </button>
         </div>
-    </div>
-  )
+      </div>
+      <Footer />
+    </>
+  );
 }
 
-export default Payment
+export default Payment;

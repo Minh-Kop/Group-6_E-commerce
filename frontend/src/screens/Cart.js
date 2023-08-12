@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react";
 import book from "../assets/SGK.jpg";
-import '../scss/cart.scss'
+import "../scss/cart.scss";
+
+import { NavLink } from "react-router-dom";
+
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const cartProduct = [
   {
@@ -44,83 +49,119 @@ function Cart() {
   const [selectedBook, setSelected] = useState(-1); //book id in cart that need to change the quantity
   const [bookQuantity, setQuantity] = useState(-1); //quantity number
 
-  const handleQuantityChange = ()=>{ //handle imput for quantity number and call changing process
+  const handleQuantityChange = () => {
+    //handle imput for quantity number and call changing process
     var val = iref.current.value;
-    if(val <= 0){
+    if (val <= 0) {
       resetSelected();
       return;
     }
 
     setQuantity(val);
     setQuantityChange(false);
-  }
+  };
 
-  const resetSelected = ()=>{
+  const resetSelected = () => {
     setQuantityChange(false);
     setSelected(-1);
-  }
+  };
 
-  const setBookQuantity = ()=> { //handle changing process
-    const newState = cartBooks.map((cartBook)=>{
-      if(cartBook.id === selectedBook){
-        return{
-          ...cartBook, quantity: parseInt(bookQuantity),
-        }
-      }
-      else{
+  const setBookQuantity = () => {
+    //handle changing process
+    const newState = cartBooks.map((cartBook) => {
+      if (cartBook.id === selectedBook) {
+        return {
+          ...cartBook,
+          quantity: parseInt(bookQuantity),
+        };
+      } else {
         return cartBook;
       }
-    })
+    });
     setCart(newState);
-  }
+  };
 
   const deleteBook = (id) => {
-    setCart(cartBooks.filter(book=>book.id !== id));
-  }
+    setCart(cartBooks.filter((book) => book.id !== id));
+  };
 
   useEffect(setBookQuantity, [bookQuantity]);
 
-  const handleSelectedBook = (index)=>{ //open change popup if change button press
+  const handleSelectedBook = (index) => {
+    //open change popup if change button press
     setSelected(index);
     setQuantityChange(true);
-  }
+  };
 
   return (
-    <div className='cart-container'>
+    <div>
+      <Navbar />
+
+      <div className="cart-container">
         <h1>GIỎ HÀNG</h1>
-        <div className='cart-list'>
-          {cartBooks.map((p)=>(
-            <div className='cart-detail'>
-              <a href='/'><img src={p.img} alt='book'></img></a>
-              <div className='cart-item-description'>
-                <a href='/'>{p.book}</a>
-                <p>Giá: {p.price + ' vnd'}</p>
+        <div className="cart-list">
+          {cartBooks.map((p) => (
+            <div className="cart-detail">
+              <a href="/">
+                <img src={p.img} alt="book"></img>
+              </a>
+              <div className="cart-item-description">
+                <a href="/">{p.book}</a>
+                <p>Giá: {p.price + " vnd"}</p>
                 <p>Số lượng: {p.quantity}</p>
               </div>
 
               {bookQuantityChange && selectedBook === p.id && (
-                <div className='quantity-change-popup'>
-                  <div className='quantity-change-inner'>
+                <div className="quantity-change-popup">
+                  <div className="quantity-change-inner">
                     <p>Nhập số lượng sách "{p.book}" bạn muốn mua:</p>
-                    <form className='quantity-change-form'>
-                      <input ref={iref} id='input_id' type='number' name='qinput'></input>
-                      <button type='button' onClick={handleQuantityChange}>Xác nhận</button>
-                      <button className='close-quantity-change-popup' type='button' onClick={resetSelected}>X</button>
+                    <form className="quantity-change-form">
+                      <input
+                        ref={iref}
+                        id="input_id"
+                        type="number"
+                        name="qinput"
+                      ></input>
+                      <button type="button" onClick={handleQuantityChange}>
+                        Xác nhận
+                      </button>
+                      <button
+                        className="close-quantity-change-popup"
+                        type="button"
+                        onClick={resetSelected}
+                      >
+                        X
+                      </button>
                     </form>
                   </div>
                 </div>
               )}
 
-              <div className='cart-item-quantity'>
-                <button type='button' onClick={()=>handleSelectedBook(p.id)}>Số lượng</button>
-                <button className='delete-button' type='button' onClick={()=>deleteBook(p.id)}>Xóa</button>
+              <div className="cart-item-quantity">
+                <button type="button" onClick={() => handleSelectedBook(p.id)}>
+                  Số lượng
+                </button>
+                <button
+                  className="delete-button"
+                  type="button"
+                  onClick={() => deleteBook(p.id)}
+                >
+                  Xóa
+                </button>
               </div>
             </div>
           ))}
         </div>
-        <button className='checkout-button' type='button'>Thanh toán</button>
+        <button className="checkout-button" type="button">
+          <NavLink className="checkout-button-link" to="/cart/payment">
+            {" "}
+            Thanh toán
+          </NavLink>
+        </button>
+        <Footer />
+      </div>
     </div>
-  )
+  );
 }
 
-export default Cart
+export default Cart;

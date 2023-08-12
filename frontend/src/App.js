@@ -7,6 +7,9 @@ import CustomerSecurity from "./screens/CustomerSecurity";
 import RefundPolicy from "./screens/RefundPolicy";
 import PaymentSecurity from "./screens/PaymentSecurity";
 import HomePage from "./screens/HomePage";
+import Cart from "./screens/Cart";
+import Payment from "./screens/Payment";
+import Order from "./screens/Order";
 
 import ProductDetail from "./screens/ProductDetail";
 function App() {
@@ -19,6 +22,10 @@ function App() {
         <Route path="/customer_security" element={<CustomerSecurity />} />
         <Route path="/refund_policy" element={<RefundPolicy />} />
         <Route path="/payment_security" element={<PaymentSecurity />} />
+
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/cart/payment" element={<Payment />} />
 
         <Route path="/home_page">
           <Route index element={<HomePage />} />

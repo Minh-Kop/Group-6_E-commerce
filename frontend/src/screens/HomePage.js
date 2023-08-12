@@ -3,7 +3,7 @@ import "../scss/homepage.scss";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 
 import book from "../assets/SGK.jpg";
 import { Outlet, NavLink } from "react-router-dom";

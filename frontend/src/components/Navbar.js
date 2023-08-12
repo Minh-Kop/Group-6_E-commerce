@@ -8,10 +8,23 @@ function Navbar() {
   const [openUserItem, setUserItem] = useState(false);
   const handleUserHover = () => setUserItem(!openUserItem);
   const userItem = [
-    "Thông tin cá nhân",
-    "Theo dõi đơn hàng",
-    "Lịch sử mua hàng",
-    "Đăng xuất",
+    {
+      name: "Thông tin cá nhân",
+      path: "/",
+    },
+    {
+      name: "Theo dõi đơn hàng",
+      path: "/order",
+    },
+    {
+      name: "Lịch sử mua hàng",
+      path: "/",
+    },
+
+    {
+      name: "Đăng xuất",
+      path: "/",
+    },
   ];
 
   //Test data\\
@@ -52,7 +65,7 @@ function Navbar() {
         </form>
 
         <div className="navbar-item">
-          <a className="navbar-cart" href="/">
+          <a className="navbar-cart" href="/cart">
             <img src={require("../assets/cart.png")} alt="Cart" />
           </a>
           <div className="navbar-user">
@@ -67,8 +80,8 @@ function Navbar() {
               <ul className="navbar-user-items-dropdown">
                 {userItem.map((item, index) => (
                   <li>
-                    <a key={index} href="/">
-                      {item}
+                    <a key={index} href={item.path}>
+                      {item.name}
                     </a>
                   </li>
                 ))}
