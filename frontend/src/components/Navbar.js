@@ -18,7 +18,7 @@ function Navbar() {
     },
     {
       name: "Lịch sử mua hàng",
-      path: "/",
+      path: "/history",
     },
 
     {

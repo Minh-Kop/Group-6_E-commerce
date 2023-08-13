@@ -10,6 +10,7 @@ import HomePage from "./screens/HomePage";
 import Cart from "./screens/Cart";
 import Payment from "./screens/Payment";
 import Order from "./screens/Order";
+import HistoryOrder from "./screens/HistoryOrder";
 
 import ProductDetail from "./screens/ProductDetail";
 function App() {
@@ -25,6 +26,7 @@ function App() {
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/history" element={<HistoryOrder />} />
         <Route path="/cart/payment" element={<Payment />} />
 
         <Route path="/home_page">

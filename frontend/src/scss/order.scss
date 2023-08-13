@@ -44,4 +44,14 @@
     background-color: #59fed6;
     border-radius: 8px;
   }
+
+  &__state1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 100px;
+    background-color: #ff7e7e;
+    border-radius: 8px;
+  }
 }
