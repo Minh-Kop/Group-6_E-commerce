@@ -12,7 +12,7 @@ router
 router
     .route('/:bookId')
     .get(bookController.getBook)
-    .patch(bookController.uploadBookImages, bookController.updateBook)
+    .patch(bookController.updateBook)
     .delete(bookController.deleteBook);
 
 router
