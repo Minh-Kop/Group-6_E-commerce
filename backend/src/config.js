@@ -14,8 +14,10 @@ const config = {
 
     NO_TOKEN_URL: ['/auth', '/location', '/category', '/product'],
     role: {
-        USER: 'user',
-        ADMIN: 'admin',
+        // USER: 'user',
+        // ADMIN: 'admin',
+        USER: 1,
+        ADMIN: 2,
     },
 
     payment: {
@@ -53,6 +55,8 @@ const config = {
 
     JWT_EXP_TIME: 60 * 60,
     JWT_SECRET: process.env.JWT_SECRET,
+    JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
+    JWT_COOKIE_EXPIRES_IN: process.env.JWT_COOKIE_EXPIRES_IN,
     NUMBER_BYTE_VERIFY_TOKEN: 256 / 8,
     NUMBER_BYTE_SALT: 16 / 8,
 
