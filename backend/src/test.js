@@ -4,12 +4,8 @@ const crypto = require('./utils/crypto');
 const config = require('./config');
 
 (async () => {
-    const newAccount = {
-        email: 'khoi@gmail.com',
-        verified: 1,
-        role: config.role.USER,
-    };
-    await accountModel.createAccount(newAccount);
+    const currentYear = new Date().getFullYear();
+    console.log(currentYear); // In ra năm hiện tại
 })();
 
 // crypto.encryptPassword('khoi123')

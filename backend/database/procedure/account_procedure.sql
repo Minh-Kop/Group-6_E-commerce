@@ -48,7 +48,8 @@ IF OBJECT_ID('sp_GetDetailedAccount') IS NOT NULL
 	DROP PROC sp_GetDetailedAccount
 GO
 CREATE PROCEDURE sp_GetDetailedAccount (
-    @email NVARCHAR(100)
+    @email NVARCHAR(100),
+    @year int
 )
 AS
 BEGIN TRANSACTION
@@ -63,9 +64,9 @@ BEGIN TRANSACTION
         select [a].[EMAIL] as email, [a].[FULLNAME] as fullName, [a].[PHONE_NUMBER] as phoneNumber,
             [a].[AVATAR_PATH] as avatarPath, [a].[AVATAR_FILENAME] as avatarFilename, [a].[HROLE] as role,
             ad.GENDER as gender, ad.BIRTHDAY as birthday, ad.HPOINT as HPoint, ad.TIER as tier, hy.HPOINT accumulatedHPoint
-        from ACCOUNT a join ACCOUNT_DETAIL ad on a.EMAIL = ad.EMAIL
-            join HPOINT_ACCUMULATION_YEAR hy on hy.EMAIL = a.EMAIL
-        where a.EMAIL = @email and hy.SAVED_YEAR = YEAR(GETDATE())
+        from ACCOUNT a LEFT join ACCOUNT_DETAIL ad on a.EMAIL = ad.EMAIL
+            LEFT join HPOINT_ACCUMULATION_YEAR hy on hy.EMAIL = a.EMAIL
+        where a.EMAIL = @email and hy.SAVED_YEAR = @year
 	END TRY
 
 	BEGIN CATCH

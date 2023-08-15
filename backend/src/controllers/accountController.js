@@ -5,6 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const accountModel = require('../models/accountModel');
 const { createUploader } = require('../utils/cloudinary');
 const config = require('../config');
+const { encryptPassword } = require('../utils/crypto');
 
 const createAvatarName = async (req, file) => {
     if (file.fieldname === 'avatar') {
@@ -27,7 +28,13 @@ exports.getMe = (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
     const { email } = req.params;
-    const detailedUser = await accountModel.getDetailedUser(email);
+    const { year } = req.body;
+    const userEntity = {
+        email,
+        year: +year || new Date().getFullYear(),
+    };
+
+    const detailedUser = await accountModel.getDetailedUser(userEntity);
 
     // Check if this user exists
     if (detailedUser.returnValue === -1) {
@@ -40,7 +47,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.updateMe = catchAsync(async (req, res, next) => {
+exports.updateUser = catchAsync(async (req, res, next) => {
     // Create error if user PATCHes password data
     if (req.body.password) {
         return next(
@@ -51,14 +58,16 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         );
     }
 
-    const { email } = req.user;
-    const { fullName, phoneNumber, birthday, gender } = req.body;
+    const { email } = req.params;
+    const { fullName, phoneNumber, birthday, gender, tier, role } = req.body;
     const userEntity = {
         email,
         fullName,
         phoneNumber,
         birthday,
         gender: +gender,
+        tier: +tier,
+        role: +role,
     };
 
     await accountModel.updateAccount(userEntity);
@@ -83,5 +92,66 @@ exports.updateAvatar = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         email,
+    });
+});
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+    const { sortType } = req.query;
+    let { year, tier, limit, page } = req.query;
+
+    year = +year || new Date().getFullYear();
+    tier = +tier;
+    page = +page || 1;
+    limit = +limit || 12;
+    const offset = (page - 1) * limit;
+
+    const userEntity = {
+        year,
+        tier,
+        sortType,
+        limit,
+        offset,
+    };
+
+    const users = await accountModel.getAllUsers(userEntity);
+
+    res.status(200).json({
+        status: 'success',
+        users,
+    });
+});
+
+exports.createUser = catchAsync(async (req, res, next) => {
+    const { email, phoneNumber, password, fullName, role } = req.body;
+
+    // Check for email duplicated
+    const emailAccount = await accountModel.getByEmail(email);
+    if (emailAccount) {
+        return next(new AppError('Email already exists.', 400));
+    }
+
+    // Check for phone number duplicated
+    const phoneNumberAccount = await accountModel.getByPhone(phoneNumber);
+    if (phoneNumberAccount) {
+        return next(new AppError('Phone number is already used.', 400));
+    }
+
+    // Encrypt password by salting and hashing
+    const encryptedPassword = encryptPassword(password);
+
+    // Create entity to insert to DB
+    const entity = {
+        email,
+        phoneNumber,
+        fullName,
+        password: encryptedPassword,
+        verified: 1,
+        role: role || config.role.USER,
+    };
+    await accountModel.createAccount(entity);
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Create account successfully',
     });
 });

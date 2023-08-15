@@ -348,7 +348,6 @@ exports.updateBook = catchAsync(async (req, res, next) => {
         bookFormat,
         description,
     };
-    console.log(bookEntity);
     await bookModel.updateBook(bookId, bookEntity);
 
     res.status(200).json({
