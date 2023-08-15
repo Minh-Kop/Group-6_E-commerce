@@ -216,6 +216,7 @@ exports.protect = catchAsync(async (req, res, next) => {
         avatarPath: currentUser.AVATAR_PATH,
         avatarFilename: currentUser.AVATAR_FILENAME,
         passwordChangedAt: currentUser.PASSWORDCHANGEDAT,
+        role: currentUser.HROLE,
     };
 
     // 4) Check if user changes password after the JWT was issued
@@ -261,3 +262,28 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     // 4) Log user in, send JWT
     createSendToken(user, 200, req, res);
 });
+
+exports.logOut = (req, res) => {
+    res.cookie('jwt', 'logged-out', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+    });
+    res.status(200).json({
+        status: 'success',
+    });
+};
+
+exports.restrictTo = (...roles) => {
+    return (req, res, next) => {
+        // roles ['admin', 'lead-guide']
+        if (!roles.includes(req.user.role)) {
+            return next(
+                new AppError(
+                    'You do not have permission to perform this action!',
+                    403,
+                ),
+            );
+        }
+        next();
+    };
+};

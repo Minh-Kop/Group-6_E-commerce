@@ -49,7 +49,8 @@ select * from ACCOUNT where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from ACCOUNT_DETAIL where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from HPOINT_ACCUMULATION_YEAR where EMAIL = 'khoiminhtrannguyen@gmail.com'
 
-update ACCOUNT set AVATAR_FILENAME = 1 where EMAIL = 'khoiminhtrannguyen@gmail.com'
+update ACCOUNT set HROLE = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
+update ACCOUNT_DETAIL set TIER = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
 
 -- ALTER TABLE ACCOUNT
 -- ADD CONSTRAINT UniquePhoneNumber UNIQUE (Phone_number);
@@ -57,4 +58,4 @@ update ACCOUNT set AVATAR_FILENAME = 1 where EMAIL = 'khoiminhtrannguyen@gmail.c
 select GETDATE() as date, DATEADD(second, -1, GETDATE())
 select DATEADD(second, -1, GETDATE()) as date
 
-update ACCOUNT_DETAIL set BIRTHDAY = '12-26-2002' where EMAIL = 'khoiminhtrannguyen@gmail.com'
+exec sp_GetDetailedAccount 'khoiminhtrannguyen@gmail.com', 2023
