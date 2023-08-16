@@ -10,7 +10,7 @@ function Navbar() {
   const userItem = [
     {
       name: "Thông tin cá nhân",
-      path: "/",
+      path: "/user",
     },
     {
       name: "Theo dõi đơn hàng",

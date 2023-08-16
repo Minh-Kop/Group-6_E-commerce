@@ -12,7 +12,12 @@ import Payment from "./screens/Payment";
 import Order from "./screens/Order";
 import HistoryOrder from "./screens/HistoryOrder";
 
+import UserInfo from "./screens/UserInfo";
+import UserPointInfo from "./screens/UserPointInfo";
+import UserVoucher from "./screens/UserVoucher";
+
 import ProductDetail from "./screens/ProductDetail";
+
 function App() {
   return (
     <>
@@ -27,6 +32,10 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/order" element={<Order />} />
         <Route path="/history" element={<HistoryOrder />} />
+        <Route path="/user" element={<UserInfo />}>
+          <Route path="point" element={<UserPointInfo />} />
+          <Route path="voucher" element={<UserVoucher />} />
+        </Route>
         <Route path="/cart/payment" element={<Payment />} />
 
         <Route path="/home_page">
