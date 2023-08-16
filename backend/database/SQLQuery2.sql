@@ -44,13 +44,15 @@ PRINT @d
 
 update BOOK set SOFT_DELETE = 0 where BOOK_ID = 'BK00034'
 
-delete from ACCOUNT WHERE EMAIL = 'khoiminhtrannguyen@gmail.com'
+delete from ACCOUNT WHERE EMAIL = 'khoiminhtrannguyen@gmail.com' CASCADE
 select * from ACCOUNT where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from ACCOUNT_DETAIL where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from HPOINT_ACCUMULATION_YEAR where EMAIL = 'khoiminhtrannguyen@gmail.com'
 
 update ACCOUNT set HROLE = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
 update ACCOUNT_DETAIL set TIER = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
+
+select * from HPOINT_HISTORY where EMAIL = 
 
 -- ALTER TABLE ACCOUNT
 -- ADD CONSTRAINT UniquePhoneNumber UNIQUE (Phone_number);
@@ -59,3 +61,27 @@ select GETDATE() as date, DATEADD(second, -1, GETDATE())
 select DATEADD(second, -1, GETDATE()) as date
 
 exec sp_GetDetailedAccount 'khoiminhtrannguyen@gmail.com', 2023
+
+-- RECEIVE: 1,
+-- USE: -1,
+-- ACCUMULATE: 2,
+
+insert into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_POINTS, CHANGED_TYPE) values ('khoiminhtrannguyen@gmail.com', GETDATE(), 10000, 1)
+insert into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_POINTS, CHANGED_TYPE) values ('khoiminhtrannguyen@gmail.com', GETDATE(), 100, -1)
+
+select * from HPOINT_HISTORY where EMAIL = 'khoiminhtrannguyen@gmail.com' order by CHANGED_TIME desc
+
+declare @cartId char(10) = (select dbo.f_CreateCartId())
+-- INSERT into CART (CART_ID, EMAIL) values (@cartId, 'khoiminhtrannguyen@gmail.com')
+INSERT into CART (CART_ID, EMAIL) values (@cartId, 'tmnkhoi20@clc.fitus.edu.com')
+
+update CART set CART_COUNT = 1 where EMAIL = 'khoiminhtrannguyen@gmail.com'
+insert into CART_DETAIL (CART_ID, BOOK_ID, CART_QUANTITY, IS_CLICKED) values ('CR00000001', 'BK00001', 2, 0)
+
+update CART_DETAIL set CART_QUANTITY = 4, IS_CLICKED = 1 where CART_ID = 'CR00000001' and BOOK_ID = 'BK00001'
+update CART_DETAIL set IS_CLICKED = 1 where CART_ID = 'CR00000001' and BOOK_ID = 'BK00002'
+
+select * from CART where EMAIL = 'khoiminhtrannguyen@gmail.com'
+select * from CART_DETAIL where CART_ID = 'CR00000001'
+
+delete from CART_DETAIL where 

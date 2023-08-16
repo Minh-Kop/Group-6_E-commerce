@@ -1,11 +1,5 @@
 use DB_hachiko
--- init: 0
--- pending: 1
--- cancel: -1
--- shipping: 2
--- success: 3
--- refunding: -2
--- refunded: -3
+
 IF OBJECT_ID('f_GetSoldNumber') IS NOT NULL
 	DROP FUNCTION f_GetSoldNumber
 GO
@@ -40,7 +34,6 @@ returns CHAR(7)
         return @id
     END
 GO
-	select dbo.f_CreateBookId()
 
 IF OBJECT_ID('sp_CreateBook') IS NOT NULL
 	DROP proc sp_CreateBook
@@ -81,17 +74,37 @@ COMMIT
 RETURN 1
 GO
 
-IF OBJECT_ID('sp_GetAuthors') IS NOT NULL
-	DROP proc sp_GetAuthors
 GO
-CREATE proc sp_GetAuthors (@BookId CHAR(7))
+IF OBJECT_ID('sp_GetBooksByCartId') IS NOT NULL
+	DROP PROC sp_GetBooksByCartId
+GO
+CREATE PROCEDURE sp_GetBooksByCartId
+	@cartId CHAR(10)
 AS
-BEGIN
-    select a.AUTHOR_NAME 
-	from WRITTEN_BY w join AUTHOR a on a.AUTHOR_ID = w.AUTHOR_ID
-	where w.BOOK_ID = @BookId
-END;
-go
+BEGIN TRANSACTION
+	BEGIN TRY
+		if not exists(select 1 from CART where CART_ID = @cartId)
+		BEGIN
+			PRINT N'Cart ID isn''t valid!'
+			ROLLBACK
+			RETURN -1
+		END
+		
+		SELECT b.BOOK_ID 'bookId', b.BOOK_NAME 'bookName', b.BOOK_PATH 'image', b.BOOK_PRICE 'originalPrice', 
+			b.BOOK_DISCOUNTED_PRICE 'discountedPrice', cd.CART_PRICE 'cartPrice', b.STOCK 'stock', cd.CART_QUANTITY 'quantity',
+			cd.IS_CLICKED 'isClicked'
+		from CART_DETAIL cd LEFT join BOOK b on b.BOOK_ID = cd.BOOK_ID 
+		where cd.CART_ID = @cartId and b.SOFT_DELETE = 0
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
 
 GO
 IF OBJECT_ID('sp_GetBook') IS NOT NULL
