@@ -43,3 +43,19 @@ DECLARE @d int = 99000 * (1 - 33/100.0)
 PRINT @d
 
 update BOOK set SOFT_DELETE = 0 where BOOK_ID = 'BK00034'
+
+delete from ACCOUNT WHERE EMAIL = 'khoiminhtrannguyen@gmail.com'
+select * from ACCOUNT where EMAIL = 'khoiminhtrannguyen@gmail.com'
+select * from ACCOUNT_DETAIL where EMAIL = 'khoiminhtrannguyen@gmail.com'
+select * from HPOINT_ACCUMULATION_YEAR where EMAIL = 'khoiminhtrannguyen@gmail.com'
+
+update ACCOUNT set HROLE = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
+update ACCOUNT_DETAIL set TIER = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
+
+-- ALTER TABLE ACCOUNT
+-- ADD CONSTRAINT UniquePhoneNumber UNIQUE (Phone_number);
+
+select GETDATE() as date, DATEADD(second, -1, GETDATE())
+select DATEADD(second, -1, GETDATE()) as date
+
+exec sp_GetDetailedAccount 'khoiminhtrannguyen@gmail.com', 2023

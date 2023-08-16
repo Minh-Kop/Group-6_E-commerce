@@ -326,3 +326,7 @@ INSERT into BOOK_DETAIL (BOOK_ID, PUB_ID, BOOK_FORMAT, PUBLISHED_YEAR, NUMBER_PA
 INSERT into WRITTEN_BY (BOOK_ID, AUTHOR_ID) values ('BK00033', 'AU45')
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('BK00033', 2, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00033-2.png', 'hachiko/product/BK00033-2.png')
 INSERT into BOOK_IMAGES (BOOK_ID, IMAGE_ID, BOOK_PATH, BOOK_FILENAME) values ('BK00033', 3, 'https://res.cloudinary.com/dsbuw9oyz/image/upload/v1690970158/hachiko/product/BK00033-3.png', 'hachiko/product/BK00033-3.png')
+
+-- ========== ACCOUNT ==========
+-- insert INTO ACCOUNT (EMAIL, phone_number) values ('khoi', '0918628528')
+-- insert INTO ACCOUNT (EMAIL, phone_number) values ('khoi2', '0918628528')

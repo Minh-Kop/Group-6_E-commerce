@@ -1,10 +1,8 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     4/8/2023 12:26:54 am                         */
+/* Created on:     13/8/2023 11:26:20 am                        */
 /*==============================================================*/
--- SELECT TABLE_NAME
--- FROM INFORMATION_SCHEMA.TABLES
--- WHERE TABLE_TYPE = 'BASE TABLE';
+
 USE master
 go
 if DB_ID('DB_hachiko') is not null
@@ -649,12 +647,14 @@ go
 create table ACCOUNT (
    EMAIL                nvarchar(100)         not null,
    FULLNAME             nvarchar(50)          null,
-   ENC_PWD              nvarchar(100)         null,
+   PHONE_NUMBER         char(10)             null,
+   ENC_PWD              nvarchar(300)         null,
    AVATAR_PATH          nvarchar(500)         null,
    AVATAR_FILENAME      nvarchar(100)         null,
    HROLE                int                  null,
    VERIFIED             bit                  null,
    TOKEN                char(64)             null,
+   PASSWORDCHANGEDAT    datetime             null,
    constraint PK_ACCOUNT primary key nonclustered (EMAIL)
 )
 go
@@ -664,9 +664,8 @@ go
 /*==============================================================*/
 create table ACCOUNT_DETAIL (
    EMAIL                nvarchar(100)         not null,
-   PHONE_NUMBER         char(10)             null,
    BIRTHDAY             datetime             null,
-   GENER                bit                  null,
+   GENDER               bit                  null,
    TIER                 int                  null,
    HPOINT               int                  null,
    constraint PK_ACCOUNT_DETAIL primary key (EMAIL)
@@ -904,7 +903,7 @@ go
 /* Table: H_ORDER                                               */
 /*==============================================================*/
 create table H_ORDER (
-   ORDER_ID             char(13)             not null,
+   ORDER_ID             char(7)              not null,
    EMAIL                nvarchar(100)         not null,
    ADDR_ID              char(10)             not null,
    PAYMENT_ID           char(4)              not null,
@@ -945,7 +944,7 @@ go
 /*==============================================================*/
 create table ORDER_DETAIL (
    BOOK_ID              char(7)              not null,
-   ORDER_ID             char(13)             not null,
+   ORDER_ID             char(7)              not null,
    ORDER_QUANTITY       int                  null,
    ORDER_PRICE          int                  null,
    constraint PK_ORDER_DETAIL primary key (BOOK_ID, ORDER_ID)
@@ -972,7 +971,7 @@ go
 /* Table: ORDER_REVIEW                                          */
 /*==============================================================*/
 create table ORDER_REVIEW (
-   ORDER_ID             char(13)             not null,
+   ORDER_ID             char(7)              not null,
    BOOK_ID              char(7)              not null,
    RATING               int                  null,
    REVIEW               nvarchar(800)         null,
@@ -1001,7 +1000,7 @@ go
 /* Table: ORDER_STATE                                           */
 /*==============================================================*/
 create table ORDER_STATE (
-   ORDER_ID             char(13)             not null,
+   ORDER_ID             char(7)              not null,
    ORDER_STATE          int                  not null,
    CREATED_TIME         datetime             null,
    constraint PK_ORDER_STATE primary key nonclustered (ORDER_ID, ORDER_STATE)
