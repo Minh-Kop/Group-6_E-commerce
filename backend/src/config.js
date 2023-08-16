@@ -33,14 +33,20 @@ const config = {
         ETH: 'eth',
     },
 
+    pointChangedType: {
+        RECEIVE: 1,
+        USE: -1,
+        ACCUMULATE: 2,
+    },
+
     orderState: {
-        INIT: 'init',
-        PENDING: 'pending',
-        SHIPPING: 'shipping',
-        CANCEL: 'cancel',
-        SUCCESS: 'success',
-        REFUNDING: 'refunding',
-        REFUNDED: 'refunded',
+        INIT: 0,
+        PENDING: 1,
+        CANCEL: -1,
+        SHIPPING: 2,
+        SUCCESS: 3,
+        REFUNDING: -2,
+        REFUNDED: -3,
     },
 
     COULDINARY_CONFIG: {

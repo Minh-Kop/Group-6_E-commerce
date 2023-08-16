@@ -130,6 +130,16 @@ exports.getBookById = async (bookId) => {
     return result;
 };
 
+exports.getBooksByCartId = async (cartId) => {
+    const pool = await database.getConnectionPool();
+
+    const request = new sql.Request(pool);
+    request.input('cartId', sql.Char, cartId);
+    const result = await request.execute('sp_GetBooksByCartId');
+
+    return result.recordset;
+};
+
 exports.createBook = async (bookEntity) => {
     const {
         categoryId,

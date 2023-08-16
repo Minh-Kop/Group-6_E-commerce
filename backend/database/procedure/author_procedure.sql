@@ -46,10 +46,16 @@ COMMIT
 RETURN 1
 GO
 
--- declare @t int
--- exec @t = sp_CreateAuthor N'Haro Ano'
--- print @t
--- select * from AUTHOR where AUTHOR_NAME = N'Haro Ano'
+GO
+IF OBJECT_ID('sp_GetAuthors') IS NOT NULL
+	DROP proc sp_GetAuthors
+GO
+CREATE proc sp_GetAuthors (@BookId CHAR(7))
+AS
+BEGIN
+    select a.AUTHOR_NAME 
+	from WRITTEN_BY w join AUTHOR a on a.AUTHOR_ID = w.AUTHOR_ID
+	where w.BOOK_ID = @BookId
+END;
+go
 
--- declare @au_id char(4) = dbo.f_CreateAuthorId()
---         PRINT @au_id
