@@ -22,6 +22,7 @@ router.patch(
     accountController.getMe,
     accountController.updateUser,
 );
+router.get('/point', accountController.getMe, accountController.getPoint);
 
 router
     .route('/avatar')
