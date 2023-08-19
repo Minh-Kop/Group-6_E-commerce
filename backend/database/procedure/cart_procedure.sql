@@ -26,12 +26,13 @@ GO
 CREATE PROCEDURE sp_AddBookToCart (
     @cartId char(10), 
     @bookId CHAR(7), 
-    @quantity int
+    @quantity int,
+    @isClicked BIT
 )
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
-        INSERT into CART_DETAIL (CART_ID, BOOK_ID, CART_QUANTITY, IS_CLICKED) values (@cartId, @bookId, @quantity, 0)
+        INSERT into CART_DETAIL (CART_ID, BOOK_ID, CART_QUANTITY, IS_CLICKED) values (@cartId, @bookId, @quantity, @isClicked)
 
         declare @cartCount int
         select @cartCount = COUNT(*)

@@ -28,7 +28,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
 
 exports.addBookToCart = catchAsync(async (req, res, next) => {
     const { email } = req.user;
-    const { bookId, quantity } = req.body;
+    const { bookId, quantity, isClicked } = req.body;
 
     const cartResult = await cartModel.getCartByEmail(email);
     const { CART_ID: cartId } = cartResult;
@@ -47,6 +47,7 @@ exports.addBookToCart = catchAsync(async (req, res, next) => {
                 cartId,
                 bookId,
                 quantity: +quantity + matchBook.quantity,
+                isClicked,
             };
             await cartModel.updateBookInCart(entity);
             return res.status(200).json({
@@ -56,7 +57,13 @@ exports.addBookToCart = catchAsync(async (req, res, next) => {
         }
     }
 
-    await cartModel.addBookToCart(cartId, bookId, quantity);
+    const entity = {
+        cartId,
+        bookId,
+        quantity,
+        isClicked: isClicked || 0,
+    };
+    await cartModel.addBookToCart(entity);
 
     res.status(200).json({
         status: 'success',

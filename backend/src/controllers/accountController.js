@@ -1,4 +1,4 @@
-const momemt = require('moment');
+// const moment = require('moment');
 
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');

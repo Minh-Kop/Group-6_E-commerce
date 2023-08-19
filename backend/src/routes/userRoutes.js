@@ -1,8 +1,8 @@
 const express = require('express');
 
+const config = require('../config');
 const accountController = require('../controllers/accountController');
 const authController = require('../controllers/authController');
-const config = require('../config');
 
 const router = express.Router();
 

@@ -1,0 +1,60 @@
+const sql = require('mssql/msnodesqlv8');
+
+const database = require('../utils/database');
+
+exports.createVoucher = async (entity) => {
+    const pool = await database.getConnectionPool();
+    const {
+        voucherTypeId,
+        percentageDiscount,
+        minPrice,
+        maxDiscountPrice,
+        startDate,
+        endDate,
+        maxAmount,
+    } = entity;
+
+    const request = new sql.Request(pool);
+    request.input('voucherTypeId', sql.Char, voucherTypeId);
+    request.input('percentageDiscount', sql.Int, percentageDiscount);
+    request.input('minPrice', sql.Int, minPrice);
+    request.input('maxDiscountPrice', sql.Int, maxDiscountPrice);
+    request.input('startDate', sql.DateTime, startDate);
+    request.input('endDate', sql.DateTime, endDate);
+    request.input('maxAmount', sql.Int, maxAmount);
+    const result = await request.execute('sp_CreateVoucher');
+    return result.rowsAffected[0];
+};
+
+exports.getAllVouchers = async () => {
+    const pool = await database.getConnectionPool();
+
+    const request = new sql.Request(pool);
+    const result = await request.execute('sp_GetAllVouchers');
+    return result.recordset;
+};
+
+exports.getAllUserVouchers = async (email) => {
+    const pool = await database.getConnectionPool();
+
+    const request = new sql.Request(pool);
+    request.input('email', sql.NVarChar, email);
+    const result = await request.execute('sp_GetAllUserVouchers');
+    return result.recordset;
+};
+
+// exports.useVoucher = async (email, voucherCode) => {
+//     const result = await db('voucher_user').insert({
+//         email: email,
+//         voucher_code: voucherCode,
+//     });
+//     return result;
+// };
+
+exports.deleteVoucher = async (voucherId) => {
+    const sqlString = `delete from VOUCHER where VOUCHER_ID = '${voucherId}'`;
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query(sqlString);
+    return result.rowsAffected[0];
+};
