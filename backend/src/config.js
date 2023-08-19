@@ -14,8 +14,6 @@ const config = {
 
     NO_TOKEN_URL: ['/auth', '/location', '/category', '/product'],
     role: {
-        // USER: 'user',
-        // ADMIN: 'admin',
         USER: 1,
         ADMIN: 2,
     },
@@ -70,6 +68,7 @@ const config = {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN,
     GMAIL_USERNAME: process.env.GMAIL_USERNAME,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
 
     MOMO_PARTNER_CODE: process.env.MOMO_PARTNER_CODE,
     MOMO_ACCESS_KEY: process.env.MOMO_ACCESS_KEY,

@@ -1,7 +1,4 @@
-﻿select * from book
-select * from BOOK b where b.DISCOUNTED_NUMBER = 12
-
-insert into account (EMAIL) values ('khoi@gmail.com')
+﻿insert into account (EMAIL) values ('khoi@gmail.com')
 insert into shipping_address (ADDR_ID, EMAIL, DIST_ID, WARD_ID, PROV_ID, DETAILED_ADDR) values 
 	('ADDR000001', 'khoi@gmail.com', 'DT0005', 'WD000001', 'PR01', N'225 Nguyễn Văn Cừ')
 insert into H_ORDER (ORDER_ID, EMAIL, addr_id, PAYMENT_ID) values ('OD001', 'khoi@gmail.com', 'ADDR000001', 'PY01')
@@ -14,8 +11,6 @@ insert into order_state (ORDER_ID, ORDER_STATE) values ('OD002', 3)
 select * from H_ORDER
 select * from order_detail
 select * from order_state
-
-select dbo.f_CreateAuthorId()
 
 GO
 DELETE from BOOK_IMAGES where BOOK_ID = 'BK00034'
@@ -33,18 +28,9 @@ SELECT * from BOOK_IMAGES where BOOK_ID = 'BK00034'
 
 select * from WRITTEN_BY where BOOK_ID = 'BK00034'
 
-delete from WRITTEN_BY where BOOK_ID = 'BK00034' AND (AUTHOR_ID = 'AU41' or AUTHOR_ID = 'AU42')
-
-insert into WRITTEN_BY (BOOK_ID, AUTHOR_ID) VALUES ('BK00034', 'AU41')
-insert into WRITTEN_BY (BOOK_ID, AUTHOR_ID) VALUES ('BK00034', 'AU42')
-insert into WRITTEN_BY (BOOK_ID, AUTHOR_ID) VALUES ('BK00034', 'AU43')
-
-DECLARE @d int = 99000 * (1 - 33/100.0)
-PRINT @d
-
 update BOOK set SOFT_DELETE = 0 where BOOK_ID = 'BK00034'
 
-delete from ACCOUNT WHERE EMAIL = 'khoiminhtrannguyen@gmail.com' CASCADE
+delete from ACCOUNT WHERE EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from ACCOUNT where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from ACCOUNT_DETAIL where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from HPOINT_ACCUMULATION_YEAR where EMAIL = 'khoiminhtrannguyen@gmail.com'
@@ -52,36 +38,20 @@ select * from HPOINT_ACCUMULATION_YEAR where EMAIL = 'khoiminhtrannguyen@gmail.c
 update ACCOUNT set HROLE = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
 update ACCOUNT_DETAIL set TIER = 2 where EMAIL = 'khoiminhtrannguyen@gmail.com'
 
-select * from HPOINT_HISTORY where EMAIL = 
-
 -- ALTER TABLE ACCOUNT
 -- ADD CONSTRAINT UniquePhoneNumber UNIQUE (Phone_number);
 
 select GETDATE() as date, DATEADD(second, -1, GETDATE())
 select DATEADD(second, -1, GETDATE()) as date
 
-exec sp_GetDetailedAccount 'khoiminhtrannguyen@gmail.com', 2023
-
--- RECEIVE: 1,
--- USE: -1,
--- ACCUMULATE: 2,
-
 insert into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_POINTS, CHANGED_TYPE) values ('khoiminhtrannguyen@gmail.com', GETDATE(), 10000, 1)
 insert into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_POINTS, CHANGED_TYPE) values ('khoiminhtrannguyen@gmail.com', GETDATE(), 100, -1)
 
 select * from HPOINT_HISTORY where EMAIL = 'khoiminhtrannguyen@gmail.com' order by CHANGED_TIME desc
 
-declare @cartId char(10) = (select dbo.f_CreateCartId())
--- INSERT into CART (CART_ID, EMAIL) values (@cartId, 'khoiminhtrannguyen@gmail.com')
-INSERT into CART (CART_ID, EMAIL) values (@cartId, 'tmnkhoi20@clc.fitus.edu.com')
+delete from user_voucher where VOUCHER_ID = ''
+select * from VOUCHER
+select * from user_voucher
 
-update CART set CART_COUNT = 1 where EMAIL = 'khoiminhtrannguyen@gmail.com'
-insert into CART_DETAIL (CART_ID, BOOK_ID, CART_QUANTITY, IS_CLICKED) values ('CR00000001', 'BK00001', 2, 0)
-
-update CART_DETAIL set CART_QUANTITY = 4, IS_CLICKED = 1 where CART_ID = 'CR00000001' and BOOK_ID = 'BK00001'
-update CART_DETAIL set IS_CLICKED = 1 where CART_ID = 'CR00000001' and BOOK_ID = 'BK00002'
-
-select * from CART where EMAIL = 'khoiminhtrannguyen@gmail.com'
-select * from CART_DETAIL where CART_ID = 'CR00000001'
-
-delete from CART_DETAIL where 
+INSERT into user_voucher (VOUCHER_ID, EMAIL, is_used) values ('VC00001', 'khoiminhtrannguyen@gmail.com', 0)
+delete from SHIPPING_ADDRESS where ADDR_ID = ''

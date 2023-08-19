@@ -1,6 +1,5 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-// const moment = require('moment');
 
 const accountModel = require('../models/accountModel');
 const AppError = require('../utils/appError');
@@ -133,11 +132,6 @@ exports.login = catchAsync(async (req, res, next) => {
         phoneNumber: account.PHONE_NUMBER,
         fullName: account.FULLNAME,
         avatar: account.AVATAR_PATH,
-        // birthday: account.birthday
-        //     ? moment(new Date(account.birthday)).format('DD/MM/YYYY')
-        //     : null,
-        // gender: account.gender,
-        // role: account.role,
         verified,
     };
 
@@ -270,6 +264,7 @@ exports.logOut = (req, res) => {
     });
     res.status(200).json({
         status: 'success',
+        token: '',
     });
 };
 

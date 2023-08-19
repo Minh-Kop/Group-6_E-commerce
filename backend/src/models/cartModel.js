@@ -17,7 +17,10 @@ exports.updateBookInCart = async (entity) => {
     if (quantity) {
         sqlString += `CART_QUANTITY = ${quantity}`;
     }
-    if (isClicked) {
+    if (isClicked || isClicked === 0) {
+        if (quantity) {
+            sqlString += ', ';
+        }
         sqlString += `IS_CLICKED = ${isClicked}`;
     }
 
@@ -28,13 +31,15 @@ exports.updateBookInCart = async (entity) => {
     return result.rowsAffected[0];
 };
 
-exports.addBookToCart = async (cartId, bookId, quantity) => {
+exports.addBookToCart = async (entity) => {
     const pool = await database.getConnectionPool();
+    const { cartId, bookId, quantity, isClicked } = entity;
 
     const request = new sql.Request(pool);
     request.input('cartId', sql.Char, cartId);
     request.input('bookId', sql.Char, bookId);
     request.input('quantity', sql.Int, quantity);
+    request.input('isClicked', sql.Bit, isClicked);
     const result = await request.execute('sp_AddBookToCart');
     return result.rowsAffected[0];
 };
