@@ -103,7 +103,6 @@ exports.deleteBookFromCart = catchAsync(async (req, res, next) => {
     const { CART_ID: cartId } = cartResult;
 
     const result = await cartModel.deleteFromCart(cartId, bookId);
-
     if (result) {
         res.status(200).json({
             status: 'success',
