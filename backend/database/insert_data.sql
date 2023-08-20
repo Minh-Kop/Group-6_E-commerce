@@ -4,7 +4,6 @@ INSERT into Province (PROV_ID, PROV_NAME) values ('PR02', N'Hà Nội')
 INSERT into Province (PROV_ID, PROV_NAME) values ('PR03', N'Đà Nẵng')
 INSERT into Province (PROV_ID, PROV_NAME) values ('PR04', N'Cần Thơ')
 INSERT into Province (PROV_ID, PROV_NAME) values ('PR05', N'Lâm Đồng')
--- select * from province
 
 -- ========== DISTRICT ==========
 insert into DISTRICT (DIST_ID, PROV_ID, DIST_NAME) values ('DT0001', 'PR01', N'Quận 1')
@@ -12,7 +11,6 @@ insert into DISTRICT (DIST_ID, PROV_ID, DIST_NAME) values ('DT0002', 'PR01', N'Q
 insert into DISTRICT (DIST_ID, PROV_ID, DIST_NAME) values ('DT0003', 'PR01', N'Quận 3')
 insert into DISTRICT (DIST_ID, PROV_ID, DIST_NAME) values ('DT0004', 'PR01', N'Quận 4')
 insert into DISTRICT (DIST_ID, PROV_ID, DIST_NAME) values ('DT0005', 'PR01', N'Quận 5')
--- select * from DISTRICT
 
 -- ========== WARD ==========
 insert into WARD (WARD_ID, DIST_ID, WARD_NAME) values
@@ -21,14 +19,13 @@ insert into WARD (WARD_ID, DIST_ID, WARD_NAME) values
     ('WD000003', 'DT0005', N'Phường 3'),
     ('WD000004', 'DT0005', N'Phường 4'),
     ('WD000005', 'DT0005', N'Phường 5')
--- select*from WARD
 
--- ========== CATEGORY ==========
+-- ========== PAYMENT ==========
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY01', 'Paypal')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY02', 'MoMo')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY03', 'ShopeePay')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY04', 'ZaloPay')
--- select*from PAYMENT
+insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY05', 'COD')
 
 -- ========== CATEGORY ==========
 insert into CATEGORY (CATE_ID, CATE_NAME) values ('CA01', N'Manga - Comic')

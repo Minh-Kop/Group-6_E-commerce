@@ -11,27 +11,6 @@ exports.getShippingAddressesByEmail = async (email) => {
     return result.recordset;
 };
 
-exports.getShippingAddressById = async (shippingAddressId) => {
-    const result = await db('shipping_address')
-        .join('province', 'shipping_address.province_id', 'province.id')
-        .join('district', 'shipping_address.district_id', 'district.id')
-        .join('ward', 'shipping_address.ward_id', 'ward.id')
-        .where({
-            'shipping_address.id': shippingAddressId,
-        })
-        .select(
-            'province.province_name',
-            'district.district_name',
-            'ward.ward_name',
-            'shipping_address.id',
-            'shipping_address.email',
-            'shipping_address.address',
-            'lat',
-            'long',
-        );
-    return result[0] || null;
-};
-
 exports.createShippingAddress = async (entity) => {
     const {
         email,

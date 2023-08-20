@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     19/8/2023 9:28:54 pm                         */
+/* Created on:     20/8/2023 9:07:14 am                         */
 /*==============================================================*/
 USE master
 go
@@ -920,9 +920,11 @@ create table H_ORDER (
    ADDR_ID              char(10)             not null,
    PAYMENT_ID           char(4)              not null,
    ORDER_DATE           datetime             null,
-   TOTAL_PRICE          int                  null,
-   SHIPPING_PRICE       int                  null,
-   FINAL_PRICE          int                  null,
+   MERCHANDISE_SUBTOTAL int                  null,
+   SHIPPING_FEE         int                  null,
+   SHIPPING_DISCOUNT_SUBTOTAL int                  null,
+   HACHIKO_VOUCHER_APPLIED int                  null,
+   ORDER_TOTAL__        int                  null,
    constraint PK_H_ORDER primary key nonclustered (ORDER_ID)
 )
 go

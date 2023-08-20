@@ -50,8 +50,16 @@ insert into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_POINTS, CHANGED_TYPE) v
 select * from HPOINT_HISTORY where EMAIL = 'khoiminhtrannguyen@gmail.com' order by CHANGED_TIME desc
 
 delete from user_voucher where VOUCHER_ID = ''
+
 select * from VOUCHER
 select * from user_voucher
 
 INSERT into user_voucher (VOUCHER_ID, EMAIL, is_used) values ('VC00001', 'khoiminhtrannguyen@gmail.com', 0)
-delete from SHIPPING_ADDRESS where ADDR_ID = ''
+
+delete from ORDER_STATE where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
+delete from ORDER_DETAIL where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
+delete from H_ORDER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
+SELECT * from H_ORDER
+select * from ORDER_STATE
+select * from ORDER_DETAIL
+
