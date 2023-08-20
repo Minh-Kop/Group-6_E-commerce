@@ -53,8 +53,8 @@
       background-color: white;
 
       font-size: large;
-      margin: 1.5rem;
-      gap: 2rem;
+      margin: 1rem;
+      gap: 1rem;
     }
   }
 
@@ -72,6 +72,124 @@
       color: white;
       background-color: #ea8d88;
       border: none;
+    }
+  }
+}
+
+//add voucher
+.voucher-add-container {
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .voucher-add-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+
+    border: 0.05em solid black;
+    background-color: white;
+
+    .add-voucher {
+      padding: 2rem;
+      gap: 1rem;
+      display: flex;
+      flex-direction: column;
+
+      button {
+        margin: 0;
+      }
+
+      .voucher-input {
+        height: 2rem;
+        gap: 1rem;
+
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .voucher-input-info {
+          width: 12rem;
+          display: flex;
+          flex-direction: column;
+
+          .info-input {
+            display: flex;
+            flex-direction: row;
+
+            width: 100%;
+          }
+        }
+
+        .info-input {
+          width: 12rem;
+
+          input {
+            box-sizing: border-box;
+            width: 100%;
+          }
+        }
+
+        .category-dropdown {
+          right: 0;
+          top: 1.7rem;
+          z-index: 1;
+
+          position: absolute;
+          background-color: gray;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          button {
+            width: 12rem;
+
+            background-color: gray;
+            border: none;
+
+            &:hover {
+              background-color: #ea8d88;
+            }
+          }
+        }
+      }
+    }
+
+    .close-add {
+      position: absolute;
+      width: 3rem;
+      height: 3rem;
+      font-size: large;
+      top: 0;
+      right: 0;
+
+      border: none;
+      background-color: white;
+    }
+
+    .buttons {
+      gap: 3rem;
+
+      display: flex;
+      flex-direction: row;
+
+      button {
+        height: 1.5rem;
+        width: 6rem;
+
+        &:hover {
+          background-color: #ea8d88;
+        }
+      }
     }
   }
 }
@@ -175,9 +293,9 @@
 
 //product add component
 .product-add-container {
-  position: fixed;
+  position: absolute;
   height: 100%;
-  top: 0;
+  top: 8%;
   left: 0;
   right: 0;
   display: flex;
@@ -202,6 +320,16 @@
 
       button {
         margin: 0;
+      }
+
+      .product-image {
+        .product-image-widget {
+          .image {
+            margin-top: 1rem;
+            height: 5rem;
+            width: auto;
+          }
+        }
       }
 
       .product-input {
@@ -291,7 +419,7 @@
   }
 }
 
-//product add component
+//product detail component
 .product-detail-container {
   position: fixed;
   height: 100%;
@@ -657,4 +785,117 @@
       }
     }
   }
+}
+
+//statistic
+.statistic-container {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 3%;
+
+  .statistic-content {
+    width: 70%;
+    left: 10%;
+    padding: 1rem;
+    gap: 2rem;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #dde6ed;
+
+    .success-order {
+      width: 100%;
+      position: relative;
+
+      background-color: #f2f2f2;
+
+      .header {
+        padding: 1rem;
+        top: 0;
+        left: 0;
+      }
+
+      .data {
+        text-align: center;
+        font-size: xx-large;
+        padding: 4rem;
+
+        position: relative;
+        bottom: 10%;
+      }
+    }
+
+    .success-order-by-day {
+      width: 100%;
+      position: relative;
+      background-color: #f2f2f2;
+
+      .header {
+        padding: 1rem;
+        top: 0;
+        left: 0;
+      }
+    }
+
+    .success-order-by-payment-method {
+      width: 100%;
+      position: relative;
+      background-color: #f2f2f2;
+
+      .header {
+        padding: 1rem;
+        top: 0;
+        left: 0;
+      }
+    }
+
+    .revenue {
+      width: 100%;
+      position: relative;
+      background-color: #f2f2f2;
+
+      .header {
+        padding: 1rem;
+        top: 0;
+        left: 0;
+      }
+
+      .data {
+        text-align: center;
+        font-size: xx-large;
+        padding: 4rem;
+
+        position: relative;
+        bottom: 10%;
+      }
+    }
+
+    .revenue-by-day {
+      width: 100%;
+      position: relative;
+      background-color: #f2f2f2;
+
+      .header {
+        padding: 1rem;
+        top: 0;
+        left: 0;
+      }
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+//Bar Chart (Temporary)
+.bar-chart-container {
+  padding: 5rem;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  background-color: #ea8d88;
 }

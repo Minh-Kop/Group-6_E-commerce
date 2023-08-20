@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../scss/admin.scss";
 
 function AdminAddProduct({ setOpen }) {
+  const [imageFile, setFile] = useState([]);
   const [cateOpen, setCategory] = useState(false);
   const [authorOpen, setAuthor] = useState(false);
   const [cPlaceholder, setCPlaceHolder] = useState("Chọn danh mục");
   const [aPlaceholder, setAPlaceholder] = useState("Chọn tác giả");
+
+  const browseImg = (event) => {
+    if (event.target.files.length !== 0) {
+      setFile(URL.createObjectURL(event.target.files[0]));
+    }
+  };
 
   const cateList = ["A", "B", "C"];
   const authorList = ["D", "E", "F"];
@@ -101,6 +108,18 @@ function AdminAddProduct({ setOpen }) {
                         ))}
                       </div>
                     )}
+                  </div>
+                </div>
+              );
+            } else if (addTag[index] === "Ảnh") {
+              return (
+                <div className="product-image">
+                  <div className="product-image-widget">
+                    <p>{tag}</p>
+                    <input type="file" onChange={browseImg} accept="image/*" />
+                    <div className="image-box">
+                      <img className="image" src={imageFile}></img>
+                    </div>
                   </div>
                 </div>
               );
