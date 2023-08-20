@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import book from "../assets/SGK.jpg";
-import "../scss/user.scss";
+import "../scss/admin.scss";
+import AdminNavbar from "../components/AdminNavbar";
 
 const orderProduct = [
   [
@@ -70,9 +71,11 @@ const orderProduct = [
   ],
 ];
 
-function UserOrder() {
-  const [currCategory, setCategory] = useState(0);
-  const orderCategory = ["Tất cả", "Đang giao", "Đã hoàn thành", "Đã hủy"];
+function AdminOrderManagement() {
+  const [currStatus, setStatus] = useState(0);
+  const [statusOpen, setOpenStatus] = useState(false);
+  const statusList = [0, 1, 2, 3];
+
   const status = (num) => {
     if (num === 1) {
       return "Đang giao";
@@ -80,6 +83,8 @@ function UserOrder() {
       return "Đã hoàn thành";
     } else if (num === 3) {
       return "Đã hủy";
+    } else if (num === 0) {
+      return "Tất cả";
     } else {
       return "";
     }
@@ -97,48 +102,52 @@ function UserOrder() {
     }
   };
 
-  const setFocus = (e) => {
-    console.log(e.target.className);
-    if (e.relatedTarget === null) {
-      e.target.focus();
-    }
-  };
-
   return (
-    <div className="user-order-container">
-      <button className="user-back-button" type="button">
-        &lt; Back
-      </button>
-      <div className="user-order-category">
-        {orderCategory.map((category, index) => (
-          <button
-            className="category-btn"
-            type="button"
-            onClick={() => setCategory(index)}
-            onBlur={(e) => {
-              setFocus(e);
-            }}
-          >
-            {category}
-          </button>
-        ))}
+    <div className="order-management-container">
+      <div className="order-management-sort">
+        <div className="order-status-widgets">
+          <p>Loại Order:</p>
+          <div className="status-dropdown-widgets">
+            <input placeholder={status(currStatus)} disabled></input>
+            <button type="button" onClick={() => setOpenStatus(!statusOpen)}>
+              V
+            </button>
+          </div>
+        </div>
+        {statusOpen && (
+          <div className="order-status-dropdown">
+            {statusList.map((s) => (
+              <button
+                className="status"
+                type="button"
+                onClick={() => {
+                  setStatus(s);
+                  setOpenStatus(false);
+                }}
+              >
+                {status(s)}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
-      <div className="user-order-list">
-        <div className="user-order">
-          {orderProduct.map((p, i) => {
-            if (p[0] === currCategory || currCategory === 0) {
+      <AdminNavbar />
+      <div className="admin-order-list">
+        <div className="admin-order">
+          {orderProduct.map((p) => {
+            if (p[0] === currStatus || currStatus === 0) {
               return (
                 <div className="order-detail">
                   <p className="order-status">{status(p[0])}</p>
                   <hr></hr>
 
-                  <div className="user-order-product">
+                  <div className="admin-order-product">
                     {p.map((product, index) => {
                       if (index === 0) {
                         return null;
                       } else if (index > 0 && index < p.length) {
                         return (
-                          <div className="user-order-product-detail">
+                          <div className="admin-order-product-detail">
                             <a href="/">
                               <img src={product.img} alt={product.book}></img>
                             </a>
@@ -157,6 +166,16 @@ function UserOrder() {
                       }
                     })}
                   </div>
+
+                  <hr></hr>
+                  <div className="order-management">
+                    <button className="accept-order" type="button">
+                      Chấp nhận
+                    </button>
+                    <button className="deny-order" type="button">
+                      Hủy bỏ
+                    </button>
+                  </div>
                 </div>
               );
             } else {
@@ -165,8 +184,9 @@ function UserOrder() {
           })}
         </div>
       </div>
+      <div className="order-list"></div>
     </div>
   );
 }
 
-export default UserOrder;
+export default AdminOrderManagement;
