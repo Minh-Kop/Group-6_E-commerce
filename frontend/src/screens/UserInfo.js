@@ -13,7 +13,6 @@ function UserInfo() {
           <button type="button">Đơn hàng</button>
           <button type="button">Kho voucher</button>
           <button type="button">Điểm tích lũy</button>
-          <button type="button">Sửa thông tin</button>
           <button type="button">Sửa mật khẩu</button>
         </div>
         <div className="info-container">

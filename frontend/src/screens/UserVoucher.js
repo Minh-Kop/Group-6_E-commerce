@@ -57,9 +57,6 @@ function UserVoucher() {
               <p>{voucher.name}</p>
               <p>Phần trăm giảm: {voucher.percentage}</p>
             </div>
-            <button className="delete-button" type="button">
-              Xóa
-            </button>
           </div>
         ))}
       </div>
