@@ -55,6 +55,7 @@
   align-items: center;
   justify-content: center;
 
+  width: 100%;
   .user-back-button {
     height: 3rem;
     width: 8rem;
@@ -109,6 +110,7 @@
     width: 70%;
 
     margin-top: 2rem;
+    margin-left: 8rem;
 
     .user-order {
       padding: 1rem;
@@ -167,7 +169,6 @@
 .user-point-info-container {
   margin-top: 5%;
   margin-left: 10%;
-  margin-right: 10%;
   gap: 2rem;
 
   position: relative;
@@ -176,6 +177,7 @@
   justify-content: center;
   align-items: center;
   font-size: larger;
+  width: 85%;
 
   .user-point-total {
     width: 75%;
@@ -269,10 +271,11 @@
 //voucher
 .user-voucher-container {
   height: 100vh;
-  width: 100%;
+  width: 85%;
   margin-top: 4%;
   gap: 5%;
 
+  margin-left: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -329,4 +332,35 @@
 .navlink {
   text-decoration: none;
   color: black;
+}
+
+.change-password-area {
+  width: 60%;
+  height: 80%;
+  margin-top: 5%;
+  margin-left: 250px;
+  font-size: xx-large;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__input {
+    font-size: x-large;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 50%;
+    margin: 25px 0px;
+    input.input {
+      height: 40px;
+      font-size: large;
+      width: 250px;
+    }
+  }
+
+  button {
+    font-size: x-large;
+  }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import "../scss/user.scss";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function UserInfo() {
   return (
@@ -10,19 +10,16 @@ function UserInfo() {
       <Navbar />
       <div className="user-info-container">
         <div className="user-info-sidebar">
-          <NavLink to="voucher" className="navlink">
+          <NavLink to="/order" className="navlink">
             <button type="button">Đơn Hàng</button>
           </NavLink>
-          <NavLink to="voucher" className="navlink">
+          <NavLink to="/voucher" className="navlink">
             <button type="button">Kho voucher</button>
           </NavLink>
-          <NavLink to="point" className="navlink">
+          <NavLink to="/point" className="navlink">
             <button type="button">Điểm tích lũy</button>{" "}
           </NavLink>
-          <NavLink className="navlink">
-            <button type="button">Sửa thông tin</button>
-          </NavLink>
-          <NavLink className="navlink">
+          <NavLink to="/change_password" className="navlink">
             <button type="button">Sửa mật khẩu</button>
           </NavLink>
         </div>
@@ -43,7 +40,6 @@ function UserInfo() {
           </div>
         </div>
       </div>
-      <Outlet />
 
       <Footer />
     </div>

@@ -1,28 +1,28 @@
 @import "./colors.scss";
 
 //Admin Navbar
-.sidebar-nav-container{
+.sidebar-nav-container {
   position: absolute;
   top: 30%;
   left: 5%;
 
-  .sidebar-nav{
+  .sidebar-nav {
     height: 100vh;
     display: flex;
     flex-direction: column;
 
     gap: 1rem;
 
-    button{
+    button {
       width: 15rem;
       height: 3rem;
 
       font-size: large;
       border: none;
-      background-color: #D9D9D9;
-      
-      &:active{
-        background-color: #EA8D88;
+      background-color: #d9d9d9;
+
+      &:active {
+        background-color: #ea8d88;
       }
     }
   }
@@ -104,7 +104,7 @@
 
       ul.navbar-user-items-dropdown {
         position: absolute;
-        top: 5%;
+        top: 40px;
         right: 2rem;
         background-color: white;
         padding: 0.75rem;
@@ -244,8 +244,9 @@
   position: relative;
   flex-shrink: 0;
   position: relative;
-  bottom: 0;
+
   width: 100%;
+  transform: translateY(50%);
   a {
     img {
       width: 32px;

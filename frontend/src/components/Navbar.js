@@ -40,7 +40,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-brand">
-          <a className="navbar-logo" href="/">
+          <a className="navbar-logo" href="/home_page">
             <img
               style={{ marginRight: " 10px" }}
               src={require("../assets/logo.png")}
