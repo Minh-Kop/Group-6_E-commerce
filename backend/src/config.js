@@ -37,6 +37,12 @@ const config = {
         ACCUMULATE: 2,
     },
 
+    tier: {
+        MEMBER: 1,
+        VIP: 2,
+        HVIP: 3,
+    },
+
     orderState: {
         INIT: 0,
         PENDING: 1,

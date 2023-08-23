@@ -38,7 +38,7 @@ exports.createShippingAddress = async (entity) => {
     request.input('lat', sql.Float, lat);
     request.input('lng', sql.Float, lng);
     const result = await request.execute('sp_CreateShippingAddress');
-    return result.rowsAffected[0];
+    return result.returnValue;
 };
 
 exports.updateShippingAddress = async (entity) => {
