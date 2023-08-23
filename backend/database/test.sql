@@ -84,3 +84,9 @@ exec sp_AddVoucher 'VC00001', 'OD00001'
 update H_ORDER
 set TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + SHIPPING_FEE
 where ORDER_ID = 'OD00001'
+
+
+
+
+
+
