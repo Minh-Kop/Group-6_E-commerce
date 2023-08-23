@@ -43,13 +43,15 @@ exports.getAllUserVouchers = async (email) => {
     return result.recordset;
 };
 
-// exports.useVoucher = async (email, voucherCode) => {
-//     const result = await db('voucher_user').insert({
-//         email: email,
-//         voucher_code: voucherCode,
-//     });
-//     return result;
-// };
+exports.useVoucher = async (orderId, voucherId) => {
+    const pool = await database.getConnectionPool();
+
+    const request = new sql.Request(pool);
+    request.input('orderId', sql.Char, orderId);
+    request.input('voucherId', sql.Char, voucherId);
+    const result = await request.execute('sp_AddVoucher');
+    return result.returnValue;
+};
 
 exports.deleteVoucher = async (voucherId) => {
     const sqlString = `delete from VOUCHER where VOUCHER_ID = '${voucherId}'`;

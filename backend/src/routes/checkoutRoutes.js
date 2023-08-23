@@ -4,7 +4,9 @@ const checkout = require('../controllers/checkoutController');
 
 const router = express.Router();
 
-router.post('/', checkout.createInitialOrder);
+router.post('/', checkout.createInitialOrder, checkout.getOrder);
+router.get('/:orderId', checkout.getOrder);
+router.post('/voucher', checkout.addVoucher, checkout.getOrder);
 
 router.delete('/initialOrders', checkout.deleteInitialOrders);
 

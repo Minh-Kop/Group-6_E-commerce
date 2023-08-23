@@ -3,18 +3,22 @@ const moment = require('moment');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const voucherModel = require('../models/voucherModel');
+const { buildVoucherTree } = require('../utils/voucher');
 
 exports.getAllVouchers = catchAsync(async (req, res, next) => {
     const result = await voucherModel.getAllVouchers();
     const vouchers = result.map((item) => ({
         ...item,
-        startDate: moment(item.startDate).format('DD/MM/YYYY'),
-        endDate: moment(item.endDate).format('DD/MM/YYYY'),
+        startDate: moment(item.startDate)
+            .subtract(7, 'hours')
+            .format('DD/MM/YYYY'),
+        endDate: moment(item.endDate).subtract(7, 'hours').format('DD/MM/YYYY'),
     }));
+    const voucherTypes = buildVoucherTree(vouchers);
     res.status(200).json({
         status: 'success',
-        length: vouchers.length,
-        vouchers,
+        length: voucherTypes.length,
+        voucherTypes,
     });
 });
 
@@ -88,12 +92,15 @@ exports.getAllUserVouchers = catchAsync(async (req, res, next) => {
     const result = await voucherModel.getAllUserVouchers(email);
     const vouchers = result.map((item) => ({
         ...item,
-        startDate: moment(item.startDate).format('DD/MM/YYYY'),
-        endDate: moment(item.endDate).format('DD/MM/YYYY'),
+        startDate: moment(item.startDate)
+            .subtract(7, 'hours')
+            .format('DD/MM/YYYY'),
+        endDate: moment(item.endDate).subtract(7, 'hours').format('DD/MM/YYYY'),
     }));
+    const voucherTypes = buildVoucherTree(vouchers);
     res.status(200).json({
         status: 'success',
-        length: vouchers.length,
-        vouchers,
+        length: voucherTypes.length,
+        voucherTypes,
     });
 });

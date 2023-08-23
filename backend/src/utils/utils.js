@@ -78,7 +78,6 @@ const toListCategory = (root) => {
     }
 
     const { children, ...rest } = root;
-    // console.log(rest.id);
     let result = [];
     if (children) {
         for (let i = 0; i < children.length; i++) {

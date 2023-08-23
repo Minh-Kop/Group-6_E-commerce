@@ -28,7 +28,7 @@ exports.createDetailedOrder = async (entity) => {
     return result.returnValue;
 };
 
-exports.getInitialOrder = async (orderId) => {
+exports.getOrder = async (orderId) => {
     const pool = await database.getConnectionPool();
 
     const request = new sql.Request(pool);

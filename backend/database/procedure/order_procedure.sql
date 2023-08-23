@@ -32,8 +32,8 @@ AS
 BEGIN TRANSACTION
 	BEGIN TRY
         DECLARE @id char(7) = dbo.f_CreateOrderId()
-        INSERT into H_ORDER (ORDER_ID, EMAIL, ADDR_ID, PAYMENT_ID, MERCHANDISE_SUBTOTAL, SHIPPING_FEE, ORDER_TOTAL__) values 
-            (@id, @email, @addrId, 'PY05', @merchandiseSubtotal, @shippingFee, @merchandiseSubtotal + @shippingFee)
+        INSERT into H_ORDER (ORDER_ID, EMAIL, ADDR_ID, PAYMENT_ID, MERCHANDISE_SUBTOTAL, SHIPPING_FEE, SHIPPING_DISCOUNT_SUBTOTAL, HACHIKO_VOUCHER_APPLIED, TOTAL_PAYMENT) values 
+            (@id, @email, @addrId, 'PY05', @merchandiseSubtotal, @shippingFee, 0, 0, @merchandiseSubtotal + @shippingFee)
         INSERT into ORDER_STATE (ORDER_ID, ORDER_STATE, CREATED_TIME) values (@id, 0, GETDATE())
 
         select @id orderId
@@ -107,7 +107,7 @@ BEGIN TRANSACTION
         select [ORDER_ID] orderId, o.[PAYMENT_ID] paymentId, p.PAYMENT_PROVIDER paymentProvider,
             [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
             [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
-            [ORDER_TOTAL__] totalPayment
+            [TOTAL_PAYMENT] totalPayment
         from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
         where ORDER_ID = @orderId
 	END TRY
