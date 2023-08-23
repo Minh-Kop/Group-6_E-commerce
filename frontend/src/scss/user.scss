@@ -377,3 +377,76 @@
     }
   }
 }
+
+//pass change
+.password-change-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  .back-button {
+    position: absolute;
+    border: none;
+    background-color: white;
+
+    font-size: large;
+    top: 2rem;
+    left: 3rem;
+  }
+
+  .password-change-content {
+    padding: 2rem;
+
+    border: 0.01em solid black;
+
+    .password-change-header {
+      margin: 0;
+    }
+
+    .password-change {
+      border-top: 0.01em solid black;
+
+      display: grid;
+      grid-auto-flow: row;
+
+      .old-pass {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .new-pass {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .reconfirm-pass {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      input {
+        height: 60%;
+        width: 50%;
+      }
+    }
+
+    .save-pass-button {
+      width: 7rem;
+      height: 2rem;
+      margin-top: 1rem;
+      left: 40%;
+
+      position: relative;
+      background-color: #ea8d88;
+    }
+  }
+}
