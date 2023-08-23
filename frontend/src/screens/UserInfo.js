@@ -6,27 +6,25 @@ import { NavLink, Outlet } from "react-router-dom";
 
 function UserInfo() {
   return (
-    <>
+    <div>
       <Navbar />
       <div className="user-info-container">
         <div className="user-info-sidebar">
-          <button type="button">
-            <NavLink className="navlink">Đơn hàng</NavLink>
-          </button>
-          <button type="button">
-            <NavLink className="navlink">Kho voucher</NavLink>
-          </button>
-          <button type="button">
-            <NavLink to="point" className="navlink">
-              Điểm tích lũy
-            </NavLink>
-          </button>
-          <button type="button">
-            <NavLink className="navlink">Sửa thông tin</NavLink>
-          </button>
-          <button type="button">
-            <NavLink className="navlink">Sửa mật khẩu</NavLink>
-          </button>
+          <NavLink to="voucher" className="navlink">
+            <button type="button">Đơn Hàng</button>
+          </NavLink>
+          <NavLink to="voucher" className="navlink">
+            <button type="button">Kho voucher</button>
+          </NavLink>
+          <NavLink to="point" className="navlink">
+            <button type="button">Điểm tích lũy</button>{" "}
+          </NavLink>
+          <NavLink className="navlink">
+            <button type="button">Sửa thông tin</button>
+          </NavLink>
+          <NavLink className="navlink">
+            <button type="button">Sửa mật khẩu</button>
+          </NavLink>
         </div>
         <div className="user-info">
           <div className="user-personal-info">
@@ -48,7 +46,7 @@ function UserInfo() {
       <Outlet />
 
       <Footer />
-    </>
+    </div>
   );
 }
 
