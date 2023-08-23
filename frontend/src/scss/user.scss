@@ -355,11 +355,25 @@
     .voucher {
       display: flex;
       flex-direction: row;
+      position: relative;
       background-color: white;
+      align-items: center;
 
+      height: 6rem;
+      padding-left: 1rem;
       font-size: large;
       margin: 1.5rem;
       gap: 2rem;
+
+      .delete-button {
+        position: absolute;
+        background-color: #ea8d88;
+        border: none;
+
+        height: 40%;
+        width: 3.5rem;
+        right: 1.5rem;
+      }
     }
   }
 }
