@@ -7,11 +7,10 @@ exports.getConnectionPool = async () => {
 
     const finalConfig = {
         ...config.DATABASE,
-        driver: 'msnodesqlv8',
-        options: {
-            trustedConnection: true,
-            // trustServerCertificate: true,
-        },
+        // driver: 'msnodesqlv8',
+        // options: {
+        //     trustedConnection: true,
+        // },
     };
 
     try {
