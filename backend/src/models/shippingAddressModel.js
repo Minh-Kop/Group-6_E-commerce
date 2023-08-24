@@ -11,6 +11,14 @@ exports.getShippingAddressesByEmail = async (email) => {
     return result.recordset;
 };
 
+exports.getShippingAddressesById = async (id) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('id', sql.Char, id);
+    const result = await request.execute('sp_GetShippingAddressById');
+    return result.recordset[0];
+};
+
 exports.createShippingAddress = async (entity) => {
     const {
         email,

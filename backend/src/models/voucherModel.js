@@ -45,7 +45,6 @@ exports.getAllUserVouchers = async (email) => {
 
 exports.useVoucher = async (orderId, voucherId) => {
     const pool = await database.getConnectionPool();
-
     const request = new sql.Request(pool);
     request.input('orderId', sql.Char, orderId);
     request.input('voucherId', sql.Char, voucherId);
