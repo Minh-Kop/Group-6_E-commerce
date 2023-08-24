@@ -145,31 +145,81 @@ exports.addVoucher = catchAsync(async (req, res, next) => {
         return next(new AppError('Missing parameter.', 400));
     }
 
-    const result = await voucherModel.useVoucher(orderId, voucherId);
+    const listVoucherId = voucherId.split(',').map((el) => el.trim());
 
-    if (result === -1) {
+    const result = await Promise.all(
+        listVoucherId.map(async (el) => {
+            return await voucherModel.useVoucher(orderId, el);
+        }),
+    );
+
+    if (result.includes(-1)) {
         return next(
             new AppError(`Subtotal isn''t enough to use this voucher.`, 400),
         );
     }
-    if (result === -2) {
+    if (result.includes(-2)) {
         return next(new AppError(`Out of vouchers.`, 400));
     }
-    if (result === -3) {
+    if (result.includes(-3)) {
         return next(
             new AppError(`Subtotal isn''t enough to use this voucher.`, 400),
         );
     }
-    if (result === -4) {
+    if (result.includes(-4)) {
         return next(new AppError(`Out of vouchers.`, 400));
     }
-    if (result === -5) {
+    if (result.includes(-5)) {
         return next(new AppError(`User doesn't have this voucher.`, 400));
     }
 
     req.params = {
         orderId,
     };
+    next();
+});
+
+exports.changeShippingAddress = catchAsync(async (req, res, next) => {
+    const { orderId } = req.params;
+    const { addrId } = req.body;
+
+    // Get shipping address
+    const shippingAddress = await shippingAddressModel.getShippingAddressesById(
+        addrId,
+    );
+
+    // Is there no shipping address?
+    if (!shippingAddress) {
+        return next(new AppError("Can't find that shipping address.", 404));
+    }
+
+    // Calculate shipping fee
+    const distance = await getDistance(
+        config.SHOP_LAT,
+        config.SHOP_LONG,
+        shippingAddress.lat,
+        shippingAddress.lng,
+    );
+    let shippingFee;
+    if (distance) {
+        if (distance < 5000) {
+            shippingFee = 20000;
+        } else {
+            shippingFee = 30000;
+        }
+    } else {
+        shippingFee = 0;
+    }
+
+    const result = await orderModel.changeShippingAddress({
+        orderId,
+        addrId,
+        shippingFee,
+    });
+    if (result !== 1) {
+        return next(new AppError('Update failed', 500));
+    }
+
     next();
 });
 
