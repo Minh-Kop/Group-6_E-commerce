@@ -1,4 +1,4 @@
-const accountModel = require('./models/voucherModel');
+const accountModel = require('./models/paymentModel');
 const voucher = require('./utils/voucher');
 const crypto = require('./utils/crypto');
 const config = require('./config');
@@ -8,9 +8,7 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    const vouchers = await accountModel.getAllUserVouchers(
-        'khoiminhtrannguyen@gmail.com',
-    );
+    const vouchers = await accountModel.getPaymentById('PY01');
     console.log(vouchers);
     console.log(moment().subtract(7, 'hours').format('LLLL'));
 })();

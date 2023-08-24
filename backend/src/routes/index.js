@@ -9,6 +9,7 @@ const voucherRouter = require('./voucherRoutes');
 const locationRouter = require('./locationRoutes');
 const shippingAddressRouter = require('./shippingAddressRoutes');
 const checkoutRouter = require('./checkoutRoutes');
+const paymentRouter = require('./paymentRoutes');
 
 const router = express.Router();
 
@@ -24,5 +25,6 @@ router.use(
     shippingAddressRouter,
 );
 router.use('/api/checkout', authController.protect, checkoutRouter);
+router.use('/api/payment', paymentRouter);
 
 module.exports = router;

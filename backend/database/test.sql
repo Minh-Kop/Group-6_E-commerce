@@ -72,21 +72,6 @@ select v.*
 from VOUCHER v join USER_VOUCHER uv on uv.VOUCHER_ID = v.VOUCHER_ID 
 	join VOUCHER_TYPE vt on vt.VOUCHER_TYPE_ID = v.VOUCHER_TYPE_ID
 
-SELECT vt.*
-from VOUCHER v join VOUCHER_TYPE vt on v.VOUCHER_TYPE_ID = vt.VOUCHER_TYPE_ID
-    join user_voucher uv on uv.VOUCHER_ID = v.VOUCHER_ID
-where uv.EMAIL = 'khoiminhtrannguyen@gmail.com' and v.STARTED_DATE <= GETDATE() and v.END_DATE >= GETDATE() and v.REMAINING_AMOUNT > 0
-
 SELECT CURRENT_TIMEZONE() 'Present server Timezone'
 
-exec sp_AddVoucher 'VC00001', 'OD00001'
-
-update H_ORDER
-set TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + SHIPPING_FEE
-where ORDER_ID = 'OD00001'
-
-
-
-
-
-
+select [PAYMENT_ID] paymentId, [PAYMENT_PROVIDER] paymentProvider from PAYMENT where PAYMENT_ID = 

@@ -21,7 +21,7 @@ insert into WARD (WARD_ID, DIST_ID, WARD_NAME) values
     ('WD000005', 'DT0005', N'Phường 5')
 
 -- ========== PAYMENT ==========
-insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY01', 'Paypal')
+insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY01', 'PayPal')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY02', 'MoMo')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY03', 'ShopeePay')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY04', 'ZaloPay')
