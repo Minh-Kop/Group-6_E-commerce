@@ -68,10 +68,4 @@ select * from ORDER_STATE
 select * from ORDER_DETAIL
 select * from ORDER_VOUCHER
 
-select v.* 
-from VOUCHER v join USER_VOUCHER uv on uv.VOUCHER_ID = v.VOUCHER_ID 
-	join VOUCHER_TYPE vt on vt.VOUCHER_TYPE_ID = v.VOUCHER_TYPE_ID
-
 SELECT CURRENT_TIMEZONE() 'Present server Timezone'
-
-select [PAYMENT_ID] paymentId, [PAYMENT_PROVIDER] paymentProvider from PAYMENT where PAYMENT_ID = 

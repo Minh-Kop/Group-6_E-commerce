@@ -49,6 +49,30 @@ COMMIT
 RETURN 1
 GO
 
+GO
+IF OBJECT_ID('sp_GetVouchersByOrderId') IS NOT NULL
+	DROP PROC sp_GetVouchersByOrderId
+GO
+CREATE PROCEDURE sp_GetVouchersByOrderId (
+    @orderId CHAR(7)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        SELECT VOUCHER_ID voucherId
+        from ORDER_VOUCHER
+        where ORDER_ID = @orderId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
 go
 IF OBJECT_ID('f_CreateVoucherId') IS NOT NULL
 	DROP FUNCTION f_CreateVoucherId
