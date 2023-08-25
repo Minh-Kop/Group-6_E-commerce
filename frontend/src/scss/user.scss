@@ -28,17 +28,56 @@
     }
   }
 
-  .user-info {
+  .info-container {
     height: 100%;
-    left: 12%;
+    width: 45%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    left: 10%;
+    padding: 1rem;
 
-    display: flex;
     position: relative;
-    flex-direction: row;
-    align-items: center;
-    gap: 10rem;
+    display: flex;
+    flex-direction: column;
+    border: 0.01em solid black;
 
-    font-size: x-large;
+    h2 {
+      margin: 0;
+      margin-top: 5%;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .user-info {
+      height: 80%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      border-top: 0.01em solid black;
+
+      .user-personal-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .user-personal-info-data {
+        width: 75%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+    }
+
+    .save-info {
+      height: 3rem;
+      background-color: #ea8d88;
+    }
   }
 
   button:active {
@@ -316,11 +355,197 @@
     .voucher {
       display: flex;
       flex-direction: row;
+      position: relative;
       background-color: white;
+      align-items: center;
 
+      height: 6rem;
+      padding-left: 1rem;
       font-size: large;
       margin: 1.5rem;
       gap: 2rem;
+    }
+  }
+}
+
+//pass change
+.password-change-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  .back-button {
+    position: absolute;
+    border: none;
+    background-color: white;
+
+    font-size: large;
+    top: 2rem;
+    left: 3rem;
+  }
+
+  .password-change-content {
+    padding: 2rem;
+
+    border: 0.01em solid black;
+
+    .password-change-header {
+      margin: 0;
+    }
+
+    .password-change {
+      border-top: 0.01em solid black;
+
+      display: grid;
+      grid-auto-flow: row;
+
+      .old-pass {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .new-pass {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .reconfirm-pass {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      input {
+        height: 60%;
+        width: 50%;
+      }
+    }
+
+    .save-pass-button {
+      width: 7rem;
+      height: 2rem;
+      margin-top: 1rem;
+      left: 40%;
+
+      position: relative;
+      background-color: #ea8d88;
+    }
+  }
+}
+
+//user info change
+.user-info-change-container {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .back-button {
+    position: absolute;
+    border: none;
+    background-color: white;
+
+    font-size: large;
+    top: 2rem;
+    left: 3rem;
+  }
+
+  .info-container {
+    height: 60%;
+    width: 45%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 0.01em solid black;
+
+    h2 {
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .user-info {
+      height: 80%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      border-top: 0.01em solid black;
+
+      .user-personal-info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .user-account-name {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .user-name {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .user-email {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .user-phone-number {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .user-address {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        input {
+          width: 60%;
+          height: 1.5rem;
+        }
+      }
+    }
+
+    button:active {
+      background-color: #ea8d88;
+    }
+
+    .save-change-button {
+      height: 3rem;
+      background-color: #ea8d88;
     }
   }
 }

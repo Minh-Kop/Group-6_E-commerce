@@ -61,6 +61,9 @@ function AdminVoucherManagement() {
               <p>{voucher.name}</p>
               <p>Phần trăm giảm: {voucher.percentage}</p>
             </div>
+            <button className="delete-button" type="button">
+              Xóa
+            </button>
           </div>
         ))}
       </div>
@@ -69,7 +72,6 @@ function AdminVoucherManagement() {
           Thêm voucher
         </button>
         <button type="button">Chỉnh sửa</button>
-        <button type="button">Xóa</button>
       </div>
       {addVoucher && <AdminAddVoucher setOpen={setAdd} />}
     </div>
