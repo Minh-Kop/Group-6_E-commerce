@@ -28,7 +28,7 @@ exports.createDetailedOrder = async (entity) => {
     return result.returnValue;
 };
 
-exports.getInitialOrder = async (orderId) => {
+exports.getOrder = async (orderId) => {
     const pool = await database.getConnectionPool();
 
     const request = new sql.Request(pool);
@@ -42,5 +42,16 @@ exports.deleteAllInitialOrders = async (email) => {
     const request = new sql.Request(pool);
     request.input('email', sql.NVarChar, email);
     const result = await request.execute('sp_DeleteAllInitialOrders');
+    return result.returnValue;
+};
+
+exports.changeShippingAddress = async (entity) => {
+    const { orderId, addrId, shippingFee } = entity;
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('orderId', sql.Char, orderId);
+    request.input('addrId', sql.Char, addrId);
+    request.input('shippingFee', sql.Int, shippingFee);
+    const result = await request.execute('sp_ChangeShippingAddress');
     return result.returnValue;
 };

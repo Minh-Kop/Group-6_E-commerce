@@ -6,7 +6,8 @@ CREATE PROCEDURE sp_GetAllVouchers
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
-        SELECT [VOUCHER_ID] 'voucherId', vt.VOUCHER_TYPE 'voucherType', [STARTED_DATE] 'startDate', [END_DATE] 'endDate', 
+        SELECT [VOUCHER_ID] 'voucherId', vt.VOUCHER_TYPE_ID voucherTypeId, vt.VOUCHER_TYPE 'voucherType', 
+            [STARTED_DATE] 'startDate', [END_DATE] 'endDate', 
             [MAXIMUM_AMOUNT] 'maxAmount', [REMAINING_AMOUNT] 'remainingAmount',
             [MINIMUM_PRICE] 'minPrice', [MAXIMUM_DISCOUNT_PRICE] 'maxPrice', [PERCENTAGE_DISCOUNT] 'percentageDiscount'
         from VOUCHER v join VOUCHER_TYPE vt on v.VOUCHER_TYPE_ID = vt.VOUCHER_TYPE_ID
@@ -31,12 +32,12 @@ CREATE PROCEDURE sp_GetAllUserVouchers (
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
-        SELECT v.[VOUCHER_ID] 'voucherId', vt.VOUCHER_TYPE 'voucherType', [STARTED_DATE] 'startDate', [END_DATE] 'endDate', 
+        SELECT v.[VOUCHER_ID] 'voucherId', vt.VOUCHER_TYPE_ID voucherTypeId, vt.VOUCHER_TYPE 'voucherType', [STARTED_DATE] 'startDate', [END_DATE] 'endDate', 
             [MAXIMUM_AMOUNT] 'maxAmount', [REMAINING_AMOUNT] 'remainingAmount',
             [MINIMUM_PRICE] 'minPrice', [MAXIMUM_DISCOUNT_PRICE] 'maxPrice', [PERCENTAGE_DISCOUNT] 'percentageDiscount'
         from VOUCHER v join VOUCHER_TYPE vt on v.VOUCHER_TYPE_ID = vt.VOUCHER_TYPE_ID
             join user_voucher uv on uv.VOUCHER_ID = v.VOUCHER_ID
-        where uv.EMAIL = @email and uv.is_used = 0 and v.STARTED_DATE <= GETDATE() and v.END_DATE >= GETDATE() and v.REMAINING_AMOUNT > 0
+        where uv.EMAIL = @email and v.STARTED_DATE <= GETDATE() and v.END_DATE >= GETDATE() and v.REMAINING_AMOUNT > 0
 	END TRY
 
 	BEGIN CATCH

@@ -7,8 +7,8 @@ const config = {
 
     DATABASE: {
         server: process.env.DB_SERVER,
-        // user: process.env.DB_USER,
-        // password: process.env.DB_PWD,
+        user: process.env.DB_USER,
+        password: process.env.DB_PWD,
         database: process.env.DB_NAME,
     },
 
@@ -35,6 +35,12 @@ const config = {
         RECEIVE: 1,
         USE: -1,
         ACCUMULATE: 2,
+    },
+
+    tier: {
+        MEMBER: 1,
+        VIP: 2,
+        HVIP: 3,
     },
 
     orderState: {

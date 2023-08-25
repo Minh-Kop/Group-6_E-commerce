@@ -7,7 +7,7 @@ const cartModel = require('../models/cartModel');
 const shippingAddressModel = require('../models/shippingAddressModel');
 const { getDistance } = require('../utils/map');
 const orderModel = require('../models/orderModel');
-// const voucherModel = require('../models/voucherModel');
+const voucherModel = require('../models/voucherModel');
 // const paymentModel = require('../models/paymentModel');
 // const accountModel = require('../models/accountModel');
 // const {
@@ -17,6 +17,20 @@ const orderModel = require('../models/orderModel');
 // } = require('../utils/checkout');
 // const { getRate } = require('../utils/currencyConverter');
 // const { getOrderEmail, createTransport } = require('../utils/nodemailer');
+
+exports.getOrder = catchAsync(async (req, res, next) => {
+    const { orderId } = req.params;
+    const [deliveryInformation, booksOrdered, orderInformation] =
+        await orderModel.getOrder(orderId);
+    res.status(200).json({
+        status: 'success',
+        data: {
+            deliveryInformation: deliveryInformation[0],
+            booksOrdered: booksOrdered,
+            orderInformation: orderInformation[0],
+        },
+    });
+});
 
 exports.createInitialOrder = catchAsync(async (req, res, next) => {
     const { email } = req.user;
@@ -29,6 +43,12 @@ exports.createInitialOrder = catchAsync(async (req, res, next) => {
 
     const { CART_ID: cartId, CART_TOTAL: merchandiseSubtotal } =
         await cartModel.getCartByEmail(email);
+
+    // If cart is empty, raise error
+    if (merchandiseSubtotal === 0) {
+        return next(new AppError("Can't check out with empty cart.", 400));
+    }
+
     books = await bookModel.getBooksByCartId(cartId);
 
     books = books.filter((el) => el.isClicked);
@@ -112,16 +132,95 @@ exports.createInitialOrder = catchAsync(async (req, res, next) => {
         );
     }
 
-    const [deliveryInformation, booksOrdered, orderInformation] =
-        await orderModel.getInitialOrder(orderId);
-    res.status(200).json({
-        status: 'success',
-        data: {
-            deliveryInformation: deliveryInformation[0],
-            booksOrdered: booksOrdered,
-            orderInformation: orderInformation[0],
-        },
+    req.params = {
+        orderId,
+    };
+    next();
+});
+
+exports.addVoucher = catchAsync(async (req, res, next) => {
+    const { voucherId, orderId } = req.body;
+
+    if (!voucherId || !orderId) {
+        return next(new AppError('Missing parameter.', 400));
+    }
+
+    const listVoucherId = voucherId.split(',').map((el) => el.trim());
+
+    const result = await Promise.all(
+        listVoucherId.map(async (el) => {
+            return await voucherModel.useVoucher(orderId, el);
+        }),
+    );
+
+    if (result.includes(-1)) {
+        return next(
+            new AppError(`Subtotal isn''t enough to use this voucher.`, 400),
+        );
+    }
+    if (result.includes(-2)) {
+        return next(new AppError(`Out of vouchers.`, 400));
+    }
+    if (result.includes(-3)) {
+        return next(
+            new AppError(`Subtotal isn''t enough to use this voucher.`, 400),
+        );
+    }
+    if (result.includes(-4)) {
+        return next(new AppError(`Out of vouchers.`, 400));
+    }
+    if (result.includes(-5)) {
+        return next(new AppError(`User doesn't have this voucher.`, 400));
+    }
+
+    req.params = {
+        orderId,
+    };
+    next();
+});
+
+exports.changeShippingAddress = catchAsync(async (req, res, next) => {
+    const { orderId } = req.params;
+    const { addrId } = req.body;
+
+    // Get shipping address
+    const shippingAddress = await shippingAddressModel.getShippingAddressesById(
+        addrId,
+    );
+
+    // Is there no shipping address?
+    if (!shippingAddress) {
+        return next(new AppError("Can't find that shipping address.", 404));
+    }
+
+    // Calculate shipping fee
+    const distance = await getDistance(
+        config.SHOP_LAT,
+        config.SHOP_LONG,
+        shippingAddress.lat,
+        shippingAddress.lng,
+    );
+    let shippingFee;
+    if (distance) {
+        if (distance < 5000) {
+            shippingFee = 20000;
+        } else {
+            shippingFee = 30000;
+        }
+    } else {
+        shippingFee = 0;
+    }
+
+    const result = await orderModel.changeShippingAddress({
+        orderId,
+        addrId,
+        shippingFee,
     });
+    if (result !== 1) {
+        return next(new AppError('Update failed', 500));
+    }
+
+    next();
 });
 
 exports.deleteInitialOrders = catchAsync(async (req, res, next) => {
