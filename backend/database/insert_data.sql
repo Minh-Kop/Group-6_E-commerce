@@ -23,9 +23,7 @@ insert into WARD (WARD_ID, DIST_ID, WARD_NAME) values
 -- ========== PAYMENT ==========
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY01', 'PayPal')
 insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY02', 'MoMo')
-insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY03', 'ShopeePay')
-insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY04', 'ZaloPay')
-insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY05', 'COD')
+insert into PAYMENT (PAYMENT_ID, PAYMENT_PROVIDER) VALUES ('PY03', 'COD')
 
 -- ========== CATEGORY ==========
 insert into CATEGORY (CATE_ID, CATE_NAME) values ('CA01', N'Manga - Comic')

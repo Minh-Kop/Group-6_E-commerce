@@ -1,4 +1,4 @@
-const accountModel = require('./models/voucherModel');
+const orderModel = require('./models/orderModel');
 const voucher = require('./utils/voucher');
 const crypto = require('./utils/crypto');
 const config = require('./config');
@@ -8,7 +8,6 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    const vouchers = await accountModel.getVouchersByOrderId('OD00001');
-    console.log(vouchers);
-    console.log(moment().subtract(7, 'hours').format('LLLL'));
+    const result = await orderModel.getTotalPayment('OD00001');
+    console.log(result);
 })();

@@ -8,14 +8,14 @@ const shippingAddressModel = require('../models/shippingAddressModel');
 const { getDistance } = require('../utils/map');
 const orderModel = require('../models/orderModel');
 const voucherModel = require('../models/voucherModel');
-// const paymentModel = require('../models/paymentModel');
-// const accountModel = require('../models/accountModel');
-// const {
-//     MomoCheckoutProvider,
-//     PaypalCheckoutProvider,
-//     ShipCodCheckoutProvider,
-// } = require('../utils/checkout');
-// const { getRate } = require('../utils/currencyConverter');
+const paymentModel = require('../models/paymentModel');
+const accountModel = require('../models/accountModel');
+const {
+    // MomoCheckoutProvider,
+    PaypalCheckoutProvider,
+    // ShipCodCheckoutProvider,
+} = require('../utils/checkout');
+const { getRate } = require('../utils/currencyConverter');
 // const { getOrderEmail, createTransport } = require('../utils/nodemailer');
 
 exports.getOrder = catchAsync(async (req, res, next) => {
@@ -232,4 +232,87 @@ exports.deleteInitialOrders = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
     });
+});
+
+exports.placeOrder = catchAsync(async (req, res, next) => {
+    const { email } = req.user;
+    const { orderId } = req.params;
+    const { paymentId } = req.body;
+
+    // Verify order ID
+    const { totalPayment } = await orderModel.getTotalPayment(orderId);
+    if (!totalPayment) {
+        return next(new AppError('Order not found.', 400));
+    }
+
+    // Get user information
+    const { FULLNAME: fullName, PHONE_NUMBER: phoneNumber } =
+        await accountModel.getByEmail(email);
+    if (!fullName) {
+        return next(new AppError('Email not found.', 400));
+    }
+    const userInfo = {
+        email,
+        fullName,
+        phoneNumber,
+    };
+
+    // Verify payment ID
+    const { paymentProvider } = await paymentModel.getPaymentById(paymentId);
+    if (!paymentProvider) {
+        return next(new AppError('Payment not found.', 400));
+    }
+
+    // Create checkout provider
+    let checkoutProvider;
+    if (paymentProvider === config.payment.MOMO) {
+        // checkoutProvider = new MomoCheckoutProvider();
+    } else if (paymentProvider === config.payment.PAYPAL) {
+        checkoutProvider = new PaypalCheckoutProvider();
+    } else if (paymentProvider === config.payment.COD) {
+        // checkoutProvider = new ShipCodCheckoutProvider();
+    }
+
+    // Calculate exchanged price
+    const exchangedPrice =
+        Math.round(
+            100 *
+                totalPayment *
+                getRate(checkoutProvider.getCurrency(), config.currency.VND),
+        ) / 100;
+
+    // Create orderId and link
+    const [paymentOrderId, redirectUrl] = await checkoutProvider.createLink(
+        exchangedPrice,
+        userInfo,
+        `${req.protocol}://${req.get('host')}`,
+        // `${req.headers.origin}`,
+    );
+
+    res.status(200).json({
+        status: 'success',
+        paymentOrderId,
+        redirectUrl,
+    });
+});
+
+exports.notifyPaypal = catchAsync(async (req, res, next) => {
+    const { orderId, paymentOrderId } = req.body;
+    const provider = new PaypalCheckoutProvider();
+
+    const detailResponse = await provider.getDetail(paymentOrderId);
+    const { status } = detailResponse;
+    if (status !== 'APPROVED') {
+        return next(new AppError('Payment is not approved.', 400));
+    }
+
+    const captureResponse = await provider.capturePayment(paymentOrderId);
+    if (captureResponse.status === 'COMPLETED') {
+        await orderModel.updateState(orderId, config.orderState.PENDING);
+        res.status(200).json({
+            status: 'success',
+        });
+    } else {
+        return next(new AppError('Payment is failed.', 400));
+    }
 });

@@ -63,7 +63,9 @@ INSERT into user_voucher (VOUCHER_ID, EMAIL) values ('VC00004', 'khoiminhtranngu
 delete from ORDER_STATE where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
 delete from ORDER_DETAIL where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
 delete from H_ORDER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
-SELECT * from H_ORDER
+delete from ORDER_VOUCHER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
+
+SELECT * from H_ORDER where ORDER_ID = 'OD00001'
 select * from ORDER_STATE
 select * from ORDER_DETAIL
 select * from ORDER_VOUCHER
