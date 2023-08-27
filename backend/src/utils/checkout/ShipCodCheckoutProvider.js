@@ -1,39 +1,38 @@
-import { generateOrderId } from '#src/utils/checkout/orderIdGenerator'
-import config from '#src/config/config'
+const config = require('../../config');
 
 class ShipCodCheckoutProvider {
     /**
      * Create payment link for Ship COD
-     * 
+     *
      * @example
      * const amount = 50000;
-     * const userInfo = { 
-     *  name: "Do Vuong Phuc", 
-     *  phoneNumber: "0707953475", 
+     * const userInfo = {
+     *  fullName: "Do Vuong Phuc",
+     *  phoneNumber: "0707953475",
      *  email: "phuc16102001@gmail.com"
      * }
-     * const [orderId, payUrl] = createLink(amount, userInfo)
-     * 
+     * const [paymentOrderId, payUrl] = createLink(amount, userInfo)
+     *
      * @type {UserInfo} {
-     *  @type {String} name
+     *  @type {String} fullName
      *  @type {String} phoneNumber
      *  @type {String} email
      * }
-     * 
-     * @param {Long} amount The total amount user need to pay
-     * @param {UserInfo} userInfo The user"s information
      *
-     * @return {[String, String]} The orderId and the URL to pay for the request
+     * @param {Long} amount The total amount user need to pay
+     * @param {UserInfo} userInfo The user's information
+     *
+     * @return {[String, String]} The paymentOrderId and the URL to pay for the request
      */
-    createLink = async (amount, userInfo, redirectUrl) => {
-        const orderId = generateOrderId();
-        const url = null;
-        return [orderId, url]
+    async createLink(amount, userInfo, redirectUrl) {
+        const paymentOrderId = null;
+        const payUrl = null;
+        return [paymentOrderId, payUrl];
     }
 
-    getCurrency = () => {
-        return config.currency.VND
+    getCurrency() {
+        return config.currency.VND;
     }
 }
 
-export default ShipCodCheckoutProvider;
+module.exports = ShipCodCheckoutProvider;

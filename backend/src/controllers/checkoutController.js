@@ -13,7 +13,7 @@ const accountModel = require('../models/accountModel');
 const {
     // MomoCheckoutProvider,
     PaypalCheckoutProvider,
-    // ShipCodCheckoutProvider,
+    ShipCodCheckoutProvider,
 } = require('../utils/checkout');
 const { getRate } = require('../utils/currencyConverter');
 // const { getOrderEmail, createTransport } = require('../utils/nodemailer');
@@ -270,7 +270,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     } else if (paymentProvider === config.payment.PAYPAL) {
         checkoutProvider = new PaypalCheckoutProvider();
     } else if (paymentProvider === config.payment.COD) {
-        // checkoutProvider = new ShipCodCheckoutProvider();
+        checkoutProvider = new ShipCodCheckoutProvider();
     }
 
     // Calculate exchanged price
@@ -289,6 +289,12 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
         // `${req.headers.origin}`,
     );
 
+    // Change order state to pending without paying
+    if (paymentProvider === config.payment.COD) {
+        await orderModel.updateState(orderId, config.orderState.PENDING);
+        await cartModel.deleteClickedBooksFromCart(email);
+    }
+
     res.status(200).json({
         status: 'success',
         paymentOrderId,
@@ -297,6 +303,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
 });
 
 exports.notifyPaypal = catchAsync(async (req, res, next) => {
+    const { email } = req.user;
     const { orderId, paymentOrderId } = req.body;
     const provider = new PaypalCheckoutProvider();
 
@@ -309,6 +316,7 @@ exports.notifyPaypal = catchAsync(async (req, res, next) => {
     const captureResponse = await provider.capturePayment(paymentOrderId);
     if (captureResponse.status === 'COMPLETED') {
         await orderModel.updateState(orderId, config.orderState.PENDING);
+        await cartModel.deleteClickedBooksFromCart(email);
         res.status(200).json({
             status: 'success',
         });

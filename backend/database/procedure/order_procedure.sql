@@ -32,8 +32,10 @@ AS
 BEGIN TRANSACTION
 	BEGIN TRY
         DECLARE @id char(7) = dbo.f_CreateOrderId()
+        DECLARE @paymentId CHAR(4) = (select PAYMENT_ID from PAYMENT where PAYMENT_PROVIDER = 'COD')
+
         INSERT into H_ORDER (ORDER_ID, EMAIL, ADDR_ID, PAYMENT_ID, MERCHANDISE_SUBTOTAL, SHIPPING_FEE, SHIPPING_DISCOUNT_SUBTOTAL, HACHIKO_VOUCHER_APPLIED, TOTAL_PAYMENT) values 
-            (@id, @email, @addrId, 'PY05', @merchandiseSubtotal, @shippingFee, 0, 0, @merchandiseSubtotal + @shippingFee)
+            (@id, @email, @addrId, @paymentId, @merchandiseSubtotal, @shippingFee, 0, 0, @merchandiseSubtotal + @shippingFee)
         INSERT into ORDER_STATE (ORDER_ID, ORDER_STATE, CREATED_TIME) values (@id, 0, GETDATE())
 
         select @id orderId

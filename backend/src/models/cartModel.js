@@ -53,3 +53,12 @@ exports.deleteFromCart = async (cartId, bookId) => {
     const result = await request.execute('sp_DeleteBookFromCart');
     return result.rowsAffected[0];
 };
+
+exports.deleteClickedBooksFromCart = async (email) => {
+    const pool = await database.getConnectionPool();
+
+    const request = new sql.Request(pool);
+    request.input('email', sql.NVarChar, email);
+    const result = await request.execute('sp_DeleteClickedBooksFromCart');
+    return result.rowsAffected[0];
+};
