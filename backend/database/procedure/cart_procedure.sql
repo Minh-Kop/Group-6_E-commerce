@@ -100,3 +100,42 @@ BEGIN TRANSACTION
 COMMIT
 RETURN 1
 GO
+
+GO
+IF OBJECT_ID('sp_DeleteClickedBooksFromCart') IS NOT NULL
+	DROP PROC sp_DeleteClickedBooksFromCart
+GO
+CREATE PROCEDURE sp_DeleteClickedBooksFromCart (
+    @email NVARCHAR(100)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        DECLARE @cartId CHAR(10) = (select CART_ID from CART where EMAIL = @email)
+        delete from CART_DETAIL where CART_ID = @cartId and IS_CLICKED = 1
+
+        -- Count books
+        declare @cartCount int
+        select @cartCount = COUNT(*)
+        from CART_DETAIL
+        where CART_ID = @cartId
+        GROUP by CART_ID
+
+        IF @cartCount is NULL
+        BEGIN
+            set @cartCount = 0
+        END
+        
+        UPDATE CART
+        set CART_COUNT = @cartCount, CART_TOTAL = 0
+        where CART_ID = @cartId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK  
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO

@@ -3,7 +3,7 @@ const moment = require('moment');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const voucherModel = require('../models/voucherModel');
-const { buildVoucherTree } = require('../utils/voucher');
+const { buildVoucherTree, buildOrderVoucherTree } = require('../utils/voucher');
 
 exports.getAllVouchers = catchAsync(async (req, res, next) => {
     const result = await voucherModel.getAllVouchers();
@@ -89,6 +89,7 @@ exports.deleteVoucher = catchAsync(async (req, res, next) => {
 
 exports.getAllUserVouchers = catchAsync(async (req, res, next) => {
     const { email } = req.user;
+
     const result = await voucherModel.getAllUserVouchers(email);
     const vouchers = result.map((item) => ({
         ...item,
@@ -97,7 +98,31 @@ exports.getAllUserVouchers = catchAsync(async (req, res, next) => {
             .format('DD/MM/YYYY'),
         endDate: moment(item.endDate).subtract(7, 'hours').format('DD/MM/YYYY'),
     }));
+
     const voucherTypes = buildVoucherTree(vouchers);
+    res.status(200).json({
+        status: 'success',
+        length: voucherTypes.length,
+        voucherTypes,
+    });
+});
+
+exports.getVouchersByOrderId = catchAsync(async (req, res, next) => {
+    const { email } = req.user;
+    const { orderId } = req.body;
+
+    let userVouchers = await voucherModel.getAllUserVouchers(email);
+    userVouchers = userVouchers.map((item) => ({
+        ...item,
+        startDate: moment(item.startDate)
+            .subtract(7, 'hours')
+            .format('DD/MM/YYYY'),
+        endDate: moment(item.endDate).subtract(7, 'hours').format('DD/MM/YYYY'),
+    }));
+
+    const orderVouchers = await voucherModel.getVouchersByOrderId(orderId);
+
+    const voucherTypes = buildOrderVoucherTree(userVouchers, orderVouchers);
     res.status(200).json({
         status: 'success',
         length: voucherTypes.length,

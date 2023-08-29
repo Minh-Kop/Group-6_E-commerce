@@ -7,6 +7,7 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 router.route('/user').get(voucherController.getAllUserVouchers);
+router.route('/order').get(voucherController.getVouchersByOrderId);
 
 // Restrict all routes to only role admin after this middleware
 router.use(authController.restrictTo(config.role.ADMIN));

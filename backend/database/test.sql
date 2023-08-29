@@ -63,30 +63,11 @@ INSERT into user_voucher (VOUCHER_ID, EMAIL) values ('VC00004', 'khoiminhtranngu
 delete from ORDER_STATE where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
 delete from ORDER_DETAIL where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
 delete from H_ORDER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
-SELECT * from H_ORDER
+delete from ORDER_VOUCHER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
+
+SELECT * from H_ORDER where ORDER_ID = 'OD00001'
 select * from ORDER_STATE
 select * from ORDER_DETAIL
 select * from ORDER_VOUCHER
 
-select v.* 
-from VOUCHER v join USER_VOUCHER uv on uv.VOUCHER_ID = v.VOUCHER_ID 
-	join VOUCHER_TYPE vt on vt.VOUCHER_TYPE_ID = v.VOUCHER_TYPE_ID
-
-SELECT vt.*
-from VOUCHER v join VOUCHER_TYPE vt on v.VOUCHER_TYPE_ID = vt.VOUCHER_TYPE_ID
-    join user_voucher uv on uv.VOUCHER_ID = v.VOUCHER_ID
-where uv.EMAIL = 'khoiminhtrannguyen@gmail.com' and v.STARTED_DATE <= GETDATE() and v.END_DATE >= GETDATE() and v.REMAINING_AMOUNT > 0
-
 SELECT CURRENT_TIMEZONE() 'Present server Timezone'
-
-exec sp_AddVoucher 'VC00001', 'OD00001'
-
-update H_ORDER
-set TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + SHIPPING_FEE
-where ORDER_ID = 'OD00001'
-
-
-
-
-
-

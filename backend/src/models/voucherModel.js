@@ -43,6 +43,16 @@ exports.getAllUserVouchers = async (email) => {
     return result.recordset;
 };
 
+exports.getVouchersByOrderId = async (orderId) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('orderId', sql.Char, orderId);
+    const result = await request.execute('sp_GetVouchersByOrderId');
+
+    const orderIdList = result.recordset.map((el) => el.voucherId);
+    return orderIdList;
+};
+
 exports.useVoucher = async (orderId, voucherId) => {
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);

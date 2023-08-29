@@ -19,10 +19,9 @@ const config = {
     },
 
     payment: {
-        PAYPAL: 'paypal',
-        MOMO: 'momo',
-        COD: 'cod',
-        NOWPAYMENT: 'nowpayment',
+        PAYPAL: 'PayPal',
+        MOMO: 'MoMo',
+        COD: 'COD',
     },
 
     currency: {

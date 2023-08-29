@@ -1,4 +1,4 @@
-const accountModel = require('./models/voucherModel');
+const orderModel = require('./models/orderModel');
 const voucher = require('./utils/voucher');
 const crypto = require('./utils/crypto');
 const config = require('./config');
@@ -8,9 +8,11 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    const vouchers = await accountModel.getAllUserVouchers(
-        'khoiminhtrannguyen@gmail.com',
-    );
-    console.log(vouchers);
-    console.log(moment().subtract(7, 'hours').format('LLLL'));
+    const email = 'khoiminhtrannguyen@gmail.com';
+    const json = JSON.stringify({ email });
+    console.log(json);
+    const extraData = crypto.encryptBase64(json);
+    console.log(extraData);
+    const { email: decryptData } = JSON.parse(crypto.decryptBase64(extraData));
+    console.log(decryptData);
 })();

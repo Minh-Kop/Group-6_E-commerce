@@ -32,8 +32,10 @@ AS
 BEGIN TRANSACTION
 	BEGIN TRY
         DECLARE @id char(7) = dbo.f_CreateOrderId()
+        DECLARE @paymentId CHAR(4) = (select PAYMENT_ID from PAYMENT where PAYMENT_PROVIDER = 'COD')
+
         INSERT into H_ORDER (ORDER_ID, EMAIL, ADDR_ID, PAYMENT_ID, MERCHANDISE_SUBTOTAL, SHIPPING_FEE, SHIPPING_DISCOUNT_SUBTOTAL, HACHIKO_VOUCHER_APPLIED, TOTAL_PAYMENT) values 
-            (@id, @email, @addrId, 'PY05', @merchandiseSubtotal, @shippingFee, 0, 0, @merchandiseSubtotal + @shippingFee)
+            (@id, @email, @addrId, @paymentId, @merchandiseSubtotal, @shippingFee, 0, 0, @merchandiseSubtotal + @shippingFee)
         INSERT into ORDER_STATE (ORDER_ID, ORDER_STATE, CREATED_TIME) values (@id, 0, GETDATE())
 
         select @id orderId
@@ -296,6 +298,63 @@ BEGIN TRANSACTION
         SET ADDR_ID = @addrId, SHIPPING_FEE = @shippingFee, 
             TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + @shippingFee - SHIPPING_DISCOUNT_SUBTOTAL - HACHIKO_VOUCHER_APPLIED
         WHERE ORDER_ID = @orderId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_CreateNewState') IS NOT NULL
+	DROP PROC sp_CreateNewState
+GO
+CREATE PROCEDURE sp_CreateNewState (
+    @orderId char(7),
+    @orderState INT
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        if EXISTS (select 1 from ORDER_STATE where ORDER_ID = @orderId and ORDER_STATE = @orderState)
+        BEGIN
+            PRINT N'This state is already existed.'
+            ROLLBACK 
+            RETURN -1
+        END
+        INSERT into ORDER_STATE (ORDER_ID, ORDER_STATE, CREATED_TIME) values (@orderId, @orderState, GETDATE())
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_IsPlacedOrder') IS NOT NULL
+	DROP PROC sp_IsPlacedOrder
+GO
+CREATE PROCEDURE sp_IsPlacedOrder (
+    @orderId char(7)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        if EXISTS (select 1 from ORDER_STATE where ORDER_ID = @orderId and ORDER_STATE = 1)
+        BEGIN
+            PRINT N'This order is already placed.'
+            ROLLBACK 
+            RETURN -1
+        END
+        SELECT TOTAL_PAYMENT totalPayment from H_ORDER where ORDER_ID = @orderId
 	END TRY
 
 	BEGIN CATCH
