@@ -24,7 +24,7 @@ router.use(
     authController.protect,
     shippingAddressRouter,
 );
-router.use('/api/checkout', authController.protect, checkoutRouter);
+router.use('/api/checkout', checkoutRouter);
 router.use('/api/payment', paymentRouter);
 
 module.exports = router;

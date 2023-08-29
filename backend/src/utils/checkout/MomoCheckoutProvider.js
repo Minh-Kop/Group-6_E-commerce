@@ -1,23 +1,27 @@
 const axios = require('axios');
 
 const config = require('../../config');
-const { createHmacString } = require('../crypto');
-const { generateOrderId } = require('./orderIdGenerator');
+const { createHmacString, encryptBase64 } = require('../crypto');
+
+let partnerCode = config.MOMO_PARTNER_CODE;
+const accessKey = config.MOMO_ACCESS_KEY;
+const secretKey = config.MOMO_SECRET_KEY;
 
 class MomoCheckoutProvider {
     async createLink(amount, userInfo, redirectHost, ipnHost, extraData = '') {
-        const partnerCode = config.MOMO_PARTNER_CODE;
-        const accessKey = config.MOMO_ACCESS_KEY;
-        const secretKey = config.MOMO_SECRET_KEY;
+        // const redirectUrl = `${redirectHost}/account/order`;
+        // const ipnUrl = `${ipnHost}/api/checkout/notifyMomo`;
+        const redirectUrl = `https://en.wikipedia.org/wiki/Oppenheimer_(film)`;
+        const ipnUrl =
+            'https://f70d-123-20-134-12.ngrok-free.app/api/checkout/notifyMomo';
 
-        const redirectUrl = `${redirectHost}/account/order`;
-        const ipnUrl = `${ipnHost}/checkout/notifyMomo`;
-
-        const orderId = generateOrderId();
-        const orderInfo = `Pay for order ID ${orderId} with Momo`;
+        let { orderId } = userInfo;
+        orderId = `${orderId}_${new Date().getTime()}`;
+        const orderInfo = `Pay for order ID ${orderId} with MoMo`;
         const requestId = partnerCode + new Date().getTime();
-
         const requestType = 'captureWallet';
+        const { email } = userInfo;
+        extraData = encryptBase64(JSON.stringify({ email }));
 
         const rawSignature = [
             `accessKey=${accessKey}`,
@@ -35,18 +39,17 @@ class MomoCheckoutProvider {
         const signature = createHmacString(rawSignature, secretKey);
 
         const requestBody = {
-            accessKey: accessKey,
-            amount: amount,
-            extraData: extraData,
-            ipnUrl: ipnUrl,
-            orderId: orderId,
-            orderInfo: orderInfo,
-            partnerCode: partnerCode,
-            redirectUrl: redirectUrl,
-            requestId: requestId,
-            requestType: requestType,
-            userInfo: userInfo,
-            signature: signature,
+            accessKey,
+            amount,
+            extraData,
+            ipnUrl,
+            orderId,
+            orderInfo,
+            partnerCode,
+            redirectUrl,
+            requestId,
+            requestType,
+            signature,
         };
 
         try {
@@ -54,18 +57,14 @@ class MomoCheckoutProvider {
                 'https://test-payment.momo.vn:443/v2/gateway/api/create',
                 requestBody,
             );
-
             const { payUrl } = response.data;
-            return [orderId, payUrl];
+            return [requestId, payUrl];
         } catch (error) {
-            throw error;
+            console.log(error);
         }
     }
 
     async queryPayment(requestId, orderId) {
-        const partnerCode = config.MOMO_PARTNER_CODE;
-        const accessKey = config.MOMO_ACCESS_KEY;
-        const secretKey = config.MOMO_SECRET_KEY;
         const lang = 'en';
 
         const rawSignature = [
@@ -92,17 +91,14 @@ class MomoCheckoutProvider {
             );
 
             const { data } = response;
-            console.log(data);
+            return data;
         } catch (error) {
             console.error(error.response.data);
         }
     }
 
     verifyIpnSignature(body) {
-        const accessKey = config.MOMO_ACCESS_KEY;
-        const secretKey = config.MOMO_SECRET_KEY;
         const {
-            partnerCode,
             orderId,
             requestId,
             amount,
@@ -116,6 +112,7 @@ class MomoCheckoutProvider {
             extraData,
             signature,
         } = body;
+        ({ partnerCode } = body);
 
         const rawSignature = [
             `accessKey=${accessKey}`,
@@ -138,9 +135,6 @@ class MomoCheckoutProvider {
     }
 
     async capturePayment(requestId, orderId, amount) {
-        const partnerCode = config.MOMO_PARTNER_CODE;
-        const accessKey = config.MOMO_ACCESS_KEY;
-        const secretKey = config.MOMO_SECRET_KEY;
         const requestType = 'capture';
         const description = '';
         const lang = 'en';
@@ -175,6 +169,7 @@ class MomoCheckoutProvider {
             );
 
             const { data } = response;
+            return data;
         } catch (error) {
             console.error(error.response.data);
         }

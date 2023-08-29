@@ -11,11 +11,12 @@ const voucherModel = require('../models/voucherModel');
 const paymentModel = require('../models/paymentModel');
 const accountModel = require('../models/accountModel');
 const {
-    // MomoCheckoutProvider,
+    MomoCheckoutProvider,
     PaypalCheckoutProvider,
     ShipCodCheckoutProvider,
 } = require('../utils/checkout');
 const { getRate } = require('../utils/currencyConverter');
+const crypto = require('../utils/crypto');
 // const { getOrderEmail, createTransport } = require('../utils/nodemailer');
 
 exports.getOrder = catchAsync(async (req, res, next) => {
@@ -155,7 +156,7 @@ exports.addVoucher = catchAsync(async (req, res, next) => {
 
     if (result.includes(-1)) {
         return next(
-            new AppError(`Subtotal isn''t enough to use this voucher.`, 400),
+            new AppError(`Subtotal isn't enough to use this voucher.`, 400),
         );
     }
     if (result.includes(-2)) {
@@ -163,7 +164,7 @@ exports.addVoucher = catchAsync(async (req, res, next) => {
     }
     if (result.includes(-3)) {
         return next(
-            new AppError(`Subtotal isn''t enough to use this voucher.`, 400),
+            new AppError(`Subtotal isn't enough to use this voucher.`, 400),
         );
     }
     if (result.includes(-4)) {
@@ -255,6 +256,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
         email,
         fullName,
         phoneNumber,
+        orderId,
     };
 
     // Verify payment ID
@@ -266,7 +268,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     // Create checkout provider
     let checkoutProvider;
     if (paymentProvider === config.payment.MOMO) {
-        // checkoutProvider = new MomoCheckoutProvider();
+        checkoutProvider = new MomoCheckoutProvider();
     } else if (paymentProvider === config.payment.PAYPAL) {
         checkoutProvider = new PaypalCheckoutProvider();
     } else if (paymentProvider === config.payment.COD) {
@@ -285,8 +287,9 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     const [paymentOrderId, redirectUrl] = await checkoutProvider.createLink(
         exchangedPrice,
         userInfo,
-        `${req.protocol}://${req.get('host')}`,
         // `${req.headers.origin}`,
+        `${req.protocol}://${req.get('host')}`,
+        `${req.protocol}://${req.get('host')}`,
     );
 
     // Change order state to pending without paying
@@ -323,4 +326,37 @@ exports.notifyPaypal = catchAsync(async (req, res, next) => {
     } else {
         return next(new AppError('Payment is failed.', 400));
     }
+});
+
+exports.notifyMomo = catchAsync(async (req, res, next) => {
+    console.log(req.body);
+    const { resultCode, amount, extraData } = req.body;
+    const { email } = JSON.parse(crypto.decryptBase64(extraData));
+    let { orderId } = req.body;
+    orderId = orderId.split('_')[0];
+
+    // Verify signature
+    const provider = new MomoCheckoutProvider();
+    if (!provider.verifyIpnSignature(req.body)) {
+        return next(new AppError('Signature is mismatch.', 400));
+    }
+
+    // Verify for total payment
+    const { totalPayment } = await orderModel.getTotalPayment(orderId);
+    if (totalPayment !== amount) {
+        return next(new AppError('Amount is mismatch.', 400));
+    }
+
+    // Check for transaction success
+    if (resultCode !== 0) {
+        return next(new AppError('Payment is failed.', 400));
+    }
+
+    await orderModel.updateState(orderId, config.orderState.PENDING);
+    await cartModel.deleteClickedBooksFromCart(email);
+
+    // Response for acknowledge
+    res.status(200).json({
+        status: 'success',
+    });
 });

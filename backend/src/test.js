@@ -8,6 +8,11 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    const result = await orderModel.getTotalPayment('OD00001');
-    console.log(result);
+    const email = 'khoiminhtrannguyen@gmail.com';
+    const json = JSON.stringify({ email });
+    console.log(json);
+    const extraData = crypto.encryptBase64(json);
+    console.log(extraData);
+    const { email: decryptData } = JSON.parse(crypto.decryptBase64(extraData));
+    console.log(decryptData);
 })();
