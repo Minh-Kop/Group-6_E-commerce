@@ -56,6 +56,17 @@ exports.getUserOrders = async (entity) => {
     return result.recordset;
 };
 
+exports.getAllOrders = async (entity) => {
+    const { orderState, limit, offset } = entity;
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('orderState', sql.Int, orderState);
+    request.input('limit', sql.Int, limit);
+    request.input('offset', sql.Int, offset);
+    const result = await request.execute('sp_GetAllOrders');
+    return result.recordset;
+};
+
 exports.getTotalPayment = async (orderId) => {
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);

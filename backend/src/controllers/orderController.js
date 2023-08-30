@@ -76,6 +76,38 @@ exports.getUserOrders = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.getAllOrders = catchAsync(async (req, res, next) => {
+    const { orderState, limit: strLimit, page: strPage } = req.body;
+
+    const page = +strPage || 1;
+    const limit = +strLimit || 10;
+    const offset = (page - 1) * limit;
+
+    const returnedOrders = await orderModel.getAllOrders({
+        orderState,
+        limit,
+        offset,
+    });
+    const orders = await Promise.all(
+        returnedOrders.map(async (order) => {
+            const books = await bookModel.getBooksByOrderId(order.orderId);
+            return {
+                orderId: order.orderId,
+                orderState: order.orderState,
+                booksLength: books.length,
+                books,
+                ...order,
+            };
+        }),
+    );
+
+    res.status(200).json({
+        status: 'success',
+        ordersLength: orders.length,
+        orders,
+    });
+});
+
 // module.exports = {
 
 //     async updateState(req, res, next) {

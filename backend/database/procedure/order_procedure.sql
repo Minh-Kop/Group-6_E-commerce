@@ -225,6 +225,55 @@ RETURN 1
 GO
 
 GO
+IF OBJECT_ID('sp_GetAllOrders') IS NOT NULL
+	DROP PROC sp_GetAllOrders
+GO
+CREATE PROCEDURE sp_GetAllOrders (
+    @orderState INT,
+    @limit INT,
+    @offset INT    
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        if @orderState IS NULL
+        BEGIN
+            SELECT o.ORDER_ID orderId, os.ORDER_STATE orderState, o.TOTAL_PAYMENT totalPayment
+            FROM H_ORDER o
+            JOIN (
+                SELECT ORDER_ID, ORDER_STATE,
+                    ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
+                FROM ORDER_STATE
+            ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
+            WHERE os.ORDER_STATE <> 0
+            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC
+            OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+        END
+        ELSE
+        BEGIN
+            SELECT o.ORDER_ID orderId, os.ORDER_STATE orderState, o.TOTAL_PAYMENT totalPayment
+            FROM H_ORDER o
+            JOIN (
+                SELECT ORDER_ID, ORDER_STATE,
+                    ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
+                FROM ORDER_STATE
+            ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
+            WHERE os.ORDER_STATE = @orderState and os.ORDER_STATE <> 0
+            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC
+            OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+        END
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
 IF OBJECT_ID('sp_DeleteAllInitialOrders') IS NOT NULL
 	DROP PROC sp_DeleteAllInitialOrders
 GO
