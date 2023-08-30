@@ -38,15 +38,41 @@ exports.getOrder = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getUserOrders = catchAsync(async (req, res, next) => {
-    const { getTotal, orderState, limit, page } = req.query;
-    const { email } = req.user;
+exports.getMe = catchAsync(async (req, res, next) => {
+    req.body.email = req.user.email;
+    next();
+});
 
-    const returnedOrders = await orderModel.getUserOrders(email, orderState);
+exports.getUserOrders = catchAsync(async (req, res, next) => {
+    const { email, orderState, limit: strLimit, page: strPage } = req.body;
+
+    const page = +strPage || 1;
+    const limit = +strLimit || 10;
+    const offset = (page - 1) * limit;
+
+    const returnedOrders = await orderModel.getUserOrders({
+        email,
+        orderState,
+        limit,
+        offset,
+    });
+    const orders = await Promise.all(
+        returnedOrders.map(async (order) => {
+            const books = await bookModel.getBooksByOrderId(order.orderId);
+            return {
+                orderId: order.orderId,
+                orderState: order.orderState,
+                booksLength: books.length,
+                books,
+                ...order,
+            };
+        }),
+    );
 
     res.status(200).json({
         status: 'success',
-        returnedOrders,
+        ordersLength: orders.length,
+        orders,
     });
 });
 

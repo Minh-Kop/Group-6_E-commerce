@@ -65,22 +65,9 @@ delete from ORDER_DETAIL where ORDER_ID in (select ORDER_ID from H_ORDER where E
 delete from H_ORDER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
 delete from ORDER_VOUCHER where ORDER_ID in (select ORDER_ID from H_ORDER where EMAIL = 'khoiminhtrannguyen@gmail.com')
 
-SELECT * from H_ORDER where ORDER_ID = 'OD00001'
+SELECT * from H_ORDER
 select * from ORDER_STATE
 select * from ORDER_DETAIL
 select * from ORDER_VOUCHER
 
 SELECT CURRENT_TIMEZONE() 'Present server Timezone'
-
-exec sp_GetUserOrders 'khoiminhtrannguyen@gmail.com', null
-exec sp_GetUserOrders 'khoiminhtrannguyen@gmail.com', 0
-
-SELECT o.ORDER_ID orderId, os.ORDER_STATE orderState, o.TOTAL_PAYMENT totalPayment
-            FROM H_ORDER o
-            JOIN (
-                SELECT ORDER_ID, ORDER_STATE,
-                    ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
-                FROM ORDER_STATE
-            ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
-            WHERE o.EMAIL = 'khoiminhtrannguyen@gmail.com'
-            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC;

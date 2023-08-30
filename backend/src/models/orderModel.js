@@ -44,11 +44,14 @@ exports.getDetailedOrder = async (orderId) => {
     return result.recordsets;
 };
 
-exports.getUserOrders = async (email, orderState) => {
+exports.getUserOrders = async (entity) => {
+    const { email, orderState, limit, offset } = entity;
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);
     request.input('email', sql.NVarChar, email);
     request.input('orderState', sql.Int, orderState);
+    request.input('limit', sql.Int, limit);
+    request.input('offset', sql.Int, offset);
     const result = await request.execute('sp_GetUserOrders');
     return result.recordset;
 };

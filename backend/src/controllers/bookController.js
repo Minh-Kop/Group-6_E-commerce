@@ -83,15 +83,15 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     const offset = (page - 1) * limit;
 
     const categoryIdList = await getListCategoryId(categoryId);
-    const resultProduct = await bookModel.getAllBooks(
+    const resultProduct = await bookModel.getAllBooks({
         categoryIdList,
         priceRange,
         publisherId,
         bookFormat,
-        sortType,
+        sortType: sortType || 'BOOK_DISCOUNTED_PRICE',
         limit,
         offset,
-    );
+    });
     const promises = resultProduct.map(async (item) => {
         return {
             bookId: item.BOOK_ID,

@@ -180,7 +180,9 @@ IF OBJECT_ID('sp_GetUserOrders') IS NOT NULL
 GO
 CREATE PROCEDURE sp_GetUserOrders (
     @email NVARCHAR(100),
-    @orderState INT
+    @orderState INT,
+    @limit INT,
+    @offset INT    
 )
 AS
 BEGIN TRANSACTION
@@ -194,8 +196,9 @@ BEGIN TRANSACTION
                     ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
                 FROM ORDER_STATE
             ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
-            WHERE o.EMAIL = @email
-            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC;
+            WHERE o.EMAIL = @email and os.ORDER_STATE <> 0
+            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC
+            OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
         END
         ELSE
         BEGIN
@@ -206,8 +209,9 @@ BEGIN TRANSACTION
                     ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
                 FROM ORDER_STATE
             ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
-            WHERE o.EMAIL = @email and os.ORDER_STATE = @orderState
-            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC;
+            WHERE o.EMAIL = @email and os.ORDER_STATE = @orderState and os.ORDER_STATE <> 0
+            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC
+            OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
         END
 	END TRY
 
