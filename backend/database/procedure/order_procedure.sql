@@ -157,7 +157,7 @@ BEGIN TRANSACTION
         from ORDER_DETAIL od join BOOK b on od.BOOK_ID = b.BOOK_ID
         where od.ORDER_ID = @orderId 
         
-        select [ORDER_ID] orderId, p.PAYMENT_PROVIDER paymentProvider,
+        select [ORDER_ID] orderId, o.EMAIL email, p.PAYMENT_PROVIDER paymentProvider,
             [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
             [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
             [TOTAL_PAYMENT] totalPayment
@@ -476,6 +476,73 @@ BEGIN TRANSACTION
             RETURN -1
         END
         INSERT into ORDER_STATE (ORDER_ID, ORDER_STATE, CREATED_TIME) values (@orderId, @orderState, GETDATE())
+
+        -- Update stock after order has been canceled or refunded
+        IF @orderState IN (-1, -3)
+        BEGIN
+            -- Create temp table to store BookId
+            DECLARE @ResultTable TABLE (
+                bookId char(7),
+                quantity INT,
+                rn int
+            )
+            INSERT INTO @ResultTable (bookId, quantity, rn)
+            SELECT BOOK_ID bookId, ORDER_QUANTITY quantity, ROW_NUMBER() OVER(order by book_id) rn
+            from ORDER_DETAIL
+            WHERE ORDER_ID = @orderId
+
+            -- Create index i to loop all temp table
+            DECLARE @i int = 1
+
+            -- Loop for all temp table
+            WHILE EXISTS (select 1 from @ResultTable where rn = @i)
+            BEGIN
+                declare @bookId CHAR(7), @quantity INT
+                SELECT @bookId = bookId, @quantity = quantity 
+                from @ResultTable 
+                where rn = @i
+
+                -- Add stock
+                UPDATE BOOK
+                set STOCK = STOCK + @quantity
+                where BOOK_ID = @bookId
+
+                -- Increase index by 1
+                set @i = @i + 1
+            END
+        END
+        -- If success
+        else IF @orderState IN (3) 
+        BEGIN
+            DECLARE @email NVARCHAR(100), @totalPayment INT
+            select @email = EMAIL, @totalPayment = TOTAL_PAYMENT from H_ORDER where ORDER_ID = @orderId
+            DECLARE @tier INT = (select TIER from ACCOUNT_DETAIL where EMAIL = @email)
+            DECLARE @percentage FLOAT = 0
+
+            IF @tier = 1
+            BEGIN
+                SET @percentage = 0.005
+            END
+            ELSE IF @tier = 2
+            BEGIN
+                SET @percentage = 0.01
+            END
+            ELSE IF @tier = 3
+            BEGIN
+                SET @percentage = 0.02
+            END
+
+            -- Calculate HPoint
+            DECLARE @hPoint INT = ROUND(@totalPayment * @percentage, 0)
+
+            -- Update HPoint
+            UPDATE ACCOUNT_DETAIL set HPOINT = HPOINT + @hPoint WHERE EMAIL = @email
+            UPDATE HPOINT_ACCUMULATION_YEAR set HPOINT = HPOINT + @hPoint WHERE EMAIL = @email and SAVED_YEAR = YEAR(GETDATE())
+            
+            -- Insert a new row in HPoint History
+            INSERT into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_TYPE, CHANGED_POINTS, CHANGED_REASON) VALUES
+                (@email, GETDATE(), 2, @hPoint, N'Tích lũy HPoint từ đơn hàng ' + @orderId + '.')
+        END
 	END TRY
 
 	BEGIN CATCH
