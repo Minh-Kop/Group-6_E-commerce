@@ -54,11 +54,12 @@ exports.deleteFromCart = async (cartId, bookId) => {
     return result.rowsAffected[0];
 };
 
-exports.deleteClickedBooksFromCart = async (email) => {
+exports.deleteClickedBooksFromCart = async (email, orderId) => {
     const pool = await database.getConnectionPool();
 
     const request = new sql.Request(pool);
     request.input('email', sql.NVarChar, email);
+    request.input('orderId', sql.Char, orderId);
     const result = await request.execute('sp_DeleteClickedBooksFromCart');
     return result.rowsAffected[0];
 };

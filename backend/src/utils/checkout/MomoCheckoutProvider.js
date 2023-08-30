@@ -11,7 +11,7 @@ class MomoCheckoutProvider {
     async createLink(amount, userInfo, redirectHost, ipnHost, extraData = '') {
         // const redirectUrl = `${redirectHost}/account/order`;
         // const ipnUrl = `${ipnHost}/api/checkout/notifyMomo`;
-        const redirectUrl = `https://en.wikipedia.org/wiki/Oppenheimer_(film)`;
+        const redirectUrl = `https://www.fahasa.com/`;
         const ipnUrl =
             'https://f70d-123-20-134-12.ngrok-free.app/api/checkout/notifyMomo';
 

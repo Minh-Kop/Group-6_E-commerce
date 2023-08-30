@@ -13,6 +13,7 @@ const config = {
     },
 
     NO_TOKEN_URL: ['/auth', '/location', '/category', '/product'],
+
     role: {
         USER: 1,
         ADMIN: 2,

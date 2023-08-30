@@ -124,6 +124,103 @@ RETURN 1
 GO
 
 GO
+IF OBJECT_ID('sp_GetDetailedOrder') IS NOT NULL
+	DROP PROC sp_GetDetailedOrder
+GO
+CREATE PROCEDURE sp_GetDetailedOrder (
+    @orderId CHAR(7)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        if not exists (select 1 from H_ORDER where ORDER_ID = @orderId)
+        BEGIN
+            PRINT N'Order not found.'
+            ROLLBACK 
+            RETURN -1
+        END
+
+        select sa.RECEIVER_NAME fullName, sa.RECEIVER_PHONE_NUMBER phoneNumber, 
+            sa.DETAILED_ADDR + ', ' + w.WARD_NAME + ', ' + d.DIST_NAME + ', ' + p.PROV_NAME detailedAddress
+        from SHIPPING_ADDRESS sa join WARD w on w.WARD_ID = sa.WARD_ID
+            join DISTRICT d on d.DIST_ID = sa.DIST_ID
+            join PROVINCE p on p.PROV_ID = sa.PROV_ID
+        where sa.ADDR_ID = (select ADDR_ID from H_ORDER where ORDER_ID = @orderId)
+
+        SELECT ORDER_STATE orderState, CREATED_TIME createdTime
+        from ORDER_STATE
+        where ORDER_ID = @orderId and ORDER_STATE != 0
+        ORDER by CREATED_TIME DESC
+
+        SELECT od.BOOK_ID bookId, b.BOOK_NAME bookName, b.BOOK_PATH bookImage, b.BOOK_DISCOUNTED_PRICE unitPrice,
+            od.ORDER_QUANTITY amount, od.ORDER_PRICE itemSubtotal
+        from ORDER_DETAIL od join BOOK b on od.BOOK_ID = b.BOOK_ID
+        where od.ORDER_ID = @orderId 
+        
+        select [ORDER_ID] orderId, p.PAYMENT_PROVIDER paymentProvider,
+            [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
+            [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
+            [TOTAL_PAYMENT] totalPayment
+        from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
+        where ORDER_ID = @orderId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_GetUserOrders') IS NOT NULL
+	DROP PROC sp_GetUserOrders
+GO
+CREATE PROCEDURE sp_GetUserOrders (
+    @email NVARCHAR(100),
+    @orderState INT
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        if @orderState IS NULL
+        BEGIN
+            SELECT o.ORDER_ID orderId, os.ORDER_STATE orderState, o.TOTAL_PAYMENT totalPayment
+            FROM H_ORDER o
+            JOIN (
+                SELECT ORDER_ID, ORDER_STATE,
+                    ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
+                FROM ORDER_STATE
+            ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
+            WHERE o.EMAIL = @email
+            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC;
+        END
+        ELSE
+        BEGIN
+            SELECT o.ORDER_ID orderId, os.ORDER_STATE orderState, o.TOTAL_PAYMENT totalPayment
+            FROM H_ORDER o
+            JOIN (
+                SELECT ORDER_ID, ORDER_STATE,
+                    ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY CREATED_TIME DESC) AS rn
+                FROM ORDER_STATE
+            ) os ON os.ORDER_ID = o.ORDER_ID AND os.rn = 1
+            WHERE o.EMAIL = @email and os.ORDER_STATE = @orderState
+            ORDER BY o.ORDER_DATE DESC, o.ORDER_ID DESC;
+        END
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
 IF OBJECT_ID('sp_DeleteAllInitialOrders') IS NOT NULL
 	DROP PROC sp_DeleteAllInitialOrders
 GO
@@ -248,7 +345,6 @@ BEGIN TRANSACTION
                 set @shippingDiscountSubtotal = @maxDiscountPrice
             END
             
-            INSERT into ORDER_VOUCHER (ORDER_ID, VOUCHER_ID) values (@orderId, @voucherId)
             UPDATE H_ORDER
             SET SHIPPING_DISCOUNT_SUBTOTAL = @shippingDiscountSubtotal, 
                 TOTAL_PAYMENT = @merchandiseSubtotal + @shippingFee - @shippingDiscountSubtotal - @hachikoVoucherApplied
@@ -265,12 +361,12 @@ BEGIN TRANSACTION
                 SET @hachikoVoucherApplied = @percentage/100.0 * @merchandiseSubtotal
             END
 
-            INSERT into ORDER_VOUCHER (ORDER_ID, VOUCHER_ID) values (@orderId, @voucherId)
             UPDATE H_ORDER
             SET HACHIKO_VOUCHER_APPLIED = @hachikoVoucherApplied, 
                 TOTAL_PAYMENT = @merchandiseSubtotal + @shippingFee - @shippingDiscountSubtotal - @hachikoVoucherApplied
             WHERE ORDER_ID = @orderId
         END
+        INSERT into ORDER_VOUCHER (ORDER_ID, VOUCHER_ID) values (@orderId, @voucherId)
 	END TRY
 
 	BEGIN CATCH

@@ -17,17 +17,16 @@ const {
 } = require('../utils/checkout');
 const { getRate } = require('../utils/currencyConverter');
 const crypto = require('../utils/crypto');
-// const { getOrderEmail, createTransport } = require('../utils/nodemailer');
 
 exports.getOrder = catchAsync(async (req, res, next) => {
     const { orderId } = req.params;
     const [deliveryInformation, booksOrdered, orderInformation] =
-        await orderModel.getOrder(orderId);
+        await orderModel.getInitialOrder(orderId);
     res.status(200).json({
         status: 'success',
         data: {
             deliveryInformation: deliveryInformation[0],
-            booksOrdered: booksOrdered,
+            booksOrdered,
             orderInformation: orderInformation[0],
         },
     });
@@ -295,7 +294,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     // Change order state to pending without paying
     if (paymentProvider === config.payment.COD) {
         await orderModel.updateState(orderId, config.orderState.PENDING);
-        await cartModel.deleteClickedBooksFromCart(email);
+        await cartModel.deleteClickedBooksFromCart(email, orderId);
     }
 
     res.status(200).json({
@@ -319,7 +318,7 @@ exports.notifyPaypal = catchAsync(async (req, res, next) => {
     const captureResponse = await provider.capturePayment(paymentOrderId);
     if (captureResponse.status === 'COMPLETED') {
         await orderModel.updateState(orderId, config.orderState.PENDING);
-        await cartModel.deleteClickedBooksFromCart(email);
+        await cartModel.deleteClickedBooksFromCart(email, orderId);
         res.status(200).json({
             status: 'success',
         });
@@ -329,11 +328,9 @@ exports.notifyPaypal = catchAsync(async (req, res, next) => {
 });
 
 exports.notifyMomo = catchAsync(async (req, res, next) => {
-    console.log(req.body);
-    const { resultCode, amount, extraData } = req.body;
+    const { resultCode, amount, extraData, orderId: longOrderId } = req.body;
     const { email } = JSON.parse(crypto.decryptBase64(extraData));
-    let { orderId } = req.body;
-    orderId = orderId.split('_')[0];
+    const orderId = longOrderId.split('_')[0];
 
     // Verify signature
     const provider = new MomoCheckoutProvider();
@@ -353,7 +350,7 @@ exports.notifyMomo = catchAsync(async (req, res, next) => {
     }
 
     await orderModel.updateState(orderId, config.orderState.PENDING);
-    await cartModel.deleteClickedBooksFromCart(email);
+    await cartModel.deleteClickedBooksFromCart(email, orderId);
 
     // Response for acknowledge
     res.status(200).json({

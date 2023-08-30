@@ -1,5 +1,7 @@
-const config = require('../config');
 const nodemailer = require('nodemailer');
+const moment = require('moment');
+
+const config = require('../config');
 const oauthClient = require('./oauth2');
 
 const accessToken = oauthClient.getAccessToken();
@@ -48,7 +50,7 @@ const getVerifyEmail = (toEmail, url, verifyToken) => {
                     </button>
                 </a>
             </div>
-            <div>Sent at ${new Date().toUTCString()}</div>
+            <div>Sent at ${moment().format('LLLL')}</div>
         </div>`,
     };
 };
@@ -97,7 +99,7 @@ const getOrderEmail = (toEmail, orderId, variants, basicInfo) => {
                 <div><b>Discount: </b>${basicInfo.discountPrice}</div>
                 <div><b>Total: </b>${basicInfo.totalPrice}</div>
             </div>
-            <div>Sent at ${new Date().toUTCString()}</div>
+            <div>Sent at ${moment().format('LLLL')}</div>
         </div>`,
     };
 };
