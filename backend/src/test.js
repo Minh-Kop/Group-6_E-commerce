@@ -8,6 +8,10 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    moment.locale();
-    console.log(moment().format('LLLL'));
+    const time = moment('2023-9-30 01:00');
+    // const time = moment('2023-08-30T18:25:37.437Z')
+    //     .subtract(7, 'h')
+    //     .startOf('day')
+    //     .add(31, 'd');
+    console.log(time.format('LLLL'));
 })();
