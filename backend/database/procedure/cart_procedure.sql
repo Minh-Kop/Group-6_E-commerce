@@ -106,13 +106,33 @@ IF OBJECT_ID('sp_DeleteClickedBooksFromCart') IS NOT NULL
 	DROP PROC sp_DeleteClickedBooksFromCart
 GO
 CREATE PROCEDURE sp_DeleteClickedBooksFromCart (
-    @email NVARCHAR(100)
+    @email NVARCHAR(100),
+    @orderId CHAR(7)
 )
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
+        -- Update order date
+        UPDATE H_ORDER
+        SET ORDER_DATE = GETDATE()
+        WHERE ORDER_ID = @orderId
+
+        -- Delete each book in cart
         DECLARE @cartId CHAR(10) = (select CART_ID from CART where EMAIL = @email)
-        delete from CART_DETAIL where CART_ID = @cartId and IS_CLICKED = 1
+        WHILE EXISTS (select 1 from CART_DETAIL where CART_ID = @cartId and IS_CLICKED = 1)
+        BEGIN
+            declare @bookId CHAR(7), @quantity INT
+            SELECT @bookId = BOOK_ID, @quantity = CART_QUANTITY 
+            from CART_DETAIL 
+            where CART_ID = @cartId and IS_CLICKED = 1
+
+            -- Substract stock
+            UPDATE BOOK
+            set STOCK = STOCK - @quantity
+            where BOOK_ID = @bookId
+
+            delete from CART_DETAIL where CART_ID = @cartId and BOOK_ID = @bookId
+        END
 
         -- Count books
         declare @cartCount int
