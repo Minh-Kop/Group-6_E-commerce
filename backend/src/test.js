@@ -8,6 +8,9 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    moment.locale();
-    console.log(moment().format('LLLL'));
+    const abc = {
+        a: 1,
+        b: 2,
+        c: 3,
+    };
 })();
