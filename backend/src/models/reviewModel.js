@@ -13,28 +13,22 @@ exports.createReview = async ({ bookId, orderId, rating, comment }) => {
     return result.returnValue;
 };
 
-// export default {
-//     async getReview({ productId, variantId, orderId }) {
-//         const query = removeUndefined({
-//             product_id: productId,
-//             variant_id: variantId,
-//             order_id: orderId,
-//         });
-//         const result = await db('review')
-//             .join('product_variant', 'review.variant_id', 'product_variant.id')
-//             .join('order', 'order.id', 'review.order_id')
-//             .join('account', 'account.email', 'order.email')
-//             .where(query)
-//             .select(
-//                 'account.email',
-//                 'account.fullname',
-//                 'account.avatar_path',
-//                 'review.variant_id',
-//                 'review.order_id',
-//                 'review.rating',
-//                 'review.comment',
-//                 'review.created_time',
-//             );
-//         return result;
-//     },
-// };
+exports.getReviews = async ({ bookId, orderId }) => {
+    let sqlString = '';
+    if (bookId) {
+        sqlString += `r.BOOK_ID = '${bookId}' `;
+    }
+    if (orderId) {
+        sqlString += `and r.ORDER_ID = '${orderId}'`;
+    }
+    sqlString = `SELECT a.EMAIL email, a.FULLNAME fullName, a.AVATAR_FILENAME avatar, r.BOOK_ID bookId, r.RATING rating, r.REVIEW comment
+                from ORDER_REVIEW r join H_ORDER o on r.ORDER_ID = o.ORDER_ID
+                    join ACCOUNT a on a.EMAIL = o.EMAIL
+                where ${sqlString}`;
+    sqlString = sqlString.replace(/where and/, 'where');
+
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query(sqlString);
+    return result.recordset;
+};

@@ -34,6 +34,16 @@ BEGIN TRANSACTION
 
         INSERT into ORDER_REVIEW (ORDER_ID, BOOK_ID, RATING, REVIEW, CREATED_TIME) VALUES
             (@orderId, @bookId, @rating, @comment, GETDATE())
+
+        -- Increase 200 HPoint for user
+        declare @email NVARCHAR(100) = (SELECT EMAIL from H_ORDER where ORDER_ID = @orderId)
+        update ACCOUNT_DETAIL
+        set HPOINT = HPOINT + 200
+        where EMAIL = @email
+
+        -- Update HPoint history
+        INSERT into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_TYPE, CHANGED_POINTS, CHANGED_REASON) VALUES
+            (@email, GETDATE(), 1, 200, N'Tăng HPoint từ việc đánh giá cho sản phẩm ' + @bookId +  N' của đơn hàng ' + @orderId + '.')
 	END TRY
 
 	BEGIN CATCH

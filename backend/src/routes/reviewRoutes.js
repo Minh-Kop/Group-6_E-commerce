@@ -7,7 +7,7 @@ const router = express.Router();
 
 router
     .route('/')
-    // .get(reviewController.getReview)
+    .get(reviewController.getReviews)
     .post(authController.protect, reviewController.createReview);
 
 module.exports = router;

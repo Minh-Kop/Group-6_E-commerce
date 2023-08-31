@@ -33,8 +33,8 @@ const config = {
 
     pointChangedType: {
         RECEIVE: 1,
-        USE: -1,
         ACCUMULATE: 2,
+        USE: -1,
     },
 
     tier: {

@@ -38,7 +38,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
     }
 
     // Check if the review exceeds the expiration date (30 days after success state)
-    if (moment().isAfter(expirationDate)) {
+    if (moment().isSameOrAfter(expirationDate)) {
         return next(new AppError('Exceed the expiration date.', 400));
     }
 
@@ -71,27 +71,15 @@ exports.createReview = catchAsync(async (req, res, next) => {
     return next(new AppError('Created failed.', 500));
 });
 
-exports.getReview = catchAsync(async (req, res, next) => {
-    const { productId, orderId, bookId } = req.query;
-
-    const result = await reviewModel.getReview({
-        productId,
+exports.getReviews = catchAsync(async (req, res, next) => {
+    const { orderId, bookId } = req.query;
+    const reviews = await reviewModel.getReviews({
         orderId,
         bookId,
     });
-    const reviews = result.map((review) => ({
-        email: review.email,
-        fullName: review.fullname,
-        avatarPath: review.avatar_path,
-        bookId: review.variant_id,
-        orderId: review.order_id,
-        rating: review.rating,
-        comment: review.comment,
-        createdTime: review.created_time,
-    }));
-    res.status(200).send({
-        exitcode: 0,
-        message: 'Get product review successfully',
-        reviews: reviews,
+    res.status(200).json({
+        status: 'success',
+        length: reviews.length,
+        reviews,
     });
 });

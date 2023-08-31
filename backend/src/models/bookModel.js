@@ -48,16 +48,15 @@ exports.getBookImages = async (bookId) => {
     return result.recordset;
 };
 
-exports.getAllBooks = async (entity) => {
-    const {
-        categoryIdList,
-        priceRange,
-        publisherId,
-        bookFormat,
-        limit,
-        offset,
-    } = entity;
-    let { sortType } = entity;
+exports.getAllBooks = async ({
+    categoryIdList,
+    priceRange,
+    publisherId,
+    bookFormat,
+    limit,
+    offset,
+    sortType,
+}) => {
     let sqlString =
         'select b.* from BOOK b join BOOK_DETAIL d on d.BOOK_ID = b.BOOK_ID';
 

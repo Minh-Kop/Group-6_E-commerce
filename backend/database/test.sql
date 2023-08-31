@@ -81,3 +81,5 @@ SELECT *
 from HPOINT_HISTORY
 
 select * from ORDER_REVIEW
+
+delete from ORDER_REVIEW
