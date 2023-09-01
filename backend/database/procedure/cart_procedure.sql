@@ -158,10 +158,9 @@ BEGIN TRANSACTION
             set CART_QUANTITY = @quantity, CART_PRICE = @price * @quantity
             where CART_ID = @cartId and BOOK_ID = @bookId
         END
-       
+
         if @isClicked is NOT NULL
         BEGIN
-            print @isClicked
             UPDATE CART_DETAIL
             set IS_CLICKED = @isClicked
             where CART_ID = @cartId and BOOK_ID = @bookId
@@ -189,30 +188,6 @@ AS
 BEGIN TRANSACTION
 	BEGIN TRY
         delete from CART_DETAIL where CART_ID = @cartId and BOOK_ID = @bookId
-
-        -- Count books
-        declare @cartCount int
-        select @cartCount = COUNT(*)
-        from CART_DETAIL
-        where CART_ID = @cartId
-        GROUP by CART_ID
-
-        IF @cartCount is NULL
-        BEGIN
-            set @cartCount = 0
-        END
-
-        -- Calculate total
-        DECLARE @total int = 0;
-        
-        select @total = sum(CART_PRICE)
-        from CART_DETAIL cd
-        where CART_ID = @cartId and IS_CLICKED = 1
-        group BY CART_ID
-        
-        UPDATE CART
-        set CART_COUNT = @cartCount, CART_TOTAL = @total
-        where CART_ID = @cartId
 	END TRY
 
 	BEGIN CATCH
@@ -258,16 +233,11 @@ BEGIN TRANSACTION
         END
 
         -- Count books
-        declare @cartCount int
+        declare @cartCount int = 0
         select @cartCount = COUNT(*)
         from CART_DETAIL
         where CART_ID = @cartId
         GROUP by CART_ID
-
-        IF @cartCount is NULL
-        BEGIN
-            set @cartCount = 0
-        END
         
         UPDATE CART
         set CART_COUNT = @cartCount, CART_TOTAL = 0

@@ -81,29 +81,3 @@ select * from ORDER_REVIEW
 
 delete from ORDER_REVIEW
 
-select BOOK_ID bookId, CART_QUANTITY quantity from CART_DETAIL where CART_ID = '' and BOOK_ID = ''
-
-delete CART_DETAIL
-update CART
-set CART_COUNT = 0, CART_TOTAL = 0
-where CART_ID = 'CR00000001'
-
-select * from sys.databases
-SELECT resource_type, resource_associated_entity_id,  
-    request_status, request_mode,request_session_id,  
-    resource_description   
-    FROM sys.dm_tran_locks  
-    WHERE resource_database_id = 21
-
-SELECT   
-        t1.resource_type,  
-        t1.resource_database_id,  
-        t1.resource_associated_entity_id,  
-        t1.request_mode,  
-        t1.request_session_id,  
-        t2.blocking_session_id  
-    FROM sys.dm_tran_locks as t1  
-    INNER JOIN sys.dm_os_waiting_tasks as t2  
-        ON t1.lock_owner_address = t2.resource_address;
-
-exec sp_UpdateCart 'CR00000001', 'BK00001', 1, 0

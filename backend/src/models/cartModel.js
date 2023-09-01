@@ -15,8 +15,8 @@ exports.updateBookInCart = async ({ cartId, bookId, quantity, isClicked }) => {
     const request = new sql.Request(pool);
     request.input('cartId', sql.Char, cartId);
     request.input('bookId', sql.Char, bookId);
-    request.input('quantity', sql.Int, quantity);
-    request.input('isClicked', sql.Bit, isClicked);
+    request.input('quantity', sql.Int, +quantity);
+    request.input('isClicked', sql.Bit, +isClicked);
     const result = await request.execute('sp_UpdateCart');
     return result.returnValue;
 };
@@ -26,8 +26,8 @@ exports.addBookToCart = async ({ cartId, bookId, quantity, isClicked }) => {
     const request = new sql.Request(pool);
     request.input('cartId', sql.Char, cartId);
     request.input('bookId', sql.Char, bookId);
-    request.input('quantity', sql.Int, quantity);
-    request.input('isClicked', sql.Bit, isClicked);
+    request.input('quantity', sql.Int, +quantity);
+    request.input('isClicked', sql.Bit, +isClicked);
     const result = await request.execute('sp_AddBookToCart');
     return result.returnValue;
 };

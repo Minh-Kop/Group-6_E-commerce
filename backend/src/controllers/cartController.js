@@ -51,6 +51,7 @@ exports.addBookToCart = catchAsync(async (req, res, next) => {
             });
             if (returnValue !== 1) {
                 await cartModel.deleteFromCart(cartId, bookId);
+                await cartModel.updateCartQuantityCartTotal(cartId);
                 return next(
                     new AppError(`This book is no longer existed.`, 400),
                 );
@@ -95,12 +96,13 @@ exports.updateBookInCart = catchAsync(async (req, res, next) => {
     });
 
     if (result === 1) {
-        // await cartModel.updateCartQuantityCartTotal(cartId);
+        await cartModel.updateCartQuantityCartTotal(cartId);
         return res.status(200).json({
             status: 'success',
         });
     }
     await cartModel.deleteFromCart(cartId, bookId);
+    await cartModel.updateCartQuantityCartTotal(cartId);
     return next(new AppError(`This book is no longer existed.`, 400));
 });
 
@@ -112,6 +114,8 @@ exports.deleteBookFromCart = catchAsync(async (req, res, next) => {
     const { CART_ID: cartId } = cartResult;
 
     const result = await cartModel.deleteFromCart(cartId, bookId);
+    await cartModel.updateCartQuantityCartTotal(cartId);
+
     if (result) {
         res.status(200).json({
             status: 'success',
