@@ -35,33 +35,35 @@ GO
 IF OBJECT_ID('t_UpdateCartDetail') IS NOT NULL
 	DROP TRIGGER t_UpdateCartDetail
 GO
-CREATE TRIGGER t_UpdateCartDetail
-ON CART_DETAIL
-AFTER UPDATE, INSERT
-AS
-BEGIN
-    declare @cartId char(10), @bookId char(7), @quantity int, @price int, @isClicked bit
-    select @cartId = i.CART_ID, @bookId = i.BOOK_ID, @quantity = i.CART_QUANTITY, @isClicked = i.IS_CLICKED from inserted i
-    select @price = BOOK_DISCOUNTED_PRICE from BOOK where BOOK_ID = @bookId
+-- CREATE TRIGGER t_UpdateCartDetail
+-- ON CART_DETAIL
+-- AFTER UPDATE, INSERT
+-- AS
+-- BEGIN
+--     declare @cartId char(10), @bookId char(7), @quantity int, @price int, @isClicked bit
+--     select @cartId = i.CART_ID, @bookId = i.BOOK_ID, @quantity = i.CART_QUANTITY, @isClicked = i.IS_CLICKED 
+--     from inserted i WITH (XLOCK)
+--     select @price = BOOK_DISCOUNTED_PRICE 
+--     from BOOK where BOOK_ID = @bookId
     
-    if UPDATE(cart_quantity)
-    BEGIN
-        UPDATE CART_DETAIL
-        SET CART_PRICE = @quantity * @price
-        where BOOK_ID = @bookId and CART_ID = @cartId
-    END
+--     if UPDATE(cart_quantity)
+--     BEGIN
+--         UPDATE CART_DETAIL
+--         SET CART_PRICE = @quantity * @price
+--         where BOOK_ID = @bookId and CART_ID = @cartId
+--     END
    
-    if UPDATE(is_clicked) or @isClicked = 1
-    BEGIN
-        DECLARE @total int = 0;
+--     if UPDATE(is_clicked) or @isClicked = 1
+--     BEGIN
+--         DECLARE @total int = 0;
         
-        select @total = sum(CART_PRICE)
-        from CART_DETAIL cd
-        where CART_ID = @cartId and IS_CLICKED = 1
-        group BY CART_ID
+--         select @total = sum(CART_PRICE)
+--         from CART_DETAIL cd WITH (XLOCK)
+--         where CART_ID = @cartId and IS_CLICKED = 1
+--         group BY CART_ID
 
-        UPDATE CART
-        SET CART_TOTAL = @total
-        where CART_ID = @cartId
-    END
-END;
+--         UPDATE CART
+--         SET CART_TOTAL = @total
+--         where CART_ID = @cartId
+--     END
+-- END;

@@ -1,4 +1,5 @@
-const sql = require('mssql/msnodesqlv8');
+// const sql = require('mssql/msnodesqlv8');
+const sql = require('mssql');
 
 const config = require('../config');
 
@@ -8,9 +9,10 @@ exports.getConnectionPool = async () => {
     const finalConfig = {
         ...config.DATABASE,
         // driver: 'msnodesqlv8',
-        // options: {
-        //     trustedConnection: true,
-        // },
+        options: {
+            trustServerCertificate: true,
+            // trustedConnection: true,
+        },
     };
 
     try {

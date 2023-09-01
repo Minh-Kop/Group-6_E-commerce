@@ -113,7 +113,7 @@ exports.createInitialOrder = catchAsync(async (req, res, next) => {
         }),
     );
 
-    // If there is any failed book creation, delete that book from the cart
+    // If there are any errors in book creation, delete that book from the cart
     const isFailedList = await Promise.all(
         isCreatedList.map(async ({ bookId, createdResult }) => {
             if (createdResult !== 1) {
@@ -126,9 +126,8 @@ exports.createInitialOrder = catchAsync(async (req, res, next) => {
     // If there is any failed book creation, delete this order
     if (isFailedList.includes(0) || isFailedList.includes(-1)) {
         await orderModel.deleteAllInitialOrders(email);
-        throw new AppError(
-            `There is at least 1 book's quantity that exceeds its stock.`,
-            400,
+        return next(
+            new AppError(`There is at least 1 no longer existed book.`, 400),
         );
     }
 

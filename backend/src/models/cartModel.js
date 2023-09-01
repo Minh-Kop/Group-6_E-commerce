@@ -1,4 +1,4 @@
-const sql = require('mssql/msnodesqlv8');
+const sql = require('mssql');
 
 const database = require('../utils/database');
 
@@ -10,38 +10,34 @@ exports.getCartByEmail = async (email) => {
     return result.recordset[0];
 };
 
-exports.updateBookInCart = async (entity) => {
-    const { cartId, bookId, quantity, isClicked } = entity;
-    let sqlString = '';
-
-    if (quantity) {
-        sqlString += `CART_QUANTITY = ${quantity}`;
-    }
-    if (isClicked || isClicked === 0) {
-        if (quantity) {
-            sqlString += ', ';
-        }
-        sqlString += `IS_CLICKED = ${isClicked}`;
-    }
-
-    sqlString = `update CART_DETAIL set ${sqlString} where CART_ID = '${cartId}' and BOOK_ID = '${bookId}'`;
+exports.updateBookInCart = async ({ cartId, bookId, quantity, isClicked }) => {
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);
-    const result = await request.query(sqlString);
-    return result.rowsAffected[0];
+    request.input('cartId', sql.Char, cartId);
+    request.input('bookId', sql.Char, bookId);
+    request.input('quantity', sql.Int, quantity);
+    request.input('isClicked', sql.Bit, isClicked);
+    const result = await request.execute('sp_UpdateCart');
+    return result.returnValue;
 };
 
-exports.addBookToCart = async (entity) => {
+exports.addBookToCart = async ({ cartId, bookId, quantity, isClicked }) => {
     const pool = await database.getConnectionPool();
-    const { cartId, bookId, quantity, isClicked } = entity;
-
     const request = new sql.Request(pool);
     request.input('cartId', sql.Char, cartId);
     request.input('bookId', sql.Char, bookId);
     request.input('quantity', sql.Int, quantity);
     request.input('isClicked', sql.Bit, isClicked);
     const result = await request.execute('sp_AddBookToCart');
-    return result.rowsAffected[0];
+    return result.returnValue;
+};
+
+exports.updateCartQuantityCartTotal = async (cartId) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('cartId', sql.Char, cartId);
+    const result = await request.execute('sp_UpdateCartQuantityCartTotal');
+    return result.returnValue;
 };
 
 exports.deleteFromCart = async (cartId, bookId) => {

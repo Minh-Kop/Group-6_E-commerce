@@ -1,4 +1,5 @@
-const sql = require('mssql/msnodesqlv8');
+// const sql = require('mssql/msnodesqlv8');
+const sql = require('mssql');
 
 const database = require('../utils/database');
 
@@ -79,6 +80,14 @@ exports.getTotalPayment = async (orderId) => {
         };
     }
     return result.recordset[0];
+};
+
+exports.getOrderDetail = async (orderId) => {
+    const sqlString = `select BOOK_ID bookId, ORDER_QUANTITY quantity from ORDER_DETAIL where ORDER_ID = '${orderId}'`;
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    const result = await request.query(sqlString);
+    return result.recordset;
 };
 
 exports.deleteAllInitialOrders = async (email) => {

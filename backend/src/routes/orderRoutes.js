@@ -6,7 +6,14 @@ const config = require('../config');
 
 const router = express.Router();
 
+router.get(
+    '/user',
+    authController.restrictTo(config.role.ADMIN),
+    orderController.getUserOrders,
+);
+
 router.get('/me', orderController.getMe, orderController.getUserOrders);
+router.patch('/buyAgain', orderController.buyAgain);
 router
     .route('/:orderId')
     .get(orderController.getOrder)
@@ -16,6 +23,5 @@ router
 router.use(authController.restrictTo(config.role.ADMIN));
 
 router.get('/', orderController.getAllOrders);
-router.get('/user', orderController.getUserOrders);
 
 module.exports = router;
