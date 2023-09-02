@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../scss/components.scss";
 import CategoryPopUp from "./CategoryPopup";
+import axios from "axios";
+
+const client = axios.create({
+  baseURL: "http://127.0.0.1:3001/",
+});
+
+let categoriesList = [];
 
 function Navbar() {
   const [btnCategory, setBtnCategory] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [selectedSub, setSub] = useState(0);
   const [openUserItem, setUserItem] = useState(false);
   const handleUserHover = () => setUserItem(!openUserItem);
   const userItem = [
@@ -16,12 +23,15 @@ function Navbar() {
 
   //Test data\\
   let name = "Mike";
-  const categoryList = ["Novel", "Comic", "Horror"];
-  const subCategoryList = [
-    ["1asdasdadddddddddddddddddsd", "2asdasd", "3asdasd"],
-    ["4asdas", "5asdasd", "6asdasd"],
-    ["7asdada", "8asdasda", "9"],
-  ];
+  useEffect(() => {
+    const temp = client.get("api/category").then((res) => {
+      console.log(res);
+      if (res.data.status === "success") {
+        categoriesList = res.data.categories;
+        console.log(categoriesList);
+      }
+    });
+  }, []);
 
   return (
     <nav className="navbar">
@@ -41,7 +51,9 @@ function Navbar() {
           <button
             className="navbar-search-category"
             type="button"
-            onClick={() => setBtnCategory(true)}
+            onClick={() => {
+              setBtnCategory(true);
+            }}
           >
             Category
           </button>
@@ -80,20 +92,37 @@ function Navbar() {
       </div>
 
       <CategoryPopUp trigger={btnCategory} setTrigger={setBtnCategory}>
-        <div className="main-category">
-          {categoryList.map((category, index) => (
-            <div onMouseOver={() => setSelectedCategory(index)}>
-              <a href="/">{category}</a>
+        {categoriesList.map((category) => (
+          <div className="category">
+            <a href="/">{category.categoryName}</a>
+            <div className="sub-category-container">
+              {category.children.map((subCate) => (
+                <div className="sub-category">
+                  <a
+                    className="sub-category-name"
+                    href="/"
+                    onMouseOver={() => {
+                      setSub(subCate.id);
+                      console.log(subCate.id);
+                    }}
+                  >
+                    {subCate.categoryName}
+                  </a>
+                  <div className="sub-sub-category-container">
+                    {subCate.id === selectedSub &&
+                      subCate.children.map((subSubCate) => (
+                        <div className="sub-sub-category">
+                          <a className="sub-sub-category-name" href="/">
+                            {subSubCate.categoryName}
+                          </a>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="sub-category">
-          {subCategoryList[selectedCategory].map((subCategory, subIndex) => (
-            <div>
-              <a href="/">{subCategory}</a>
-            </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </CategoryPopUp>
     </nav>
   );
