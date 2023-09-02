@@ -13,7 +13,7 @@ router.get(
 );
 
 router.get('/me', orderController.getMe, orderController.getUserOrders);
-router.patch('/buyAgain', orderController.buyAgain);
+router.post('/buyAgain', orderController.buyAgain);
 router
     .route('/:orderId')
     .get(orderController.getOrder)

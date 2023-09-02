@@ -13,4 +13,8 @@ const moment = require('moment');
         b: 2,
         c: 3,
     };
+    const queryString = Object.keys(abc)
+        .map((key) => `${key}=${abc[key]}`)
+        .join('&');
+    console.log(queryString);
 })();

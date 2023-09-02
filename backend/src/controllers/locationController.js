@@ -33,7 +33,7 @@ exports.getWards = catchAsync(async (req, res, next) => {
 });
 
 exports.getCoordinate = catchAsync(async (req, res, next) => {
-    const { address, wardId, distId, provId } = req.body;
+    const { address, wardId, distId, provId } = req.query;
 
     const province = await locationModel.getProvinceById(provId);
     const district = await locationModel.getDistrictById(distId);

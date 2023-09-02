@@ -109,8 +109,15 @@ exports.getAllUserVouchers = catchAsync(async (req, res, next) => {
 
 exports.getVouchersByOrderId = catchAsync(async (req, res, next) => {
     const { email } = req.user;
-    const { orderId } = req.body;
+    const { orderId } = req.query;
 
+    // Get order vouchers
+    const orderVouchers = await voucherModel.getVouchersByOrderId(orderId);
+    if (!orderVouchers.length) {
+        return next(new AppError("This order doesn't have any vouchers.", 400));
+    }
+
+    // Get user vouchers
     let userVouchers = await voucherModel.getAllUserVouchers(email);
     userVouchers = userVouchers.map((item) => ({
         ...item,
@@ -120,8 +127,7 @@ exports.getVouchersByOrderId = catchAsync(async (req, res, next) => {
         endDate: moment(item.endDate).subtract(7, 'hours').format('DD/MM/YYYY'),
     }));
 
-    const orderVouchers = await voucherModel.getVouchersByOrderId(orderId);
-
+    // Create voucher tree from orderVouchers and userVouchers
     const voucherTypes = buildOrderVoucherTree(userVouchers, orderVouchers);
     res.status(200).json({
         status: 'success',

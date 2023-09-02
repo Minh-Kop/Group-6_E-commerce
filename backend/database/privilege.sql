@@ -1,7 +1,7 @@
 go
-DROP USER [hachiko-admin]
-exec sp_droplogin [hachiko-admin]
+DROP USER [hachiko_admin]
+exec sp_droplogin [hachiko_admin]
 go
-CREATE LOGIN [hachiko-admin] WITH PASSWORD = 'project2023$', DEFAULT_DATABASE = db_hachiko
-CREATE USER [hachiko-admin] FROM LOGIN [hachiko-admin]
-EXEC sp_addrolemember 'db_owner', 'hachiko-admin'
+CREATE LOGIN [hachiko_admin] WITH PASSWORD = 'Kohachi123', DEFAULT_DATABASE = DB_Hachiko
+CREATE USER [hachiko_admin] FROM LOGIN [hachiko_admin]
+EXEC sp_addrolemember 'db_owner', 'hachiko_admin'

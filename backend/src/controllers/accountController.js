@@ -28,7 +28,7 @@ exports.getMe = (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
     const { email } = req.params;
-    const { year } = req.body;
+    const { year } = req.query;
     const userEntity = {
         email,
         year: +year || new Date().getFullYear(),
@@ -49,7 +49,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 exports.getPoint = catchAsync(async (req, res, next) => {
     const { email } = req.params;
-    const { changedType } = req.body;
+    const { changedType } = req.query;
     const userEntity = {
         email,
         changedType,
