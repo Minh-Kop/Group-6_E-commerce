@@ -140,20 +140,6 @@ exports.getBooksByCartId = async (cartId) => {
     return result.recordset;
 };
 
-exports.getBookByCartId = async (cartId, bookId) => {
-    const pool = await database.getConnectionPool();
-    const request = new sql.Request(pool);
-    request.input('cartId', sql.Char, cartId);
-    request.input('bookId', sql.Char, bookId);
-    const result = await request.execute('sp_GetBookByCartId');
-    return result.recordset[0];
-    // const sqlString = `select BOOK_ID bookId, CART_QUANTITY quantity from CART_DETAIL where CART_ID = '${cartId}' and BOOK_ID = '${bookId}'`;
-    // const pool = await database.getConnectionPool();
-    // const request = new sql.Request(pool);
-    // const result = await request.query(sqlString);
-    // return result.recordset[0];
-};
-
 exports.getBooksByOrderId = async (orderId) => {
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);

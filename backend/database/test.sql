@@ -30,7 +30,6 @@ select * from WRITTEN_BY where BOOK_ID = 'BK00034'
 
 update BOOK set SOFT_DELETE = 0 where BOOK_ID = 'BK00034'
 
-delete from ACCOUNT WHERE EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from ACCOUNT where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from ACCOUNT_DETAIL where EMAIL = 'khoiminhtrannguyen@gmail.com'
 select * from HPOINT_ACCUMULATION_YEAR where EMAIL = 'khoiminhtrannguyen@gmail.com'
@@ -74,8 +73,9 @@ select *
 from ACCOUNT_DETAIL
 SELECT *
 from HPOINT_ACCUMULATION_YEAR
-SELECT *
-from HPOINT_HISTORY
+SELECT [EMAIL] email, [CHANGED_TYPE] changedType, [CHANGED_TIME] changedTime, [CHANGED_POINTS],
+
+[CHANGED_REASON] from HPOINT_HISTORY
 
 select * from ORDER_REVIEW
 

@@ -54,3 +54,34 @@ BEGIN TRANSACTION
 COMMIT
 RETURN 1
 GO
+
+GO
+IF OBJECT_ID('sp_UpdateBookRating') IS NOT NULL
+	DROP PROC sp_UpdateBookRating
+GO
+CREATE PROCEDURE sp_UpdateBookRating (
+    @bookId char(7)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        DECLARE @countRatings INT = 0, @avgRatings FLOAT = 0
+        SELECT @countRatings = COUNT(*), @avgRatings = AVG(RATING)
+        from ORDER_REVIEW
+        where BOOK_ID = @bookId
+        GROUP BY BOOK_ID
+
+        -- Update book
+        UPDATE BOOK
+        SET AVG_RATING = @avgRatings, COUNT_RATING = @countRatings
+        WHERE BOOK_ID = @bookId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
