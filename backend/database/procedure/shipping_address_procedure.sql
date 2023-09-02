@@ -9,6 +9,7 @@ AS
 BEGIN TRANSACTION
 	BEGIN TRY
         SELECT sa.ADDR_ID 'addrId', sa.DETAILED_ADDR 'address', w.WARD_NAME wardName, d.DIST_NAME distName, p.PROV_NAME provName,
+            sa.DETAILED_ADDR + ', ' + w.WARD_NAME + ', ' + d.DIST_NAME + ', ' + p.PROV_NAME detailedAddress,
             sa.RECEIVER_NAME fullName, sa.RECEIVER_PHONE_NUMBER phoneNumber, sa.LATITUDE lat, sa.LONGITUDE lng,
             sa.IS_DEFAULT isDefault
         from SHIPPING_ADDRESS sa join PROVINCE p on p.PROV_ID = sa.PROV_ID

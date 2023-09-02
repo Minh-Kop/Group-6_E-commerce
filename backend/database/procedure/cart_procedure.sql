@@ -20,6 +20,31 @@ returns CHAR(10)
     END
 
 GO
+IF OBJECT_ID('sp_GetBookByCartId') IS NOT NULL
+	DROP PROC sp_GetBookByCartId
+GO
+CREATE PROCEDURE sp_GetBookByCartId (
+    @cartId char(10), 
+    @bookId CHAR(7)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        select BOOK_ID bookId, CART_QUANTITY quantity 
+        from CART_DETAIL 
+        where CART_ID = @cartId and BOOK_ID = @bookId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK  
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
 IF OBJECT_ID('sp_AddBookToCart') IS NOT NULL
 	DROP PROC sp_AddBookToCart
 GO
@@ -32,17 +57,114 @@ CREATE PROCEDURE sp_AddBookToCart (
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
-        INSERT into CART_DETAIL (CART_ID, BOOK_ID, CART_QUANTITY, IS_CLICKED) values (@cartId, @bookId, @quantity, @isClicked)
+        DECLARE @price INT, @stock INT
+        select @price = BOOK_DISCOUNTED_PRICE, @stock = STOCK 
+        from BOOK 
+        where BOOK_ID = @bookId and SOFT_DELETE = 0
 
-        declare @cartCount int
-        select @cartCount = COUNT(*)
+        if @price IS NULL
+        BEGIN
+            PRINT N'This product is no longer exists.'
+            ROLLBACK  
+            RETURN -1
+        END
+        
+        if @quantity > @stock
+        BEGIN
+            set @quantity = @stock
+        END
+
+        INSERT into CART_DETAIL (CART_ID, BOOK_ID, CART_QUANTITY, IS_CLICKED, CART_PRICE) values (@cartId, @bookId, @quantity, @isClicked, @quantity * @price)
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK  
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_UpdateCartQuantityCartTotal') IS NOT NULL
+	DROP PROC sp_UpdateCartQuantityCartTotal
+GO
+CREATE PROCEDURE sp_UpdateCartQuantityCartTotal (
+    @cartId char(10)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        declare @cartCount int = 0
+        select @cartCount = COUNT(BOOK_ID)
         from CART_DETAIL
         where CART_ID = @cartId
         GROUP by CART_ID
+
+        DECLARE @total int = 0;
+        select @total = sum(CART_PRICE)
+        from CART_DETAIL
+        where CART_ID = @cartId and IS_CLICKED = 1
+        group BY CART_ID
         
         UPDATE CART
-        set CART_COUNT = @cartCount
+        set CART_COUNT = @cartCount, CART_TOTAL = @total
         where CART_ID = @cartId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK  
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_UpdateCart') IS NOT NULL
+	DROP PROC sp_UpdateCart
+GO
+CREATE PROCEDURE sp_UpdateCart (
+    @cartId char(10), 
+    @bookId CHAR(7), 
+    @quantity int,
+    @isClicked BIT
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        if @quantity IS NOT NULL
+        BEGIN
+            DECLARE @price INT, @stock INT
+            select @price = BOOK_DISCOUNTED_PRICE, @stock = STOCK 
+            from BOOK 
+            where BOOK_ID = @bookId and SOFT_DELETE = 0
+
+            if @price IS NULL
+            BEGIN
+                PRINT N'This product is no longer exists.'
+                ROLLBACK  
+                RETURN -1
+            END
+
+            if @quantity > @stock
+            BEGIN
+                set @quantity = @stock
+            END
+
+            UPDATE CART_DETAIL
+            set CART_QUANTITY = @quantity, CART_PRICE = @price * @quantity
+            where CART_ID = @cartId and BOOK_ID = @bookId
+        END
+
+        if @isClicked is NOT NULL
+        BEGIN
+            UPDATE CART_DETAIL
+            set IS_CLICKED = @isClicked
+            where CART_ID = @cartId and BOOK_ID = @bookId
+        END
 	END TRY
 
 	BEGIN CATCH
@@ -66,30 +188,6 @@ AS
 BEGIN TRANSACTION
 	BEGIN TRY
         delete from CART_DETAIL where CART_ID = @cartId and BOOK_ID = @bookId
-
-        -- Count books
-        declare @cartCount int
-        select @cartCount = COUNT(*)
-        from CART_DETAIL
-        where CART_ID = @cartId
-        GROUP by CART_ID
-
-        IF @cartCount is NULL
-        BEGIN
-            set @cartCount = 0
-        END
-
-        -- Calculate total
-        DECLARE @total int = 0;
-        
-        select @total = sum(CART_PRICE)
-        from CART_DETAIL cd
-        where CART_ID = @cartId and IS_CLICKED = 1
-        group BY CART_ID
-        
-        UPDATE CART
-        set CART_COUNT = @cartCount, CART_TOTAL = @total
-        where CART_ID = @cartId
 	END TRY
 
 	BEGIN CATCH
@@ -135,16 +233,11 @@ BEGIN TRANSACTION
         END
 
         -- Count books
-        declare @cartCount int
+        declare @cartCount int = 0
         select @cartCount = COUNT(*)
         from CART_DETAIL
         where CART_ID = @cartId
         GROUP by CART_ID
-
-        IF @cartCount is NULL
-        BEGIN
-            set @cartCount = 0
-        END
         
         UPDATE CART
         set CART_COUNT = @cartCount, CART_TOTAL = 0

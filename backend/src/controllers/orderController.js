@@ -6,6 +6,7 @@ const config = require('../config');
 const orderModel = require('../models/orderModel');
 const bookModel = require('../models/bookModel');
 const accountModel = require('../models/accountModel');
+const cartModel = require('../models/cartModel');
 
 exports.getOrder = catchAsync(async (req, res, next) => {
     const { orderId } = req.params;
@@ -233,4 +234,68 @@ exports.updateState = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
     });
+});
+
+exports.buyAgain = catchAsync(async (req, res, next) => {
+    const { email } = req.user;
+    const { orderId } = req.body;
+
+    const books = await orderModel.getOrderDetail(orderId);
+    if (!books.length) {
+        return next(new AppError('Order not found.', 400));
+    }
+
+    const cartResult = await cartModel.getCartByEmail(email);
+    const { CART_ID: cartId } = cartResult;
+
+    const isCreatedList = await Promise.all(
+        books.map(async ({ bookId, quantity }) => {
+            const isClicked = 1;
+            const cartBook = await bookModel.getBookByCartId(cartId, bookId);
+
+            if (cartBook) {
+                const returnedValue = await cartModel.updateBookInCart({
+                    cartId,
+                    bookId,
+                    quantity: +quantity + cartBook.quantity,
+                    isClicked,
+                });
+                return returnedValue;
+            }
+
+            const returnedValue = await cartModel.addBookToCart({
+                cartId,
+                bookId,
+                quantity,
+                isClicked,
+            });
+            return returnedValue;
+        }),
+    );
+
+    let success = true;
+
+    // If there are any errors in adding or updating, delete all added book from the cart
+    if (isCreatedList.includes(0) || isCreatedList.includes(-1)) {
+        success = false;
+        await Promise.all(
+            books.map(async ({ bookId }) => {
+                return await cartModel.deleteFromCart(cartId, bookId);
+            }),
+        );
+    }
+
+    await cartModel.updateCartQuantityCartTotal(cartId);
+
+    if (success) {
+        return res.status(200).json({
+            status: 'success',
+        });
+    }
+    return next(
+        new AppError(
+            `There is at least 1 book that is no longer existed.`,
+            400,
+        ),
+    );
 });

@@ -70,9 +70,6 @@ select * from ORDER_STATE
 select * from ORDER_DETAIL
 select * from ORDER_VOUCHER
 
-SELECT BOOK_ID, STOCK
-from BOOK
-
 select *
 from ACCOUNT_DETAIL
 SELECT *
@@ -83,3 +80,4 @@ from HPOINT_HISTORY
 select * from ORDER_REVIEW
 
 delete from ORDER_REVIEW
+
