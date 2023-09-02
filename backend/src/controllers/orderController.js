@@ -241,7 +241,7 @@ exports.buyAgain = catchAsync(async (req, res, next) => {
     const { orderId } = req.body;
 
     const books = await orderModel.getOrderDetail(orderId);
-    if (!books) {
+    if (!books.length) {
         return next(new AppError('Order not found.', 400));
     }
 

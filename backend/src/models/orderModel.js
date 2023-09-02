@@ -37,6 +37,14 @@ exports.getInitialOrder = async (orderId) => {
     return result.recordsets;
 };
 
+exports.getPrice = async (orderId) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('orderId', sql.Char, orderId);
+    const result = await request.execute('sp_GetPrice');
+    return result.recordset[0];
+};
+
 exports.getDetailedOrder = async (orderId) => {
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);
@@ -98,14 +106,23 @@ exports.deleteAllInitialOrders = async (email) => {
     return result.returnValue;
 };
 
-exports.changeShippingAddress = async (entity) => {
-    const { orderId, addrId, shippingFee } = entity;
+exports.updateOrder = async ({
+    orderId,
+    addrId,
+    shippingFee,
+    paymentId,
+    useHPoint,
+    hPoint,
+}) => {
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);
     request.input('orderId', sql.Char, orderId);
     request.input('addrId', sql.Char, addrId);
     request.input('shippingFee', sql.Int, shippingFee);
-    const result = await request.execute('sp_ChangeShippingAddress');
+    request.input('paymentId', sql.Char, paymentId);
+    request.input('useHPoint', sql.Bit, useHPoint);
+    request.input('hPoint', sql.Int, hPoint);
+    const result = await request.execute('sp_UpdateOrder');
     return result.returnValue;
 };
 

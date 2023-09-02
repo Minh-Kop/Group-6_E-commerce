@@ -109,7 +109,34 @@ BEGIN TRANSACTION
         select [ORDER_ID] orderId, o.[PAYMENT_ID] paymentId, p.PAYMENT_PROVIDER paymentProvider,
             [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
             [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
-            [TOTAL_PAYMENT] totalPayment
+            o.HPOINTS_REDEEMED hPointsRedeemed, [TOTAL_PAYMENT] totalPayment
+        from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
+        where ORDER_ID = @orderId
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_GetPrice') IS NOT NULL
+	DROP PROC sp_GetPrice
+GO
+CREATE PROCEDURE sp_GetPrice (
+    @orderId CHAR(7)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        select [ORDER_ID] orderId, p.PAYMENT_PROVIDER paymentProvider,
+            [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
+            [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
+            o.HPOINTS_REDEEMED hPointsRedeemed, [TOTAL_PAYMENT] totalPayment
         from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
         where ORDER_ID = @orderId
 	END TRY
@@ -157,11 +184,12 @@ BEGIN TRANSACTION
         from ORDER_DETAIL od join BOOK b on od.BOOK_ID = b.BOOK_ID
         where od.ORDER_ID = @orderId 
         
-        select [ORDER_ID] orderId, o.EMAIL email, p.PAYMENT_PROVIDER paymentProvider,
+        select [ORDER_ID] orderId, o.EMAIL email, ad.HPOINT hPoint, p.PAYMENT_PROVIDER paymentProvider,
             [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
             [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
-            [TOTAL_PAYMENT] totalPayment
+            o.HPOINTS_REDEEMED hPointsRedeemed, [TOTAL_PAYMENT] totalPayment
         from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
+            JOIN ACCOUNT_DETAIL ad on ad.EMAIL = o.EMAIL
         where ORDER_ID = @orderId
 	END TRY
 
@@ -432,21 +460,52 @@ RETURN 1
 GO
 
 GO
-IF OBJECT_ID('sp_ChangeShippingAddress') IS NOT NULL
-	DROP PROC sp_ChangeShippingAddress
+IF OBJECT_ID('sp_UpdateOrder') IS NOT NULL
+	DROP PROC sp_UpdateOrder
 GO
-CREATE PROCEDURE sp_ChangeShippingAddress (
+CREATE PROCEDURE sp_UpdateOrder (
     @orderId char(7),
     @addrId char(10),
-    @shippingFee INT
+    @shippingFee INT,
+    @paymentId CHAR(4),
+    @useHPoint BIT,
+    @hPoint INT
 )
 AS
 BEGIN TRANSACTION
 	BEGIN TRY
-        UPDATE H_ORDER
-        SET ADDR_ID = @addrId, SHIPPING_FEE = @shippingFee, 
-            TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + @shippingFee - SHIPPING_DISCOUNT_SUBTOTAL - HACHIKO_VOUCHER_APPLIED
-        WHERE ORDER_ID = @orderId
+        IF @addrId IS NOT NULL
+        BEGIN
+            UPDATE H_ORDER
+            SET ADDR_ID = @addrId, SHIPPING_FEE = @shippingFee, 
+                TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + @shippingFee - SHIPPING_DISCOUNT_SUBTOTAL - HACHIKO_VOUCHER_APPLIED
+            WHERE ORDER_ID = @orderId
+        END
+        
+        IF @paymentId IS NOT NULL
+        BEGIN
+            UPDATE H_ORDER
+            SET PAYMENT_ID = @paymentId
+            WHERE ORDER_ID = @orderId
+        END
+        
+        IF @useHPoint IS NOT NULL
+        BEGIN
+            if @useHPoint = 1
+            BEGIN
+                UPDATE H_ORDER
+                SET HPOINTS_REDEEMED = @hPoint, 
+                    TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + SHIPPING_FEE - SHIPPING_DISCOUNT_SUBTOTAL - HACHIKO_VOUCHER_APPLIED - @hPoint
+                WHERE ORDER_ID = @orderId
+            END
+            ELSE
+            BEGIN
+                UPDATE H_ORDER
+                SET HPOINTS_REDEEMED = null, 
+                    TOTAL_PAYMENT = MERCHANDISE_SUBTOTAL + SHIPPING_FEE - SHIPPING_DISCOUNT_SUBTOTAL - HACHIKO_VOUCHER_APPLIED
+                WHERE ORDER_ID = @orderId
+            END
+        END
 	END TRY
 
 	BEGIN CATCH

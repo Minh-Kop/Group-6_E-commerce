@@ -32,6 +32,15 @@ exports.getOrder = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.getPrice = catchAsync(async (req, res, next) => {
+    const { orderId } = req.params;
+    const order = await orderModel.getPrice(orderId);
+    res.status(200).json({
+        status: 'success',
+        order,
+    });
+});
+
 exports.createInitialOrder = catchAsync(async (req, res, next) => {
     const { email } = req.user;
 
@@ -122,6 +131,7 @@ exports.createInitialOrder = catchAsync(async (req, res, next) => {
             return createdResult;
         }),
     );
+    await cartModel.updateCartQuantityCartTotal(cartId);
 
     // If there is any failed book creation, delete this order
     if (isFailedList.includes(0) || isFailedList.includes(-1)) {
@@ -178,42 +188,57 @@ exports.addVoucher = catchAsync(async (req, res, next) => {
     next();
 });
 
-exports.changeShippingAddress = catchAsync(async (req, res, next) => {
+exports.updateCheckout = catchAsync(async (req, res, next) => {
     const { orderId } = req.params;
-    const { addrId } = req.body;
+    const { addrId, paymentId, useHPoint, hPoint } = req.body;
+    let shippingFee = 0;
 
-    // Get shipping address
-    const shippingAddress = await shippingAddressModel.getShippingAddressesById(
-        addrId,
-    );
+    // Handle shipping address
+    if (addrId) {
+        // Get shipping address
+        const shippingAddress =
+            await shippingAddressModel.getShippingAddressesById(addrId);
 
-    // Is there no shipping address?
-    if (!shippingAddress) {
-        return next(new AppError("Can't find that shipping address.", 404));
-    }
-
-    // Calculate shipping fee
-    const distance = await getDistance(
-        config.SHOP_LAT,
-        config.SHOP_LONG,
-        shippingAddress.lat,
-        shippingAddress.lng,
-    );
-    let shippingFee;
-    if (distance) {
-        if (distance < 5000) {
-            shippingFee = 20000;
-        } else {
-            shippingFee = 30000;
+        // Is there no shipping address?
+        if (!shippingAddress) {
+            return next(new AppError("Can't find that shipping address.", 404));
         }
-    } else {
-        shippingFee = 0;
+
+        // Calculate shipping fee
+        const distance = await getDistance(
+            config.SHOP_LAT,
+            config.SHOP_LONG,
+            shippingAddress.lat,
+            shippingAddress.lng,
+        );
+        if (distance) {
+            if (distance < 5000) {
+                shippingFee = 20000;
+            } else {
+                shippingFee = 30000;
+            }
+        } else {
+            shippingFee = 0;
+        }
     }
 
-    const result = await orderModel.changeShippingAddress({
+    // Handle payment
+    if (paymentId) {
+        const { paymentProvider } = await paymentModel.getPaymentById(
+            paymentId,
+        );
+        if (!paymentProvider) {
+            return next(new AppError('Payment not found.', 400));
+        }
+    }
+
+    const result = await orderModel.updateOrder({
         orderId,
         addrId,
         shippingFee,
+        paymentId,
+        useHPoint: +useHPoint,
+        hPoint: +hPoint,
     });
     if (result !== 1) {
         return next(new AppError('Update failed', 500));
