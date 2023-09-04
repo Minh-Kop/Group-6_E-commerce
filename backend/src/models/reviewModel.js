@@ -14,6 +14,14 @@ exports.createReview = async ({ bookId, orderId, rating, comment }) => {
     return result.returnValue;
 };
 
+exports.updateBookRating = async (bookId) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('bookId', sql.Char, bookId);
+    const result = await request.execute('sp_UpdateBookRating');
+    return result.returnValue;
+};
+
 exports.getReviews = async ({ bookId, orderId }) => {
     let sqlString = '';
     if (bookId) {

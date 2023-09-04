@@ -106,11 +106,12 @@ BEGIN TRANSACTION
         from ORDER_DETAIL od join BOOK b on od.BOOK_ID = b.BOOK_ID
         where od.ORDER_ID = @orderId 
         
-        select [ORDER_ID] orderId, o.[PAYMENT_ID] paymentId, p.PAYMENT_PROVIDER paymentProvider,
+        select [ORDER_ID] orderId, ad.HPOINT hPoint, p.PAYMENT_PROVIDER paymentProvider,
             [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
             [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
             o.HPOINTS_REDEEMED hPointsRedeemed, [TOTAL_PAYMENT] totalPayment
         from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
+            JOIN ACCOUNT_DETAIL ad on ad.EMAIL = o.EMAIL
         where ORDER_ID = @orderId
 	END TRY
 
@@ -184,12 +185,11 @@ BEGIN TRANSACTION
         from ORDER_DETAIL od join BOOK b on od.BOOK_ID = b.BOOK_ID
         where od.ORDER_ID = @orderId 
         
-        select [ORDER_ID] orderId, o.EMAIL email, ad.HPOINT hPoint, p.PAYMENT_PROVIDER paymentProvider,
+        select [ORDER_ID] orderId, o.EMAIL email, p.PAYMENT_PROVIDER paymentProvider,
             [MERCHANDISE_SUBTOTAL] merchandiseSubtotal, [SHIPPING_FEE] shippingFee, 
             [SHIPPING_DISCOUNT_SUBTOTAL] shippingDiscountSubtotal, [HACHIKO_VOUCHER_APPLIED] hachikoVoucherApplied, 
             o.HPOINTS_REDEEMED hPointsRedeemed, [TOTAL_PAYMENT] totalPayment
         from H_ORDER o join PAYMENT p on o.PAYMENT_ID = p.PAYMENT_ID 
-            JOIN ACCOUNT_DETAIL ad on ad.EMAIL = o.EMAIL
         where ORDER_ID = @orderId
 	END TRY
 

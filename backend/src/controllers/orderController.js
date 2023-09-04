@@ -40,12 +40,12 @@ exports.getOrder = catchAsync(async (req, res, next) => {
 });
 
 exports.getMe = catchAsync(async (req, res, next) => {
-    req.body.email = req.user.email;
+    req.query.email = req.user.email;
     next();
 });
 
 exports.getUserOrders = catchAsync(async (req, res, next) => {
-    const { email, orderState, limit: strLimit, page: strPage } = req.body;
+    const { email, orderState, limit: strLimit, page: strPage } = req.query;
 
     const page = +strPage || 1;
     const limit = +strLimit || 10;
@@ -78,7 +78,7 @@ exports.getUserOrders = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllOrders = catchAsync(async (req, res, next) => {
-    const { orderState, limit: strLimit, page: strPage } = req.body;
+    const { orderState, limit: strLimit, page: strPage } = req.query;
 
     const page = +strPage || 1;
     const limit = +strLimit || 10;
@@ -247,11 +247,12 @@ exports.buyAgain = catchAsync(async (req, res, next) => {
 
     const cartResult = await cartModel.getCartByEmail(email);
     const { CART_ID: cartId } = cartResult;
+    const cartBooks = await bookModel.getBooksByCartId(cartId);
 
     const isCreatedList = await Promise.all(
         books.map(async ({ bookId, quantity }) => {
             const isClicked = 1;
-            const cartBook = await bookModel.getBookByCartId(cartId, bookId);
+            const cartBook = cartBooks.find((item) => item.bookId === bookId);
 
             if (cartBook) {
                 const returnedValue = await cartModel.updateBookInCart({

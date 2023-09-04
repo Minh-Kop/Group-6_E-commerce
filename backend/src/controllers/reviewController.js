@@ -10,7 +10,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
     const { bookId, orderId, rating, comment } = req.body;
     const { email } = req.user;
 
-    // Check order exist
+    // Check if order exists
     const orderData = await orderModel.getDetailedOrder(orderId);
     if (!orderData[0] || !orderData[1].length) {
         return next(new AppError('Order not found.', 400));
@@ -51,6 +51,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
     });
 
     if (result === 1) {
+        await reviewModel.updateBookRating(bookId);
         return res.status(200).json({
             status: 'success',
         });

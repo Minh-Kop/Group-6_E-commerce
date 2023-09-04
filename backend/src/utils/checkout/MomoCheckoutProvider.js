@@ -13,7 +13,9 @@ class MomoCheckoutProvider {
         // const ipnUrl = `${ipnHost}/api/checkout/notifyMomo`;
         const redirectUrl = `https://www.fahasa.com/`;
         const ipnUrl =
-            'https://f70d-123-20-134-12.ngrok-free.app/api/checkout/notifyMomo';
+            'https://c6f9-123-20-134-12.ngrok-free.app/api/checkout/notifyMomo';
+        // const ipnUrl =
+        //     'https://webhook.site/4d84ac14-b238-49d0-8ecc-8034de57ec5f';
 
         let { orderId } = userInfo;
         orderId = `${orderId}_${new Date().getTime()}`;

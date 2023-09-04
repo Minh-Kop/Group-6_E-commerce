@@ -215,6 +215,15 @@ BEGIN TRANSACTION
         SET ORDER_DATE = GETDATE()
         WHERE ORDER_ID = @orderId
 
+        -- Update user HPoint if he/she used
+        DECLARE @hPoint INT = (SELECT HPOINTS_REDEEMED from H_ORDER where ORDER_ID = @orderId)
+        IF @hPoint is NOT NULL
+        BEGIN
+            UPDATE ACCOUNT_DETAIL
+            set HPOINT = 0
+            where EMAIL = @email
+        END
+
         -- Delete each book in cart
         DECLARE @cartId CHAR(10) = (select CART_ID from CART where EMAIL = @email)
         WHILE EXISTS (select 1 from CART_DETAIL where CART_ID = @cartId and IS_CLICKED = 1)
