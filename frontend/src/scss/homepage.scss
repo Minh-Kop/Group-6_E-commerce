@@ -16,7 +16,7 @@
     margin-left: 300px;
   }
   &__displayData {
-    width: 1510px;
+    width: 97%;
     background-color: #dbdbdb88;
     &__inf {
       display: inline-flex;
@@ -46,14 +46,30 @@
           height: 50px;
         }
         &__price {
+          text-decoration-line: line-through;
+          line-height: 25px;
+        }
+        &__disprice {
           font-size: 18px;
           font-weight: bold;
           color: #c92127;
           line-height: 25px;
-        }
-        &__disprice {
-          text-decoration-line: line-through;
-          line-height: 25px;
+          &__cover {
+            display: flex;
+            align-items: center;
+          }
+          &__num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-left: 10px;
+            color: #ffffff;
+            background-color: #c92127;
+            height: 26px;
+            width: 40px;
+            border-radius: 5px;
+          }
         }
       }
     }

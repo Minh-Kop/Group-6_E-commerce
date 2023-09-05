@@ -1,6 +1,9 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import "../scss/productdetail.scss";
 import book from "../assets/SGK.jpg";
+import axios from "axios";
+
+import { useLocation } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -8,8 +11,6 @@ import Footer from "../components/Footer";
 const handleGoBack = () => {
   window.history.back();
 };
-
-const productGeneralInfo = ["Sach A", "Van hoc", "5", "25000"];
 
 const productDetail = [
   "Kim Dong",
@@ -57,18 +58,36 @@ const similarProduct = [
 ];
 
 function ProductDetail() {
+  const location = useLocation();
+
+  const ID = location.state?.ID;
+
+  const [records, setRecords] = useState([]);
+  const [type, setType] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:3001/api/books/${ID}`)
+      .then((res) => {
+        setRecords(res.data.book);
+        setType(res.data.book.category.children.children.categoryName);
+        console.log(res.data.book);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Navbar />
       <div className="product-detail-container">
         <div className="product-detail">
           <div className="product-general-detail">
-            <img src={book} alt={productGeneralInfo[0]} />
+            <img src={records.mainImage} alt="Book image" />
             <div className="product-general-info">
-              <h3>{productGeneralInfo[0]}</h3>
-              <p>The loai: {productGeneralInfo[1]}</p>
-              <p>Danh gia: {productGeneralInfo[2]}/5</p>
-              <p>Gia: {productGeneralInfo[3]}</p>
+              <h3>{records.bookName}</h3>
+              <p>Thể loại: {type} </p>
+              <p>Đánh giá: {records.avgRating} / 5.0</p>
+              <p>Giá:</p>
               <div className="product-order-button">
                 <form>
                   <button className="add-to-cart-button">

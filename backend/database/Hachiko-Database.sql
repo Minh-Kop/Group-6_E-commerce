@@ -2,15 +2,15 @@
 /* DBMS name:      Microsoft SQL Server 2008                    */
 /* Created on:     1/9/2023 6:59:39 pm                          */
 /*==============================================================*/
-USE master
-go
-if DB_ID('DB_hachiko') is not null
-	drop database DB_hachiko
-GO 
-CREATE DATABASE DB_hachiko
-GO
-USE DB_hachiko
-GO
+-- USE master
+-- go
+-- if DB_ID('DB_hachiko') is not null
+-- 	drop database DB_hachiko
+-- GO 
+-- CREATE DATABASE DB_hachiko
+-- GO
+-- USE DB_hachiko
+-- GO
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
