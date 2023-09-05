@@ -103,21 +103,24 @@ function Navbar() {
                     href="/"
                     onMouseOver={() => {
                       setSub(subCate.id);
-                      console.log(subCate.id);
                     }}
                   >
                     {subCate.categoryName}
                   </a>
-                  <div className="sub-sub-category-container">
-                    {subCate.id === selectedSub &&
-                      subCate.children.map((subSubCate) => (
-                        <div className="sub-sub-category">
-                          <a className="sub-sub-category-name" href="/">
-                            {subSubCate.categoryName}
-                          </a>
-                        </div>
-                      ))}
-                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="sub-sub-category-container">
+              {category.children.map((subCate) => (
+                <div className="sub-sub-category-content">
+                  {subCate.id === selectedSub &&
+                    subCate.children.map((subSubCate) => (
+                      <div className="sub-sub-category">
+                        <a className="sub-sub-category-name" href="/">
+                          {subSubCate.categoryName}
+                        </a>
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
