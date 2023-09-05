@@ -7,8 +7,19 @@ import CustomerSecurity from "./screens/CustomerSecurity";
 import RefundPolicy from "./screens/RefundPolicy";
 import PaymentSecurity from "./screens/PaymentSecurity";
 import HomePage from "./screens/HomePage";
+import Cart from "./screens/Cart";
+import Payment from "./screens/Payment";
+import HistoryOrder from "./screens/HistoryOrder";
+
+import UserOrder from "./screens/UserOrder";
+
+import UserInfo from "./screens/UserInfo";
+import UserPointInfo from "./screens/UserPointInfo";
+import UserVoucher from "./screens/UserVoucher";
+import ChangePassword from "./screens/ChangePassword";
 
 import ProductDetail from "./screens/ProductDetail";
+
 function App() {
   return (
     <>
@@ -19,6 +30,16 @@ function App() {
         <Route path="/customer_security" element={<CustomerSecurity />} />
         <Route path="/refund_policy" element={<RefundPolicy />} />
         <Route path="/payment_security" element={<PaymentSecurity />} />
+
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/order" element={<UserOrder />} />
+        <Route path="/history" element={<HistoryOrder />} />
+        <Route path="/user" element={<UserInfo />} />
+        <Route path="/point" element={<UserPointInfo />} />
+        <Route path="/voucher" element={<UserVoucher />} />
+        <Route path="/change_password" element={<ChangePassword />} />
+
+        <Route path="/cart/payment" element={<Payment />} />
 
         <Route path="/home_page">
           <Route index element={<HomePage />} />
