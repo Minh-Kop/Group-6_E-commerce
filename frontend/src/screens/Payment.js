@@ -1,5 +1,8 @@
 import book from "../assets/SGK.jpg";
 import "../scss/cart.scss";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import "../scss/cart.scss";
 import voucher_img from "../assets/voucher-icon.png";
 import { useState } from "react";
 

@@ -104,7 +104,7 @@
 
       ul.navbar-user-items-dropdown {
         position: absolute;
-        top: 5%;
+        top: 40px;
         right: 2rem;
         background-color: white;
         padding: 0.75rem;
@@ -240,8 +240,9 @@
   position: relative;
   flex-shrink: 0;
   position: relative;
-  bottom: 0;
+
   width: 100%;
+  transform: translateY(50%);
   a {
     img {
       width: 32px;

@@ -1,6 +1,9 @@
 import React from "react";
 import voucher_img from "../assets/voucher-icon.png";
 import "../scss/user.scss";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import { NavLink } from "react-router-dom";
 
 const testVoucher = [
   {
@@ -42,23 +45,46 @@ const testVoucher = [
 
 function UserVoucher() {
   return (
-    <div className="user-voucher-container">
-      <div className="voucher-search">
-        <form>
-          <input className="search-bar" placeholder="Tên voucher"></input>
-          <button type="button">Tìm kiếm</button>
-        </form>
-      </div>
-      <div className="voucher-table">
-        {testVoucher.map((voucher) => (
-          <div className="voucher">
-            <img src={voucher.image} alt="Voucher icon"></img>
-            <div className="voucher-detail">
-              <p>{voucher.name}</p>
-              <p>Phần trăm giảm: {voucher.percentage}</p>
-            </div>
+    <div>
+      <Navbar />
+
+      <div className="user-info-container">
+        <div className="user-info-sidebar">
+          <NavLink to="/order" className="navlink">
+            <button type="button">Đơn Hàng</button>
+          </NavLink>
+          <NavLink to="/voucher" className="navlink">
+            <button type="button">Kho voucher</button>
+          </NavLink>
+          <NavLink to="/point" className="navlink">
+            <button type="button">Điểm tích lũy</button>{" "}
+          </NavLink>
+          <NavLink to="/change_password" className="navlink">
+            <button type="button">Sửa mật khẩu</button>
+          </NavLink>
+        </div>
+
+        <div className="user-voucher-container">
+          <div className="voucher-search">
+            <form>
+              <input className="search-bar" placeholder="Tên voucher"></input>
+              <button type="button">Tìm kiếm</button>
+            </form>
           </div>
-        ))}
+          <div className="voucher-table">
+            {testVoucher.map((voucher) => (
+              <div className="voucher">
+                <img src={voucher.image} alt="Voucher icon"></img>
+                <div className="voucher-detail">
+                  <p>{voucher.name}</p>
+                  <p>Phần trăm giảm: {voucher.percentage}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Footer />
       </div>
     </div>
   );

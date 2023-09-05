@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import book from "../assets/SGK.jpg";
 import "../scss/user.scss";
-
+import { NavLink } from "react-router-dom";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 const orderProduct = [
   [
     2,
@@ -105,64 +107,88 @@ function UserOrder() {
   };
 
   return (
-    <div className="user-order-container">
-      <button className="user-back-button" type="button">
-        &lt; Back
-      </button>
-      <div className="user-order-category">
-        {orderCategory.map((category, index) => (
-          <button
-            className="category-btn"
-            type="button"
-            onClick={() => setCategory(index)}
-            onBlur={(e) => {
-              setFocus(e);
-            }}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-      <div className="user-order-list">
-        <div className="user-order">
-          {orderProduct.map((p, i) => {
-            if (p[0] === currCategory || currCategory === 0) {
-              return (
-                <div className="order-detail">
-                  <p className="order-status">{status(p[0])}</p>
-                  <hr></hr>
+    <div>
+      <Navbar />
+      <div className="user-info-container">
+        <div className="user-info-sidebar">
+          <NavLink to="/order" className="navlink">
+            <button type="button">Đơn Hàng</button>
+          </NavLink>
+          <NavLink to="/voucher" className="navlink">
+            <button type="button">Kho voucher</button>
+          </NavLink>
+          <NavLink to="/point" className="navlink">
+            <button type="button">Điểm tích lũy</button>{" "}
+          </NavLink>
+          <NavLink to="/change_password" className="navlink">
+            <button type="button">Sửa mật khẩu</button>
+          </NavLink>
+        </div>
 
-                  <div className="user-order-product">
-                    {p.map((product, index) => {
-                      if (index === 0) {
-                        return null;
-                      } else if (index > 0 && index < p.length) {
-                        return (
-                          <div className="user-order-product-detail">
-                            <a href="/">
-                              <img src={product.img} alt={product.book}></img>
-                            </a>
-                            <div className="order-product-detail">
-                              <h3>{product.book}</h3>
-                              <p>Giá: {product.price}</p>
-                              <p>Số lượng: {product.quantity}</p>
-                            </div>
-                            <button className="button" type="button">
-                              {buttonName(p[0])}
-                            </button>
-                          </div>
-                        );
-                      } else {
-                        return null;
-                      }
-                    })}
-                  </div>
-                </div>
-              );
-            } else {
-              return null;
-            }
-          })}
+        <div className="user-order-container">
+          <button className="user-back-button" type="button">
+            &lt; Back
+          </button>
+          <div className="user-order-category">
+            {orderCategory.map((category, index) => (
+              <button
+                className="category-btn"
+                type="button"
+                onClick={() => setCategory(index)}
+                onBlur={(e) => {
+                  setFocus(e);
+                }}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+          <div className="user-oder-list">
+            <div className="user-order">
+              {orderProduct.map((p, i) => {
+                if (p[0] === currCategory || currCategory === 0) {
+                  return (
+                    <div className="order-detail">
+                      <p className="order-status">{status(p[0])}</p>
+                      <hr></hr>
+
+                      <div className="user-order-product">
+                        {p.map((product, index) => {
+                          if (index === 0) {
+                            return null;
+                          } else if (index > 0 && index < p.length) {
+                            return (
+                              <div className="user-order-product-detail">
+                                <a href="/">
+                                  <img
+                                    src={product.img}
+                                    alt={product.book}
+                                  ></img>
+                                </a>
+                                <div className="order-product-detail">
+                                  <h3>{product.book}</h3>
+                                  <p>Giá: {product.price}</p>
+                                  <p>Số lượng: {product.quantity}</p>
+                                </div>
+                                <button className="button" type="button">
+                                  {buttonName(p[0])}
+                                </button>
+                              </div>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </div>
+          </div>
+          <Footer />
         </div>
       </div>
     </div>
