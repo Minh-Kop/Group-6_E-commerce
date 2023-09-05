@@ -1,8 +1,7 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     13/8/2023 11:26:20 am                        */
+/* Created on:     1/9/2023 6:59:39 pm                          */
 /*==============================================================*/
-
 USE master
 go
 if DB_ID('DB_hachiko') is not null
@@ -85,20 +84,6 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('HAS_VOUCHER') and o.name = 'FK_HAS_VOUC_HAS_VOUCH_ACCOUNT')
-alter table HAS_VOUCHER
-   drop constraint FK_HAS_VOUC_HAS_VOUCH_ACCOUNT
-go
-
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('HAS_VOUCHER') and o.name = 'FK_HAS_VOUC_HAS_VOUCH_VOUCHER')
-alter table HAS_VOUCHER
-   drop constraint FK_HAS_VOUC_HAS_VOUCH_VOUCHER
-go
-
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
    where r.fkeyid = object_id('HPOINT_ACCUMULATION_YEAR') and o.name = 'FK_HPOINT_A_STORE_HPO_ACCOUNT_')
 alter table HPOINT_ACCUMULATION_YEAR
    drop constraint FK_HPOINT_A_STORE_HPO_ACCOUNT_
@@ -169,6 +154,20 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('ORDER_VOUCHER') and o.name = 'FK_ORDER_VO_ORDER_VOU_H_ORDER')
+alter table ORDER_VOUCHER
+   drop constraint FK_ORDER_VO_ORDER_VOU_H_ORDER
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('ORDER_VOUCHER') and o.name = 'FK_ORDER_VO_ORDER_VOU_VOUCHER')
+alter table ORDER_VOUCHER
+   drop constraint FK_ORDER_VO_ORDER_VOU_VOUCHER
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
    where r.fkeyid = object_id('SHIPPING_ADDRESS') and o.name = 'FK_SHIPPING_INCLUDE_D_DISTRICT')
 alter table SHIPPING_ADDRESS
    drop constraint FK_SHIPPING_INCLUDE_D_DISTRICT
@@ -193,6 +192,20 @@ if exists (select 1
    where r.fkeyid = object_id('SHIPPING_ADDRESS') and o.name = 'FK_SHIPPING_OF_ACCOUN_ACCOUNT')
 alter table SHIPPING_ADDRESS
    drop constraint FK_SHIPPING_OF_ACCOUN_ACCOUNT
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('USER_VOUCHER') and o.name = 'FK_USER_VOU_USER_VOUC_VOUCHER')
+alter table USER_VOUCHER
+   drop constraint FK_USER_VOU_USER_VOUC_VOUCHER
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('USER_VOUCHER') and o.name = 'FK_USER_VOU_USER_VOUC_ACCOUNT')
+alter table USER_VOUCHER
+   drop constraint FK_USER_VOU_USER_VOUC_ACCOUNT
 go
 
 if exists (select 1
@@ -366,31 +379,6 @@ if exists (select 1
 go
 
 if exists (select 1
-            from  sysindexes
-           where  id    = object_id('HAS_VOUCHER')
-            and   name  = 'HAS_VOUCHER2_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index HAS_VOUCHER.HAS_VOUCHER2_FK
-go
-
-if exists (select 1
-            from  sysindexes
-           where  id    = object_id('HAS_VOUCHER')
-            and   name  = 'HAS_VOUCHER_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index HAS_VOUCHER.HAS_VOUCHER_FK
-go
-
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('HAS_VOUCHER')
-            and   type = 'U')
-   drop table HAS_VOUCHER
-go
-
-if exists (select 1
             from  sysobjects
            where  id = object_id('HPOINT_ACCUMULATION_YEAR')
             and   type = 'U')
@@ -514,6 +502,31 @@ if exists (select 1
 go
 
 if exists (select 1
+            from  sysindexes
+           where  id    = object_id('ORDER_VOUCHER')
+            and   name  = 'ORDER_VOUCHER2_FK2'
+            and   indid > 0
+            and   indid < 255)
+   drop index ORDER_VOUCHER.ORDER_VOUCHER2_FK2
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('ORDER_VOUCHER')
+            and   name  = 'ORDER_VOUCHER2_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index ORDER_VOUCHER.ORDER_VOUCHER2_FK
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('ORDER_VOUCHER')
+            and   type = 'U')
+   drop table ORDER_VOUCHER
+go
+
+if exists (select 1
             from  sysobjects
            where  id = object_id('PAYMENT')
             and   type = 'U')
@@ -575,6 +588,31 @@ if exists (select 1
            where  id = object_id('SHIPPING_ADDRESS')
             and   type = 'U')
    drop table SHIPPING_ADDRESS
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('USER_VOUCHER')
+            and   name  = 'USER_VOUCHER2_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index USER_VOUCHER.USER_VOUCHER2_FK
+go
+
+if exists (select 1
+            from  sysindexes
+           where  id    = object_id('USER_VOUCHER')
+            and   name  = 'USER_VOUCHER_FK'
+            and   indid > 0
+            and   indid < 255)
+   drop index USER_VOUCHER.USER_VOUCHER_FK
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('USER_VOUCHER')
+            and   type = 'U')
+   drop table USER_VOUCHER
 go
 
 if exists (select 1
@@ -842,32 +880,6 @@ PROV_ID ASC
 go
 
 /*==============================================================*/
-/* Table: HAS_VOUCHER                                           */
-/*==============================================================*/
-create table HAS_VOUCHER (
-   EMAIL                nvarchar(100)         not null,
-   VOUCHER_ID           char(7)              not null,
-   constraint PK_HAS_VOUCHER primary key (EMAIL, VOUCHER_ID)
-)
-go
-
-/*==============================================================*/
-/* Index: HAS_VOUCHER_FK                                        */
-/*==============================================================*/
-create index HAS_VOUCHER_FK on HAS_VOUCHER (
-EMAIL ASC
-)
-go
-
-/*==============================================================*/
-/* Index: HAS_VOUCHER2_FK                                       */
-/*==============================================================*/
-create index HAS_VOUCHER2_FK on HAS_VOUCHER (
-VOUCHER_ID ASC
-)
-go
-
-/*==============================================================*/
 /* Table: HPOINT_ACCUMULATION_YEAR                              */
 /*==============================================================*/
 create table HPOINT_ACCUMULATION_YEAR (
@@ -908,9 +920,12 @@ create table H_ORDER (
    ADDR_ID              char(10)             not null,
    PAYMENT_ID           char(4)              not null,
    ORDER_DATE           datetime             null,
-   TOTAL_PRICE          int                  null,
-   SHIPPING_PRICE       int                  null,
-   FINAL_PRICE          int                  null,
+   MERCHANDISE_SUBTOTAL int                  null,
+   SHIPPING_FEE         int                  null,
+   SHIPPING_DISCOUNT_SUBTOTAL int                  null,
+   HACHIKO_VOUCHER_APPLIED int                  null,
+   HPOINTS_REDEEMED     int                  null,
+   TOTAL_PAYMENT        int                  null,
    constraint PK_H_ORDER primary key nonclustered (ORDER_ID)
 )
 go
@@ -1016,6 +1031,32 @@ ORDER_ID ASC
 go
 
 /*==============================================================*/
+/* Table: ORDER_VOUCHER                                         */
+/*==============================================================*/
+create table ORDER_VOUCHER (
+   ORDER_ID             char(7)              not null,
+   VOUCHER_ID           char(7)              not null,
+   constraint PK_ORDER_VOUCHER primary key (ORDER_ID, VOUCHER_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: ORDER_VOUCHER2_FK                                     */
+/*==============================================================*/
+create index ORDER_VOUCHER2_FK on ORDER_VOUCHER (
+ORDER_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Index: ORDER_VOUCHER2_FK2                                    */
+/*==============================================================*/
+create index ORDER_VOUCHER2_FK2 on ORDER_VOUCHER (
+VOUCHER_ID ASC
+)
+go
+
+/*==============================================================*/
 /* Table: PAYMENT                                               */
 /*==============================================================*/
 create table PAYMENT (
@@ -1055,6 +1096,11 @@ create table SHIPPING_ADDRESS (
    WARD_ID              char(8)              not null,
    PROV_ID              char(4)              not null,
    DETAILED_ADDR        nvarchar(100)         null,
+   IS_DEFAULT           bit                  null,
+   RECEIVER_NAME        nvarchar(60)          null,
+   RECEIVER_PHONE_NUMBER char(10)             null,
+   LATITUDE             float                null,
+   LONGITUDE            float                null,
    constraint PK_SHIPPING_ADDRESS primary key nonclustered (ADDR_ID)
 )
 go
@@ -1088,6 +1134,32 @@ go
 /*==============================================================*/
 create index INCLUDE_WARD_FK on SHIPPING_ADDRESS (
 WARD_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Table: USER_VOUCHER                                          */
+/*==============================================================*/
+create table USER_VOUCHER (
+   VOUCHER_ID           char(7)              not null,
+   EMAIL                nvarchar(100)         not null,
+   constraint PK_USER_VOUCHER primary key (VOUCHER_ID, EMAIL)
+)
+go
+
+/*==============================================================*/
+/* Index: USER_VOUCHER_FK                                       */
+/*==============================================================*/
+create index USER_VOUCHER_FK on USER_VOUCHER (
+VOUCHER_ID ASC
+)
+go
+
+/*==============================================================*/
+/* Index: USER_VOUCHER2_FK                                      */
+/*==============================================================*/
+create index USER_VOUCHER2_FK on USER_VOUCHER (
+EMAIL ASC
 )
 go
 
@@ -1221,16 +1293,6 @@ alter table DISTRICT
       references PROVINCE (PROV_ID)
 go
 
-alter table HAS_VOUCHER
-   add constraint FK_HAS_VOUC_HAS_VOUCH_ACCOUNT foreign key (EMAIL)
-      references ACCOUNT (EMAIL)
-go
-
-alter table HAS_VOUCHER
-   add constraint FK_HAS_VOUC_HAS_VOUCH_VOUCHER foreign key (VOUCHER_ID)
-      references VOUCHER (VOUCHER_ID)
-go
-
 alter table HPOINT_ACCUMULATION_YEAR
    add constraint FK_HPOINT_A_STORE_HPO_ACCOUNT_ foreign key (EMAIL)
       references ACCOUNT_DETAIL (EMAIL)
@@ -1281,6 +1343,16 @@ alter table ORDER_STATE
       references H_ORDER (ORDER_ID)
 go
 
+alter table ORDER_VOUCHER
+   add constraint FK_ORDER_VO_ORDER_VOU_H_ORDER foreign key (ORDER_ID)
+      references H_ORDER (ORDER_ID)
+go
+
+alter table ORDER_VOUCHER
+   add constraint FK_ORDER_VO_ORDER_VOU_VOUCHER foreign key (VOUCHER_ID)
+      references VOUCHER (VOUCHER_ID)
+go
+
 alter table SHIPPING_ADDRESS
    add constraint FK_SHIPPING_INCLUDE_D_DISTRICT foreign key (DIST_ID)
       references DISTRICT (DIST_ID)
@@ -1298,6 +1370,16 @@ go
 
 alter table SHIPPING_ADDRESS
    add constraint FK_SHIPPING_OF_ACCOUN_ACCOUNT foreign key (EMAIL)
+      references ACCOUNT (EMAIL)
+go
+
+alter table USER_VOUCHER
+   add constraint FK_USER_VOU_USER_VOUC_VOUCHER foreign key (VOUCHER_ID)
+      references VOUCHER (VOUCHER_ID)
+go
+
+alter table USER_VOUCHER
+   add constraint FK_USER_VOU_USER_VOUC_ACCOUNT foreign key (EMAIL)
       references ACCOUNT (EMAIL)
 go
 

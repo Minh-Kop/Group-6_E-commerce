@@ -7,24 +7,22 @@ const config = {
 
     DATABASE: {
         server: process.env.DB_SERVER,
-        // user: process.env.DB_USER,
-        // password: process.env.DB_PWD,
+        user: process.env.DB_USER,
+        password: process.env.DB_PWD,
         database: process.env.DB_NAME,
     },
 
     NO_TOKEN_URL: ['/auth', '/location', '/category', '/product'],
+
     role: {
-        // USER: 'user',
-        // ADMIN: 'admin',
         USER: 1,
         ADMIN: 2,
     },
 
     payment: {
-        PAYPAL: 'paypal',
-        MOMO: 'momo',
-        COD: 'cod',
-        NOWPAYMENT: 'nowpayment',
+        PAYPAL: 'PayPal',
+        MOMO: 'MoMo',
+        COD: 'COD',
     },
 
     currency: {
@@ -35,8 +33,14 @@ const config = {
 
     pointChangedType: {
         RECEIVE: 1,
-        USE: -1,
         ACCUMULATE: 2,
+        USE: -1,
+    },
+
+    tier: {
+        MEMBER: 1,
+        VIP: 2,
+        HVIP: 3,
     },
 
     orderState: {
@@ -70,6 +74,7 @@ const config = {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN,
     GMAIL_USERNAME: process.env.GMAIL_USERNAME,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
 
     MOMO_PARTNER_CODE: process.env.MOMO_PARTNER_CODE,
     MOMO_ACCESS_KEY: process.env.MOMO_ACCESS_KEY,

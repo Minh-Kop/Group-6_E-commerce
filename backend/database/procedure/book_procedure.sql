@@ -139,3 +139,34 @@ BEGIN TRANSACTION
 COMMIT
 RETURN 1
 GO
+
+GO
+IF OBJECT_ID('sp_GetBooksByOrderId') IS NOT NULL
+	DROP PROC sp_GetBooksByOrderId
+GO
+CREATE PROCEDURE sp_GetBooksByOrderId
+	@orderId CHAR(7)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		if not exists (select 1 from H_ORDER where ORDER_ID = @orderId)
+        BEGIN
+            PRINT N'Order not found.'
+            ROLLBACK 
+            RETURN -1
+        END
+		
+		SELECT od.BOOK_ID bookId, b.BOOK_NAME bookName, b.BOOK_PATH bookImage, b.BOOK_PRICE originalPrice,
+			b.BOOK_DISCOUNTED_PRICE unitPrice, od.ORDER_QUANTITY amount
+        from ORDER_DETAIL od join BOOK b on od.BOOK_ID = b.BOOK_ID
+        where od.ORDER_ID = @orderId 
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO

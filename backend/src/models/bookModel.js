@@ -1,4 +1,5 @@
-const sql = require('mssql/msnodesqlv8');
+// const sql = require('mssql/msnodesqlv8');
+const sql = require('mssql');
 
 const database = require('../utils/database');
 
@@ -48,17 +49,18 @@ exports.getBookImages = async (bookId) => {
     return result.recordset;
 };
 
-exports.getAllBooks = async (
+exports.getAllBooks = async ({
     categoryIdList,
     priceRange,
     publisherId,
     bookFormat,
-    sortType = 'BOOK_DISCOUNTED_PRICE',
     limit,
     offset,
-) => {
+    sortType,
+}) => {
     let sqlString =
         'select b.* from BOOK b join BOOK_DETAIL d on d.BOOK_ID = b.BOOK_ID';
+
     if (categoryIdList) {
         let strList = '';
         for (let i = 0; i < categoryIdList.length; i++) {
@@ -132,11 +134,17 @@ exports.getBookById = async (bookId) => {
 
 exports.getBooksByCartId = async (cartId) => {
     const pool = await database.getConnectionPool();
-
     const request = new sql.Request(pool);
     request.input('cartId', sql.Char, cartId);
     const result = await request.execute('sp_GetBooksByCartId');
+    return result.recordset;
+};
 
+exports.getBooksByOrderId = async (orderId) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('orderId', sql.Char, orderId);
+    const result = await request.execute('sp_GetBooksByOrderId');
     return result.recordset;
 };
 

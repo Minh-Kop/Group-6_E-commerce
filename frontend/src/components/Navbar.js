@@ -95,14 +95,14 @@ function Navbar() {
       <CategoryPopUp trigger={btnCategory} setTrigger={setBtnCategory}>
         <div className="main-category">
           {categoryList.map((category, index) => (
-            <div onMouseOver={() => setSelectedCategory(index)}>
+            <div key={index} onMouseOver={() => setSelectedCategory(index)}>
               <a href="/">{category}</a>
             </div>
           ))}
         </div>
         <div className="sub-category">
           {subCategoryList[selectedCategory].map((subCategory, subIndex) => (
-            <div>
+            <div key={subIndex}>
               <a href="/">{subCategory}</a>
             </div>
           ))}

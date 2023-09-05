@@ -23,24 +23,30 @@ function UserInfo() {
             <button type="button">Sửa mật khẩu</button>
           </NavLink>
         </div>
-        <div className="user-info">
-          <div className="user-personal-info">
-            <p>Tài khoản:</p>
-            <p>Mật khẩu:</p>
-            <p>Email:</p>
-            <p>Số điện thoại:</p>
-            <p>Địa chỉ:</p>
+        <div className="info-container">
+          <h2>Hồ sơ của tôi</h2>
+          <h3>Quản lí thông tin hồ sơ để bảo mật tài khoản</h3>
+          <div className="user-info">
+            <div className="user-personal-info">
+              <p>Tài khoản:</p>
+              <p>Tên:</p>
+              <p>Email:</p>
+              <p>Số điện thoại:</p>
+              <p>Địa chỉ:</p>
+            </div>
+            <div className="user-personal-info-data">
+              <p>User5763</p>
+              <input type="text"></input>
+              <input type="text"></input>
+              <input type="text"></input>
+              <input type="text"></input>
+            </div>
           </div>
-          <div className="user-personal-info-data">
-            <p>User5763</p>
-            <p>XXXXXXX</p>
-            <p>user5763@gamil.com</p>
-            <p>023456789</p>
-            <p>Việt Nam</p>
-          </div>
+          <button className="save-info" type="button">
+            Lưu
+          </button>
         </div>
       </div>
-
       <Footer />
     </div>
   );
