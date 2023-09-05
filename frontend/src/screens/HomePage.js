@@ -31,7 +31,12 @@ const HomePage = () => {
           {records.map((subitem) => (
             <div key={subitem.bookId} className="homepage__displayData__inf">
               <div className="homepage__displayData__cover">
-                <NavLink to="/home_page/1">
+                <NavLink
+                  to={{
+                    pathname: `/home_page/${subitem.bookId}`,
+                  }}
+                  state={{ ID: `${subitem.bookId}` }}
+                >
                   <img
                     className="homepage__displayData__book"
                     src={subitem.image}
@@ -43,12 +48,18 @@ const HomePage = () => {
                   <div className="homepage__displayData__book__inf__name">
                     {subitem.bookName}
                   </div>
+                  <div className="homepage__displayData__book__inf__disprice__cover">
+                    <div className="homepage__displayData__book__inf__disprice">
+                      {subitem.discountedPrice}đ
+                    </div>
+                    <div className="homepage__displayData__book__inf__disprice__num">
+                      {subitem.discountedNumber}%
+                    </div>
+                  </div>
                   <div className="homepage__displayData__book__inf__price">
                     {subitem.originalPrice}đ
                   </div>
-                  <div className="homepage__displayData__book__inf__disprice">
-                    {subitem.discountedPrice}đ
-                  </div>
+
                   <div className="homepage__displayData__book__inf__rate">
                     Đánh giá: {subitem.avgRating} /5.0
                   </div>

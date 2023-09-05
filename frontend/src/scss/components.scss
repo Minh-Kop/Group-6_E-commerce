@@ -177,59 +177,55 @@
     }
 
     .category-popup-children {
+      position: relative;
       display: flex;
       flex-direction: row;
       gap: 30px;
 
-      .main-category {
+      .category {
         display: flex;
         flex-direction: column;
-        gap: 5px;
-        width: 25%;
 
-        div {
+        .sub-category-container {
           position: relative;
-          text-align: center;
-          justify-content: center;
-          height: 3rem;
+          left: 10%;
 
-          &:hover {
-            background-color: #9db2bf;
-          }
+          .sub-category {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
 
-          a {
-            color: black;
-            position: relative;
-            top: 30%;
-            text-decoration: none;
-          }
-        }
-      }
+            .sub-category-name:hover {
+              background-color: #ea8d88;
+            }
 
-      .sub-category {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        width: 25%;
+            .sub-sub-category-container {
+              position: absolute;
+              display: flex;
+              flex-direction: column;
 
-        div {
-          position: relative;
-          text-align: center;
-          justify-content: center;
-          height: 3rem;
+              gap: 3rem;
+              top: -25%;
+              left: 150%;
+              width: 100%;
+              height: 100%;
 
-          &:hover {
-            a {
-              color: orange;
+              .sub-sub-category {
+                height: 100%;
+
+                .sub-sub-category-name:hover {
+                  color: orange;
+                }
+              }
             }
           }
+        }
 
-          a {
-            color: black;
-            position: relative;
-            top: 30%;
-            text-decoration: none;
-          }
+        a {
+          height: 3rem;
+          text-decoration: none;
+
+          font-size: large;
         }
       }
     }
