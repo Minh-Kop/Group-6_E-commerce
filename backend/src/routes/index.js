@@ -12,6 +12,7 @@ const checkoutRouter = require('./checkoutRoutes');
 const paymentRouter = require('./paymentRoutes');
 const orderRouter = require('./orderRoutes');
 const reviewRouter = require('./reviewRoutes');
+const searchRouter = require('./searchRoutes');
 
 const router = express.Router();
 
@@ -30,5 +31,6 @@ router.use('/api/checkout', checkoutRouter);
 router.use('/api/payment', paymentRouter);
 router.use('/api/order', authController.protect, orderRouter);
 router.use('/api/review', reviewRouter);
+router.use('/api/search', searchRouter);
 
 module.exports = router;

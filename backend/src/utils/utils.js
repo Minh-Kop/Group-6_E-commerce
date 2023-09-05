@@ -131,10 +131,93 @@ const removeUndefined = (obj) => {
     return newObj;
 };
 
+const vietnameseToEnglishMap = {
+    à: 'a',
+    á: 'a',
+    ả: 'a',
+    ạ: 'a',
+    ã: 'a',
+    ă: 'a',
+    ắ: 'a',
+    ằ: 'a',
+    ẳ: 'a',
+    ẵ: 'a',
+    ặ: 'a',
+    â: 'a',
+    ấ: 'a',
+    ầ: 'a',
+    ẩ: 'a',
+    ẫ: 'a',
+    ậ: 'a',
+    đ: 'd',
+    è: 'e',
+    é: 'e',
+    ẻ: 'e',
+    ẽ: 'e',
+    ẹ: 'e',
+    ê: 'e',
+    ế: 'e',
+    ề: 'e',
+    ể: 'e',
+    ễ: 'e',
+    ệ: 'e',
+    ì: 'i',
+    í: 'i',
+    ỉ: 'i',
+    ị: 'i',
+    ĩ: 'i',
+    ò: 'o',
+    ó: 'o',
+    ỏ: 'o',
+    ọ: 'o',
+    õ: 'o',
+    ô: 'o',
+    ố: 'o',
+    ồ: 'o',
+    ổ: 'o',
+    ỗ: 'o',
+    ộ: 'o',
+    ơ: 'o',
+    ớ: 'o',
+    ờ: 'o',
+    ở: 'o',
+    ỡ: 'o',
+    ợ: 'o',
+    ù: 'u',
+    ú: 'u',
+    ủ: 'u',
+    ụ: 'u',
+    ũ: 'u',
+    ư: 'u',
+    ứ: 'u',
+    ừ: 'u',
+    ử: 'u',
+    ữ: 'u',
+    ự: 'u',
+    ỳ: 'y',
+    ý: 'y',
+    ỷ: 'y',
+    ỵ: 'y',
+    ỹ: 'y',
+};
+
+/**
+ * Convert Vietnamese string to English string
+ *
+ * @param {string} input The input string
+ */
+const convertVietnameseToEnglish = (input) => {
+    input = input.toLowerCase();
+    return [...input]
+        .map((char) => vietnameseToEnglishMap[char] || char)
+        .join('');
+};
+
 module.exports = {
     buildCategoryRoot,
     searchCategoryTree,
     toListCategory,
     getParentBranch,
     removeUndefined,
+    convertVietnameseToEnglish,
 };
