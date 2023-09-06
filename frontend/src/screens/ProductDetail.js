@@ -74,7 +74,7 @@ function ProductDetail() {
         console.log(res.data.book);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [ID]);
 
   return (
     <>
@@ -82,16 +82,28 @@ function ProductDetail() {
       <div className="product-detail-container">
         <div className="product-detail">
           <div className="product-general-detail">
-            <img src={records.mainImage} alt="Book image" />
+            <img src={records.mainImage} alt="Book" />
             <div className="product-general-info">
               <h3>{records.bookName}</h3>
-              <p>Thể loại: {type} </p>
-              <p>Đánh giá: {records.avgRating} / 5.0</p>
-              <p>Giá:</p>
+              <p> {type} </p>
+              <p>
+                {records.avgRating} / 5.0 (Đánh giá {records.countRating})
+              </p>
+              <div className="product-general-info__priceCover">
+                <p className="product-general-info__disPrice">
+                  {records.discountedPrice}đ
+                </p>
+                <p className="product-general-info__price">
+                  {records.originalPrice}đ
+                </p>
+                <p className="product-general-info__numPrice">
+                  {records.discountedNumber}%
+                </p>
+              </div>
               <div className="product-order-button">
                 <form>
                   <button className="add-to-cart-button">
-                    Them vao gio hang
+                    Thêm vào giỏ hàng
                   </button>
                 </form>
                 <form>
@@ -102,12 +114,14 @@ function ProductDetail() {
           </div>
 
           <div className="product-detail-info">
-            <h2>Thong tin san pham</h2>
-            {productDetailTag.map((x, index) => (
-              <p>
-                {x} {productDetail[index]}
-              </p>
-            ))}
+            <h2>Thông tin sản phẩm</h2>
+            <p>Nhà xuất bản: {records.publisher}</p>
+            <p>Tác giả: {records.author}</p>
+            <p>Năm xuất bản {records.publishedYear}</p>
+            <p>Chất liệu: {records.bookFormat}</p>
+            <p>Số trang: {records.numberPage}</p>
+            <p>Mô tả: {records.description}</p>
+            <p>Tồn kho: {records.stock}</p>
           </div>
           <button className="product-backBtn" onClick={handleGoBack}>
             Go Back

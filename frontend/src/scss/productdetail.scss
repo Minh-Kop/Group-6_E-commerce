@@ -6,7 +6,7 @@
 }
 
 .product-detail {
-  padding-top: 3%;
+  padding: 3% 4% 0% 4%;
   background-color: #dde6ed;
 
   display: flex;
@@ -26,9 +26,37 @@
       height: 500px;
     }
     .product-general-info {
+      &__priceCover {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        max-width: 250px;
+      }
+      &__disPrice {
+        font-size: 28px;
+        font-weight: bold;
+        color: #c92127;
+      }
+
+      &__price {
+        text-decoration-line: line-through;
+      }
+
+      &__numPrice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: #c92127;
+        color: #ffffff;
+        background-color: #c92127;
+        height: 26px;
+        width: 40px;
+        border-radius: 5px;
+      }
       p {
         text-align: justify;
-        margin-bottom: 10px;
         margin-left: 5px;
       }
 
