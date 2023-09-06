@@ -19,6 +19,7 @@ import UserVoucher from "./screens/UserVoucher";
 import ChangePassword from "./screens/ChangePassword";
 
 import ProductDetail from "./screens/ProductDetail";
+import ProductsByCategories from "./screens/ProductsByCategories";
 
 function App() {
   return (
@@ -40,6 +41,9 @@ function App() {
         <Route path="/change_password" element={<ChangePassword />} />
 
         <Route path="/cart/payment" element={<Payment />} />
+        <Route path="/category">
+          <Route path=":categoryId" element={<ProductsByCategories />} />
+        </Route>
 
         <Route path="/home_page">
           <Route index element={<HomePage />} />

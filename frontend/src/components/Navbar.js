@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../scss/components.scss";
 import CategoryPopUp from "./CategoryPopup";
 import axios from "axios";
+import { NavLink, Outlet } from "react-router-dom";
 
 const client = axios.create({
   baseURL: "http://127.0.0.1:3001/",
@@ -37,7 +38,7 @@ function Navbar() {
   //Test data\\
   let name = "Mike";
   useEffect(() => {
-    const temp = client.get("api/category").then((res) => {
+    client.get("api/category").then((res) => {
       console.log(res);
       if (res.data.status === "success") {
         categoriesList = res.data.categories;
@@ -107,19 +108,25 @@ function Navbar() {
       <CategoryPopUp trigger={btnCategory} setTrigger={setBtnCategory}>
         {categoriesList.map((category) => (
           <div className="category">
-            <a href="/">{category.categoryName}</a>
+            <NavLink
+              to={{ pathname: `/category/${category.id}` }}
+              onClick={() => setBtnCategory(false)}
+            >
+              {category.categoryName}
+            </NavLink>
             <div className="sub-category-container">
               {category.children.map((subCate) => (
                 <div className="sub-category">
-                  <a
+                  <NavLink
                     className="sub-category-name"
-                    href="/"
+                    to={{ pathname: `/category/${subCate.id}` }}
                     onMouseOver={() => {
                       setSub(subCate.id);
                     }}
+                    onClick={() => setBtnCategory(false)}
                   >
                     {subCate.categoryName}
-                  </a>
+                  </NavLink>
                 </div>
               ))}
             </div>
@@ -129,9 +136,13 @@ function Navbar() {
                   {subCate.id === selectedSub &&
                     subCate.children.map((subSubCate) => (
                       <div className="sub-sub-category">
-                        <a className="sub-sub-category-name" href="/">
+                        <NavLink
+                          className="sub-sub-category-name"
+                          to={{ pathname: `/category/${subSubCate.id}` }}
+                          onClick={() => setBtnCategory(false)}
+                        >
                           {subSubCate.categoryName}
-                        </a>
+                        </NavLink>
                       </div>
                     ))}
                 </div>
@@ -140,6 +151,7 @@ function Navbar() {
           </div>
         ))}
       </CategoryPopUp>
+      <Outlet />
     </nav>
   );
 }
