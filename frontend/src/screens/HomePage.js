@@ -26,6 +26,7 @@ const HomePage = () => {
       <Navbar />
       <div className="homepage__banner"></div>
       <Sidebar />
+
       <div className="homepage__cover">
         <div className="homepage__displayData">
           {records.map((subitem) => (
