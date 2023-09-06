@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import book from "../assets/SGK.jpg";
 import "../scss/cart.scss";
+import axios from "axios";
+
+const client = axios.create({
+  baseURL: "http://127.0.0.1:3001/",
+});
 
 const cartProduct = [
   {
@@ -44,6 +49,22 @@ const cartProduct = [
 function Cart() {
   const [cartBooks, setCart] = useState(cartProduct); //array of book product (can be changed)
   const [selectedBook, setSelected] = useState(-1); //book id in cart that need to change the quantity
+
+  useEffect(() => {
+    client
+      .post("api/users/login", {
+        email: "khoiminhtrannguyen@gmail.com",
+        password: "khoi123",
+      })
+      .then((res) => {
+        console.log(res);
+        client
+          .get("api/cart")
+          .then((Response) => console.log(Response))
+          .catch((err) => console.log(err));
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const sum = () => {
     let s = 0;
