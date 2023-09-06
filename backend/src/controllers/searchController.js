@@ -1,7 +1,6 @@
-// const AppError = require('../utils/appError');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const searchModel = require('../models/searchModel');
-// const { convertVietnameseToEnglish } = require('../utils/utils');
 
 exports.getBooks = catchAsync(async (req, res, next) => {
     let {
@@ -14,8 +13,11 @@ exports.getBooks = catchAsync(async (req, res, next) => {
         page,
     } = req.query;
 
-    // keyword = convertVietnameseToEnglish(keyword);
-    keyword = keyword || '';
+    if (keyword) {
+        keyword = keyword.trim().replace(/\s+/g, '&');
+    } else {
+        return next(new AppError("Keyword can't be null.", 400));
+    }
     if (priceRange) {
         priceRange = priceRange.split(',').map((el) => +el);
     }
@@ -63,8 +65,11 @@ exports.countBooks = catchAsync(async (req, res, next) => {
         page,
     } = req.query;
 
-    // keyword = convertVietnameseToEnglish(keyword);
-    keyword = keyword || '';
+    if (keyword) {
+        keyword = keyword.trim().replace(/\s+/g, '&');
+    } else {
+        return next(new AppError("Keyword can't be null.", 400));
+    }
     if (priceRange) {
         priceRange = priceRange.split(',').map((el) => +el);
     }
@@ -83,7 +88,7 @@ exports.countBooks = catchAsync(async (req, res, next) => {
     limit = +limit || 12;
     const offset = (page - 1) * limit;
 
-    const result = await searchModel.countBooks({
+    const result = await searchModel.getBooks({
         keyword,
         priceRange,
         publisherId,

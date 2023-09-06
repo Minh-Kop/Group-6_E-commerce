@@ -30,21 +30,6 @@ exports.getDetailedUser = async (userEntity) => {
     return result;
 };
 
-exports.getPoint = async (userEntity) => {
-    const { email, changedType } = userEntity;
-    const pool = await database.getConnectionPool();
-
-    let sqlString = `select * from HPOINT_HISTORY where EMAIL = '${email}'`;
-    if (changedType) {
-        sqlString += ` and CHANGED_TYPE = ${changedType}`;
-    }
-    sqlString += ' order by CHANGED_TIME desc';
-
-    const request = new sql.Request(pool);
-    const result = await request.query(sqlString);
-    return result.recordset;
-};
-
 exports.createAccount = async (accountEntity) => {
     const { email, phoneNumber, fullName, password, verified, token, role } =
         accountEntity;
