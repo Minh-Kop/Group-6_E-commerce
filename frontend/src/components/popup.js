@@ -1,5 +1,6 @@
 import React from "react";
 import "../scss/components.scss";
+import { NavLink } from "react-router-dom";
 
 const Popup = (props) => {
   return props.trigger ? (
@@ -9,7 +10,9 @@ const Popup = (props) => {
       <div className="popup__inner">
         <div className="title">{props.title}</div>
         <div className="content">{props.content}</div>
-        <button className="comfirmBtn">Xác nhận</button>
+        <NavLink to={props.link}>
+          <button className="comfirmBtn">Xác nhận</button>
+        </NavLink>
         {props.children}
       </div>
     </div>
