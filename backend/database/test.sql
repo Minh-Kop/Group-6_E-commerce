@@ -81,13 +81,14 @@ select * from ORDER_REVIEW
 
 delete from ORDER_REVIEW
 
-SELECT b.BOOK_ID, b.BOOK_DISCOUNTED_PRICE
-                from BOOK b join CATEGORY c on b.CATE_ID = c.CATE_ID
-                    join BOOK_DETAIL bd on b.BOOK_ID = bd.BOOK_ID
-                    join CATEGORY pc on pc.CATE_ID = c.PARENT_ID
-                    WHERE (b.BOOK_NAME like '%tiểu%' OR bd.BOOK_DESC LIKE '%tiểu%' OR c.CATE_NAME LIKE N'%Tiểu Thuyết%' OR pc.CATE_NAME LIKE '%tiểu%')
-                         and bd.book_format in (N'Bìa mềm',N'Bìa cứng') and b.stock > 0 and b.SOFT_DELETE = 0
-                        order by b.BOOK_DISCOUNTED_PRICE 
-asc OFFSET 0 ROWS FETCH NEXT 50 ROWS ONLY
-
 select * from CATEGORY
+
+SELECT SERVERPROPERTY('IsFullTextInstalled')
+
+SELECT *
+FROM BOOK
+WHERE CONTAINS(BOOK_NAME,'"cay cam cua toi"')
+
+select * from sys.fulltext_stopwords
+select * from sys.fulltext_stoplists
+select * from sys.syslanguages WHERE lcid = 1066
