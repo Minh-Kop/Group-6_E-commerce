@@ -47,22 +47,6 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getPoint = catchAsync(async (req, res, next) => {
-    const { email } = req.params;
-    const { changedType } = req.query;
-    const userEntity = {
-        email,
-        changedType,
-    };
-
-    const HPoint = await accountModel.getPoint(userEntity);
-
-    res.status(200).json({
-        status: 'success',
-        user: HPoint,
-    });
-});
-
 exports.updateUser = catchAsync(async (req, res, next) => {
     // Create error if user PATCHes password data
     if (req.body.password) {

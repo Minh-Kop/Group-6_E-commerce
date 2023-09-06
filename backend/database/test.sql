@@ -73,9 +73,8 @@ select *
 from ACCOUNT_DETAIL
 SELECT *
 from HPOINT_ACCUMULATION_YEAR
-SELECT [EMAIL] email, [CHANGED_TYPE] changedType, [CHANGED_TIME] changedTime, [CHANGED_POINTS],
-
-[CHANGED_REASON] from HPOINT_HISTORY
+SELECT [EMAIL] email, [CHANGED_TYPE] changedType, [CHANGED_TIME] changedTime, [CHANGED_POINTS] changedPoints,
+[CHANGED_REASON] changedReason from HPOINT_HISTORY
 
 select * from ORDER_REVIEW
 

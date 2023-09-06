@@ -74,16 +74,13 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     if (bookFormat) {
         bookFormat = bookFormat.split(',').map((el) => el.trim());
     }
-    if (limit) {
-        limit = +limit;
-    }
 
     page = +page || 1;
     limit = +limit || 12;
     const offset = (page - 1) * limit;
 
     const categoryIdList = await getListCategoryId(categoryId);
-    const resultProduct = await bookModel.getAllBooks({
+    const resultBooks = await bookModel.getAllBooks({
         categoryIdList,
         priceRange,
         publisherId,
@@ -92,7 +89,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
         limit,
         offset,
     });
-    const promises = resultProduct.map(async (item) => {
+    const books = resultBooks.map((item) => {
         return {
             bookId: item.BOOK_ID,
             bookName: item.BOOK_NAME,
@@ -104,7 +101,28 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
             image: item.BOOK_PATH,
         };
     });
-    const books = await Promise.all(promises);
+
+    // SEND RESPONSE
+    res.status(200).json({
+        status: 'success',
+        numberOfProducts: books.length,
+        books,
+    });
+});
+
+exports.getRelatedBooks = catchAsync(async (req, res, next) => {
+    const { bookId } = req.params;
+    let { limit, page } = req.query;
+
+    page = +page || 1;
+    limit = +limit || 12;
+    const offset = (page - 1) * limit;
+
+    const books = await bookModel.getRelatedBooks({
+        bookId,
+        limit,
+        offset,
+    });
 
     // SEND RESPONSE
     res.status(200).json({
@@ -356,7 +374,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.deleteBookImage = async (req, res, next) => {
+exports.deleteBookImage = catchAsync(async (req, res, next) => {
     const { bookId } = req.params;
     const { imageFilename } = req.body;
 
@@ -374,9 +392,9 @@ exports.deleteBookImage = async (req, res, next) => {
         status: 'success',
         message: `Delete ${imageFilename} image of book ${bookId} successfully.`,
     });
-};
+});
 
-exports.deleteBook = async (req, res, next) => {
+exports.deleteBook = catchAsync(async (req, res, next) => {
     const { bookId } = req.params;
     const result = await bookModel.deleteBook(bookId);
     if (!result) {
@@ -386,4 +404,4 @@ exports.deleteBook = async (req, res, next) => {
         status: 'success',
         message: `Delete book ${bookId} successfully.`,
     });
-};
+});

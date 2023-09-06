@@ -1,4 +1,4 @@
-// const AppError = require('../utils/appError');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const searchModel = require('../models/searchModel');
 
@@ -16,7 +16,7 @@ exports.getBooks = catchAsync(async (req, res, next) => {
     if (keyword) {
         keyword = keyword.trim().replace(/\s+/g, '&');
     } else {
-        keyword = '';
+        return next(new AppError("Keyword can't be null.", 400));
     }
     if (priceRange) {
         priceRange = priceRange.split(',').map((el) => +el);
@@ -68,7 +68,7 @@ exports.countBooks = catchAsync(async (req, res, next) => {
     if (keyword) {
         keyword = keyword.trim().replace(/\s+/g, '&');
     } else {
-        keyword = '';
+        return next(new AppError("Keyword can't be null.", 400));
     }
     if (priceRange) {
         priceRange = priceRange.split(',').map((el) => +el);

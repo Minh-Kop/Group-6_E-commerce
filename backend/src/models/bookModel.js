@@ -112,6 +112,16 @@ exports.getAllBooks = async ({
     return result.recordset;
 };
 
+exports.getRelatedBooks = async ({ bookId, limit, offset }) => {
+    const pool = await database.getConnectionPool();
+    const request = new sql.Request(pool);
+    request.input('bookId', sql.Char, bookId);
+    request.input('limit', sql.Int, limit);
+    request.input('offset', sql.Int, offset);
+    const result = await request.execute('sp_GetRelatedBooks');
+    return result.recordset;
+};
+
 exports.getBookById = async (bookId) => {
     const pool = await database.getConnectionPool();
 

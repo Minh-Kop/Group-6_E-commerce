@@ -107,6 +107,38 @@ RETURN 1
 GO
 
 GO
+IF OBJECT_ID('sp_GetRelatedBooks') IS NOT NULL
+	DROP PROC sp_GetRelatedBooks
+GO
+CREATE PROCEDURE sp_GetRelatedBooks
+	@bookId CHAR(7),
+	@limit INT,
+	@offset INT
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		DECLARE @cateId CHAR(4), @parentId CHAR(4)
+		select @cateId = c.CATE_ID, @parentId = c.PARENT_ID
+		from BOOK b join CATEGORY c on b.CATE_ID = c.CATE_ID
+		where b.BOOK_ID = @bookId
+
+		SELECT b.BOOK_ID bookId, b.BOOK_NAME bookName, b.BOOK_PRICE originalPrice, b.BOOK_DISCOUNTED_PRICE discountedPrice,
+			b.DISCOUNTED_NUMBER discountedNumber, b.AVG_RATING avgRating, b.COUNT_RATING countRating, 
+			b.BOOK_PATH image
+		from BOOK b join CATEGORY c on b.CATE_ID = c.CATE_ID
+		where (b.BOOK_ID <> @bookId) AND (c.CATE_ID = @cateId or c.PARENT_ID = @parentId)
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
 IF OBJECT_ID('sp_GetBook') IS NOT NULL
 	DROP PROC sp_GetBook
 GO

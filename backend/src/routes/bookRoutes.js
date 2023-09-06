@@ -9,15 +9,17 @@ router
     .get(bookController.getAllBooks)
     .post(bookController.uploadBookImages, bookController.createBook);
 
-router
-    .route('/:bookId')
-    .get(bookController.getBook)
-    .patch(bookController.updateBook)
-    .delete(bookController.deleteBook);
+router.get('/related/:bookId', bookController.getRelatedBooks);
 
 router
     .route('/images/:bookId')
     .patch(bookController.uploadBookImages, bookController.updateBookImages)
     .delete(bookController.deleteBookImage);
+
+router
+    .route('/:bookId')
+    .get(bookController.getBook)
+    .patch(bookController.updateBook)
+    .delete(bookController.deleteBook);
 
 module.exports = router;
