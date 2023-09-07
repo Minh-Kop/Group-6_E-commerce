@@ -1,8 +1,12 @@
-import { React, useRef, useState } from "react";
+import { React, useContext, useRef, useState } from "react";
 import "../scss/signin.scss";
 import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import axios from "axios";
+import api from "../ult/api";
+import { AccountContext } from "../context/account";
+import config from "../config/config";
+const { storageKeys } = config;
 
 const Signin = () => {
   const email = useRef(null);
@@ -11,6 +15,34 @@ const Signin = () => {
   const [status, setStatus] = useState("");
 
   const navigate = useNavigate();
+  const { login } = useContext(AccountContext);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    if (email && pass) {
+      try {
+        const response = await api.post("/api/users/login", {
+          email: email.current.value,
+          password: pass.current.value,
+        });
+        const { status, token } = response.data;
+
+        if (status === "success") {
+          login(token);
+          console.log(1);
+
+          navigate("/home_page");
+        } else {
+          setTimeout(() => {
+            navigate("/");
+          }, 4500);
+        }
+      } catch {
+        console.log("error");
+      }
+    }
+  };
 
   const handleSignin = (event) => {
     axios
@@ -61,7 +93,7 @@ const Signin = () => {
 
         <div className="signin__form__btnsCover">
           <NavLink
-            onClick={() => handleSignin()}
+            onClick={(event) => onSubmit(event)}
             className="signin__form__btnsCover__btn DN"
           >
             Đăng nhập
