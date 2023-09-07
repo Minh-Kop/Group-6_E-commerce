@@ -105,7 +105,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        numberOfProducts: books.length,
+        length: books.length,
         books,
     });
 });
@@ -127,7 +127,47 @@ exports.getRelatedBooks = catchAsync(async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        numberOfProducts: books.length,
+        length: books.length,
+        books,
+    });
+});
+
+exports.getNewestArrival = catchAsync(async (req, res, next) => {
+    let { limit, page } = req.query;
+
+    page = +page || 1;
+    limit = +limit || 12;
+    const offset = (page - 1) * limit;
+
+    const books = await bookModel.getNewestArrival({
+        limit,
+        offset,
+    });
+
+    // SEND RESPONSE
+    res.status(200).json({
+        status: 'success',
+        length: books.length,
+        books,
+    });
+});
+
+exports.getBestSeller = catchAsync(async (req, res, next) => {
+    let { limit, page } = req.query;
+
+    page = +page || 1;
+    limit = +limit || 12;
+    const offset = (page - 1) * limit;
+
+    const books = await bookModel.getBestSeller({
+        limit,
+        offset,
+    });
+
+    // SEND RESPONSE
+    res.status(200).json({
+        status: 'success',
+        length: books.length,
         books,
     });
 });
