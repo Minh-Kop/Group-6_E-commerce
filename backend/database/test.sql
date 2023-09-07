@@ -1,18 +1,4 @@
-﻿-- insert into account (EMAIL) values ('khoi@gmail.com')
--- insert into shipping_address (ADDR_ID, EMAIL, DIST_ID, WARD_ID, PROV_ID, DETAILED_ADDR) values 
--- 	('ADDR000001', 'khoi@gmail.com', 'DT0005', 'WD000001', 'PR01', N'225 Nguyễn Văn Cừ')
--- insert into H_ORDER (ORDER_ID, EMAIL, addr_id, PAYMENT_ID) values ('OD001', 'khoi@gmail.com', 'ADDR000001', 'PY01')
--- insert into H_ORDER (ORDER_ID, EMAIL, addr_id, PAYMENT_ID) values ('OD002', 'khoi@gmail.com', 'ADDR000001', 'PY01')
--- insert into ORDER_detail (ORDER_ID, BOOK_ID, ORDER_QUANTITY, ORDER_PRICE) values ('OD001', 'BK00001', 6, 120000)
--- insert into ORDER_detail (ORDER_ID, BOOK_ID, ORDER_QUANTITY, ORDER_PRICE) values ('OD002', 'BK00001', 6, 120000)
--- insert into order_state (ORDER_ID, ORDER_STATE) values ('OD001', 3)
--- insert into order_state (ORDER_ID, ORDER_STATE) values ('OD002', 3)
-
-select * from H_ORDER
-select * from order_detail
-select * from order_state
-
-GO
+﻿GO
 DELETE from BOOK_IMAGES where BOOK_ID = 'BK00034'
 go
 delete from WRITTEN_BY where BOOK_ID = 'BK00034'
@@ -21,7 +7,7 @@ delete from BOOK_DETAIL where BOOK_ID = 'BK00034'
 go
 delete from BOOK where BOOK_ID = 'BK00034'
 
-select * from BOOK where BOOK_ID = 'BK00034'
+select BOOK_ID, STOCK from BOOK where BOOK_ID = 'BK00034'
 select * from BOOK_DETAIL where BOOK_ID = 'BK00034'
 select w.*, a.AUTHOR_NAME from WRITTEN_BY w join AUTHOR a on w.AUTHOR_ID = a.AUTHOR_ID where BOOK_ID = 'BK00034'
 SELECT * from BOOK_IMAGES where BOOK_ID = 'BK00034'
@@ -82,12 +68,4 @@ delete from ORDER_REVIEW
 
 select * from CATEGORY
 
-SELECT SERVERPROPERTY('IsFullTextInstalled')
 
-SELECT *
-FROM BOOK
-WHERE CONTAINS(BOOK_NAME,'"cay cam cua toi"')
-
-select * from sys.fulltext_stopwords
-select * from sys.fulltext_stoplists
-select * from sys.syslanguages WHERE lcid = 1066
