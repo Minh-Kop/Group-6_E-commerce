@@ -1,12 +1,13 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import book from "../assets/SGK.jpg";
 import "../scss/cart.scss";
 import axios from "axios";
 
 const client = axios.create({
   baseURL: "http://127.0.0.1:3001/",
+  withCredentials: true,
 });
 
 const cartProduct = [
