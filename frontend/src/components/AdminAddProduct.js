@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../scss/admin.scss";
 
 function AdminAddProduct({ setOpen }) {
@@ -118,7 +118,7 @@ function AdminAddProduct({ setOpen }) {
                     <p>{tag}</p>
                     <input type="file" onChange={browseImg} accept="image/*" />
                     <div className="image-box">
-                      <img className="image" src={imageFile}></img>
+                      <img className="image" src={imageFile} alt={""}></img>
                     </div>
                   </div>
                 </div>
