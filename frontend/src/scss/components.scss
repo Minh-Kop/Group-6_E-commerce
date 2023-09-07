@@ -376,16 +376,19 @@
     margin: 20px 0px 20px 10px;
     font-weight: bold;
     font-size: 24px;
+    z-index: 1;
   }
   &__level2 {
     margin: 10px 0px 20px 20px;
     font-weight: normal;
     font-size: 20px;
     cursor: pointer;
+    z-index: 2;
   }
   &__level3 {
     margin: 10px 0px 20px 20px;
     font-size: 16px;
+    z-index: 3;
 
     &:hover {
       text-decoration: underline solid 2px;

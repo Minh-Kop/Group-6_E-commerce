@@ -11,21 +11,32 @@ import { Outlet, NavLink } from "react-router-dom";
 const HomePage = () => {
   const [records, setRecords] = useState([]);
 
+  const getID = (Id) => {
+    setID(Id);
+    console.log(Id);
+  };
+
+  const [id, setID] = useState("");
+
   useEffect(() => {
+    const dynamicID = id;
+
     axios
-      .get("http://127.0.0.1:3001/api/books?page=1&limit=50")
+      .get(
+        `http://127.0.0.1:3001/api/books?categoryId=${dynamicID}&page=1&limit=50`
+      )
       .then((res) => {
         setRecords(res.data.books);
         console.log(res.data.books);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [id]);
 
   return (
     <div className="homepage">
       <Navbar />
       <div className="homepage__banner"></div>
-      <Sidebar />
+      <Sidebar getID={getID} />
 
       <div className="homepage__cover">
         <div className="homepage__displayData">
