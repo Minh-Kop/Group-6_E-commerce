@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../scss/admin.scss";
 
+import AdminNavbar from "../components/AdminNavbar";
+
 const customerList = [
   {
     id: 1,
@@ -79,53 +81,56 @@ function AdminPointManagement() {
   };
 
   return (
-    <div className="point-management-container">
-      <button className="back-button">&lt; Back</button>
-      <div className="point-management-content">
-        <div className="point-category">
-          {pointCategory.map((category, index) => (
-            <button
-              className="category-btn"
-              type="button"
-              onClick={() => setCategory(pCategory[index])}
-              onBlur={(e) => {
-                setFocus(e);
-              }}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        <div className="customer-search">
-          <input type="text" placeholder="Tên khách hàng"></input>
-          <button type="button">Tìm kiếm</button>
-        </div>
-
-        <div className="point-table">
-          <div className="customer-name">
-            <p className="header">{header[0]}</p>
-            {customerList.map((c) => {
-              if (currCategory === 0 || c.status === currCategory) {
-                return <p className="data">{c.name}</p>;
-              } else return null;
-            })}
+    <div>
+      <AdminNavbar />
+      <div className="point-management-container">
+        <button className="back-button">&lt; Back</button>
+        <div className="point-management-content">
+          <div className="point-category">
+            {pointCategory.map((category, index) => (
+              <button
+                className="category-btn"
+                type="button"
+                onClick={() => setCategory(pCategory[index])}
+                onBlur={(e) => {
+                  setFocus(e);
+                }}
+              >
+                {category}
+              </button>
+            ))}
           </div>
-          <div className="coin-status">
-            <p className="header">{header[1]}</p>
-            {customerList.map((c) => {
-              if (currCategory === 0 || c.status === currCategory) {
-                return <p className="data">{cStatus(c.status)}</p>;
-              } else return null;
-            })}
+
+          <div className="customer-search">
+            <input type="text" placeholder="Tên khách hàng"></input>
+            <button type="button">Tìm kiếm</button>
           </div>
-          <div className="customer-coin">
-            <p className="header">{header[2]}</p>
-            {customerList.map((c) => {
-              if (currCategory === 0 || c.status === currCategory) {
-                return <p className="data">{c.coin}</p>;
-              } else return null;
-            })}
+
+          <div className="point-table">
+            <div className="customer-name">
+              <p className="header">{header[0]}</p>
+              {customerList.map((c) => {
+                if (currCategory === 0 || c.status === currCategory) {
+                  return <p className="data">{c.name}</p>;
+                } else return null;
+              })}
+            </div>
+            <div className="coin-status">
+              <p className="header">{header[1]}</p>
+              {customerList.map((c) => {
+                if (currCategory === 0 || c.status === currCategory) {
+                  return <p className="data">{cStatus(c.status)}</p>;
+                } else return null;
+              })}
+            </div>
+            <div className="customer-coin">
+              <p className="header">{header[2]}</p>
+              {customerList.map((c) => {
+                if (currCategory === 0 || c.status === currCategory) {
+                  return <p className="data">{c.coin}</p>;
+                } else return null;
+              })}
+            </div>
           </div>
         </div>
       </div>
