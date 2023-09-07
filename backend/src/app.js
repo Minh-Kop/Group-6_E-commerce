@@ -19,8 +19,11 @@ const app = express();
 
 // 1) GLOBAL MIDDLEWARES
 // Implement CORS
-app.use(cors());
-app.options('*', cors());
+const corsOptions = {
+    credentials: true,
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Set security HTTP headers
 app.use(helmet());
