@@ -64,6 +64,7 @@ function App() {
         />
 
         <Route
+          management
           path="/admin-point-management"
           element={<AdminPointManagement />}
         />

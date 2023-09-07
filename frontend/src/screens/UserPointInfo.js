@@ -49,6 +49,9 @@ function UserPointInfo() {
 
       <div className="user-info-container">
         <div className="user-info-sidebar">
+          <NavLink to="/user" className="navlink">
+            <button type="button">Thông tin cá nhân</button>
+          </NavLink>
           <NavLink to="/order" className="navlink">
             <button type="button">Đơn Hàng</button>
           </NavLink>

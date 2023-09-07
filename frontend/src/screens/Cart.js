@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import React, { useEffect, useState } from "react";
 import book from "../assets/SGK.jpg";
 import "../scss/cart.scss";

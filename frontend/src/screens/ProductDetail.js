@@ -1,9 +1,8 @@
 import { React, useState, useEffect } from "react";
 import "../scss/productdetail.scss";
-import book from "../assets/SGK.jpg";
 import axios from "axios";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -12,33 +11,6 @@ const handleGoBack = () => {
   window.history.back();
 };
 
-const similarProduct = [
-  {
-    img: book,
-    book: "Sách giáo khoa",
-    price: "30.000 vnd",
-    vote: "5.0",
-  },
-  {
-    img: book,
-    book: "Sách giáo khoa toán",
-    price: "30.000 vnd",
-    vote: "5.0",
-  },
-  {
-    img: book,
-    book: "Sách",
-    price: "30.000 vnd",
-    vote: "5.0",
-  },
-  {
-    img: book,
-    book: "Sách giáo khoa toán",
-    price: "30.000 vnd",
-    vote: "5.0",
-  },
-];
-
 function ProductDetail() {
   const location = useLocation();
 
@@ -46,6 +18,8 @@ function ProductDetail() {
 
   const [records, setRecords] = useState([]);
   const [type, setType] = useState([]);
+  const [cateID, setCateID] = useState([]);
+  const [related, setRelated] = useState([]);
 
   useEffect(() => {
     axios
@@ -53,10 +27,19 @@ function ProductDetail() {
       .then((res) => {
         setRecords(res.data.book);
         setType(res.data.book.category.children.children.categoryName);
+        setCateID(res.data.book.category.children.children.id);
         console.log(res.data.book);
       })
       .catch((err) => console.log(err));
-  }, [ID]);
+
+    axios
+      .get(`http://127.0.0.1:3001/api/books?categoryId=${cateID}&limit=3`)
+      .then((res) => {
+        setRelated(res.data.books);
+        console.log(res.data.book);
+      })
+      .catch((err) => console.log(err));
+  }, [cateID, ID]);
 
   return (
     <div className="prodcut-detail-cover">
@@ -111,19 +94,45 @@ function ProductDetail() {
         </div>
 
         <div className="similar-product-container">
-          <h1>San pham tuong tu</h1>
+          <h1>Sản phẩm tương tự</h1>
           <div className="similar-product-list">
-            {similarProduct.map((sProduct) => (
-              <div className="similar-product">
-                <img src={sProduct.img} alt={sProduct.book} />
-                <p>{sProduct.book}</p>
-                <p>{sProduct.price} VND</p>
-                <p>{sProduct.vote}/5</p>
-              </div>
+            {related.map((sProduct) => (
+              <NavLink
+                to={{
+                  pathname: `/home_page/${sProduct.bookId}`,
+                }}
+                state={{ ID: `${sProduct.bookId}` }}
+                className="similar-product-list__cover"
+              >
+                <img
+                  className="similar-product-container__img"
+                  src={sProduct.image}
+                  alt="Related book"
+                />
+                <div className="similar-product-container__book__inf__name">
+                  {sProduct.bookName}
+                </div>
+                <div className="similar-product-container__book__inf__disprice__cover">
+                  <div className="similar-product-container__book__inf__disprice">
+                    {sProduct.discountedPrice}đ
+                  </div>
+                  <div className="similar-product-container__book__inf__price">
+                    {sProduct.originalPrice}đ
+                  </div>
+                  <div className="similar-product-container__book__inf__disprice__num">
+                    {sProduct.discountedNumber}%
+                  </div>
+                </div>
+
+                <div className="similar-product-container__book__inf__rate">
+                  {sProduct.avgRating} /5.0
+                </div>
+              </NavLink>
             ))}
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );

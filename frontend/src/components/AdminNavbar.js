@@ -11,19 +11,19 @@ function AdminNavbar() {
           <button type="button">Khách hàng</button>
         </NavLink>
 
-        <NavLink to="/admin-order-management">
+        <NavLink to="/admin-product-management">
           <button type="button">Sản phẩm</button>
         </NavLink>
 
-        <NavLink to="/admin-point-management">
+        <NavLink to="/admin-voucher-management">
           <button type="button">Voucher</button>
         </NavLink>
 
-        <NavLink>
+        <NavLink to="/admin-point-management">
           <button type="button">Thống kê</button>
         </NavLink>
 
-        <NavLink>
+        <NavLink to="/admin-order-management">
           <button type="button">Đơn hàng</button>
         </NavLink>
       </div>
