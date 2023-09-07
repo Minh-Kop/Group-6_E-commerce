@@ -49,8 +49,12 @@ const cartProduct = [
 ];
 
 function Cart() {
+<<<<<<< HEAD
     const [cartBooks, setCart] = useState(cartProduct); //array of book product (can be changed)
     const [selectedBook, setSelected] = useState(-1); //book id in cart that need to change the quantity
+=======
+  const [cartBooks, setCart] = useState(cartProduct); //array of book product (can be changed)
+>>>>>>> 66862fc47d26a72a4910c6ca06c4b0268fc88fad
 
     useEffect(() => {
         client

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../scss/components.scss";
 import axios from "axios";
 
-const Sidebar = () => {
+function Sidebar({ getID }) {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ const Sidebar = () => {
       .get("http://127.0.0.1:3001/api/category")
       .then((res) => {
         setRecords(res.data.categories);
-        console.log(res.data.books);
+        console.log(res.data.categories);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -24,7 +24,9 @@ const Sidebar = () => {
             <div className="sidebar__level2">
               {lv2.categoryName}
               {lv2.children.map((lv3) => (
-                <div className="sidebar__level3">{lv3.categoryName}</div>
+                <div onClick={() => getID(lv3.id)} className="sidebar__level3">
+                  {lv3.categoryName}
+                </div>
               ))}
             </div>
           ))}
@@ -32,6 +34,6 @@ const Sidebar = () => {
       ))}
     </div>
   );
-};
+}
 
 export default Sidebar;
