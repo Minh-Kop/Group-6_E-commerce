@@ -3,13 +3,21 @@
 //Admin Navbar
 .sidebar-nav-container {
   position: absolute;
-  top: 30%;
-  left: 5%;
+  left: 0%;
+  background-color: #27374d;
+  height: 100vh;
+  width: 20rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   .sidebar-nav {
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     gap: 1rem;
 
@@ -20,7 +28,7 @@
       font-size: large;
       border: none;
       background-color: #d9d9d9;
-
+      cursor: pointer;
       &:active {
         background-color: #ea8d88;
       }
@@ -242,7 +250,6 @@
   flex-direction: column;
   position: relative;
   flex-shrink: 0;
-  position: relative;
 
   width: 100%;
   transform: translateY(50%);
@@ -363,9 +370,28 @@
 
 //----------Sidebar----------\\
 .sidebar {
-  min-height: 700px;
+  min-height: 650px;
   width: 300px;
-  background-color: rgb(163, 250, 250);
+  background-color: #dde6ed;
   z-index: 3;
   position: absolute;
+  &__level1 {
+    margin: 20px 0px 20px 10px;
+    font-weight: bold;
+    font-size: 24px;
+  }
+  &__level2 {
+    margin: 10px 0px 20px 20px;
+    font-weight: normal;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  &__level3 {
+    margin: 10px 0px 20px 20px;
+    font-size: 16px;
+
+    &:hover {
+      text-decoration: underline solid 2px;
+    }
+  }
 }

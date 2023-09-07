@@ -21,6 +21,14 @@ import ChangePassword from "./screens/ChangePassword";
 import ProductDetail from "./screens/ProductDetail";
 import ProductsByCategories from "./screens/ProductsByCategories";
 
+// Admin
+import AdminCustomerManagement from "./screens/AdminCustomerManagement";
+import AdminOrderManagement from "./screens/AdminOrderManagement";
+import AdminPointManagement from "./screens/AdminPointManagement";
+import AdminProductManagement from "./screens/AdminProductManagement";
+import AdminStatistic from "./screens/AdminStatistic";
+import AdminVoucherManagement from "./screens/AdminVoucherManagement";
+
 function App() {
   return (
     <>
@@ -44,6 +52,33 @@ function App() {
         <Route path="/category">
           <Route path=":categoryId" element={<ProductsByCategories />} />
         </Route>
+
+        <Route
+          path="/admin-customer-management"
+          element={<AdminCustomerManagement />}
+        />
+
+        <Route
+          path="/admin-order-management"
+          element={<AdminOrderManagement />}
+        />
+
+        <Route
+          path="/admin-point-management"
+          element={<AdminPointManagement />}
+        />
+
+        <Route
+          path="/admin-product-management"
+          element={<AdminProductManagement />}
+        />
+
+        <Route path="/admin-statistic " element={<AdminStatistic />} />
+
+        <Route
+          path="/admin-voucher-management "
+          element={<AdminVoucherManagement />}
+        />
 
         <Route path="/home_page">
           <Route index element={<HomePage />} />

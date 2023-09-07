@@ -46,7 +46,7 @@ function AdminProductManagement() {
   const [openProduct, setOpen] = useState(false);
   return (
     <>
-      <div className="product-management-container">
+      <div className="admin-product-management-container">
         <div className="product-search">
           <form>
             <input type="text" placeholder="Tên sản phẩm"></input>

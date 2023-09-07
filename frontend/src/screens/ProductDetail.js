@@ -12,24 +12,6 @@ const handleGoBack = () => {
   window.history.back();
 };
 
-const productDetail = [
-  "Kim Dong",
-  "Viet Nam",
-  "Tieng Viet",
-  "Kim Dong",
-  "2022",
-  "100",
-];
-
-const productDetailTag = [
-  "Thuong hieu:",
-  "Nhap khau:",
-  "Ngon ngu:",
-  "Nha phat hanh:",
-  "Nam xuat ban:",
-  "Ton kho:",
-];
-
 const similarProduct = [
   {
     img: book,
@@ -77,7 +59,7 @@ function ProductDetail() {
   }, [ID]);
 
   return (
-    <>
+    <div className="prodcut-detail-cover">
       <Navbar />
       <div className="product-detail-container">
         <div className="product-detail">
@@ -143,7 +125,7 @@ function ProductDetail() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 
