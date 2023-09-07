@@ -127,6 +127,66 @@ BEGIN TRANSACTION
 			b.BOOK_PATH image
 		from BOOK b join CATEGORY c on b.CATE_ID = c.CATE_ID
 		where (b.BOOK_ID <> @bookId) AND (c.CATE_ID = @cateId or c.PARENT_ID = @parentId)
+		ORDER by b.BOOK_DISCOUNTED_PRICE
+		OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_GetNewestArrival') IS NOT NULL
+	DROP PROC sp_GetNewestArrival
+GO
+CREATE PROCEDURE sp_GetNewestArrival
+	@limit INT,
+	@offset INT
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		SELECT b.BOOK_ID bookId, b.BOOK_NAME bookName, b.BOOK_PRICE originalPrice, b.BOOK_DISCOUNTED_PRICE discountedPrice,
+			b.DISCOUNTED_NUMBER discountedNumber, b.AVG_RATING avgRating, b.COUNT_RATING countRating, 
+			b.BOOK_PATH image
+		from BOOK b
+		ORDER by b.ADDED_TIME DESC
+		OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
+IF OBJECT_ID('sp_GetBestSeller') IS NOT NULL
+	DROP PROC sp_GetBestSeller
+GO
+CREATE PROCEDURE sp_GetBestSeller
+	@limit INT,
+	@offset INT
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		SELECT b.BOOK_ID bookId, b.BOOK_NAME bookName, b.BOOK_PRICE originalPrice, b.BOOK_DISCOUNTED_PRICE discountedPrice,
+			b.DISCOUNTED_NUMBER discountedNumber, b.AVG_RATING avgRating, b.COUNT_RATING countRating, 
+			b.BOOK_PATH image
+		from BOOK b
+		where b.BOOK_ID IN (select od.BOOK_ID
+							from ORDER_DETAIL od join ORDER_STATE os on os.ORDER_ID = od.ORDER_ID
+							where os.ORDER_STATE = 3
+							GROUP by od.BOOK_ID
+							order BY SUM(od.ORDER_QUANTITY) DESC
+							OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY)
 	END TRY
 
 	BEGIN CATCH

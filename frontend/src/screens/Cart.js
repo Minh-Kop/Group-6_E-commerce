@@ -1,10 +1,15 @@
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import React, { useEffect, useRef, useState } from "react";
 import book from "../assets/SGK.jpg";
 import "../scss/cart.scss";
 import axios from "axios";
 
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+
+
 
 const cartProduct = [
   {
@@ -50,7 +55,6 @@ function Cart() {
     baseURL: "http://127.0.0.1:3001/",
   });
   const [cartBooks, setCart] = useState(cartProduct); //array of book product (can be changed)
-  const [selectedBook, setSelected] = useState(-1); //book id in cart that need to change the quantity
 
   useEffect(() => {
     client
