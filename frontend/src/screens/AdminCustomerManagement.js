@@ -1,6 +1,7 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import "../scss/admin.scss";
 import AdminNavbar from "../components/AdminNavbar";
+import axios from "axios";
 
 const customerList = [
   {
@@ -37,6 +38,17 @@ const customerList = [
 
 function AdminCustomerManagement() {
   const header = ["Tên khách hàng", "Cấp bậc", "Coin"];
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:3001/api/users?sortType=HPoint")
+      .then((res) => {
+        setRecords(res.data.users);
+        console.log(res.data.users);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <div className="customer-management-container">
@@ -44,8 +56,8 @@ function AdminCustomerManagement() {
       <div className="customer-table">
         <div className="customer-name">
           <p className="header">{header[0]}</p>
-          {customerList.map((c) => (
-            <p className="data">{c.name}</p>
+          {records.map((c) => (
+            <p className="data">{c.fullName}</p>
           ))}
         </div>
         <div className="customer-rank">

@@ -12,6 +12,7 @@ const client = axios.create({
 });
 
 function ProductsByCategories() {
+  const [isSubcribe, setSub] = useState(false);
   const [books, setBooks] = useState([]);
   const [categoriesList, setCate] = useState([]);
   const { categoryId } = useParams();
@@ -19,12 +20,13 @@ function ProductsByCategories() {
   useEffect(() => {
     let isChange = false;
     if (!isChange) {
-      setBooks([]);
       client
         .get("api/books?categoryId=" + categoryId)
         .then((res) => {
           console.log(res.data.books);
           setBooks(res.data.books);
+          console.log("stop changing");
+          setSub(false);
         })
         .catch((err) => console.log(err));
     }
@@ -32,13 +34,14 @@ function ProductsByCategories() {
     client
       .get("api/category")
       .then((res) => {
-        console.log(res.data.categories);
         setCate(res.data.categories);
       })
       .catch((err) => console.log(err));
 
     return () => {
       isChange = true;
+      console.log("is changing");
+      setSub(true);
     };
   }, [categoryId]);
 
@@ -49,17 +52,26 @@ function ProductsByCategories() {
         <CateSidebar className="category__sidebar">
           {categoriesList.map((cate) => (
             <div className="category__main">
-              <NavLink to={{ pathname: `/category/${cate.id}` }}>
+              <NavLink
+                to={{ pathname: `/category/${cate.id}` }}
+                onClick={() => setBooks([])}
+              >
                 {cate.categoryName}
               </NavLink>
               {cate.children.map((subCate) => (
                 <div className="category__sub">
-                  <NavLink to={{ pathname: `/category/${subCate.id}` }}>
+                  <NavLink
+                    to={{ pathname: `/category/${subCate.id}` }}
+                    onClick={() => setBooks([])}
+                  >
                     {subCate.categoryName}
                   </NavLink>
                   {subCate.children.map((subSubCate) => (
                     <div className="category__sub__sub">
-                      <NavLink to={{ pathname: `/category/${subSubCate.id}` }}>
+                      <NavLink
+                        to={{ pathname: `/category/${subSubCate.id}` }}
+                        onClick={() => setBooks([])}
+                      >
                         {subSubCate.categoryName}
                       </NavLink>
                     </div>
@@ -71,45 +83,49 @@ function ProductsByCategories() {
         </CateSidebar>
         <div className="category__cover">
           <div className="category__displayData">
-            {books.map((subitem) => (
-              <div key={subitem.bookId} className="category__displayData__inf">
-                <div className="category__displayData__cover">
-                  <NavLink
-                    to={{
-                      pathname: `/home_page/${subitem.bookId}`,
-                    }}
-                    state={{ ID: `${subitem.bookId}` }}
-                  >
-                    <img
-                      className="category__displayData__book"
-                      src={subitem.image}
-                      alt="book"
-                    />
-                  </NavLink>
+            {!isSubcribe &&
+              books.map((subitem) => (
+                <div
+                  key={subitem.bookId}
+                  className="category__displayData__inf"
+                >
+                  <div className="category__displayData__cover">
+                    <NavLink
+                      to={{
+                        pathname: `/home_page/${subitem.bookId}`,
+                      }}
+                      state={{ ID: `${subitem.bookId}` }}
+                    >
+                      <img
+                        className="category__displayData__book"
+                        src={subitem.image}
+                        alt="book"
+                      />
+                    </NavLink>
 
-                  <div className="category__displayData__book__inf">
-                    <div className="category__displayData__book__inf__name">
-                      {subitem.bookName}
-                    </div>
-                    <div className="category__displayData__book__inf__disprice__cover">
-                      <div className="category__displayData__book__inf__disprice">
-                        {subitem.discountedPrice}đ
+                    <div className="category__displayData__book__inf">
+                      <div className="category__displayData__book__inf__name">
+                        {subitem.bookName}
                       </div>
-                      <div className="category__displayData__book__inf__disprice__num">
-                        {subitem.discountedNumber}%
+                      <div className="category__displayData__book__inf__disprice__cover">
+                        <div className="category__displayData__book__inf__disprice">
+                          {subitem.discountedPrice}đ
+                        </div>
+                        <div className="category__displayData__book__inf__disprice__num">
+                          {subitem.discountedNumber}%
+                        </div>
                       </div>
-                    </div>
-                    <div className="category__displayData__book__inf__price">
-                      {subitem.originalPrice}đ
-                    </div>
+                      <div className="category__displayData__book__inf__price">
+                        {subitem.originalPrice}đ
+                      </div>
 
-                    <div className="category__displayData__book__inf__rate">
-                      Đánh giá: {subitem.avgRating} /5.0
+                      <div className="category__displayData__book__inf__rate">
+                        Đánh giá: {subitem.avgRating} /5.0
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <Footer />

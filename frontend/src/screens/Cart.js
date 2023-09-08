@@ -1,9 +1,13 @@
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import React, { useEffect, useRef, useState } from 'react';
-import book from '../assets/SGK.jpg';
-import '../scss/cart.scss';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import book from "../assets/SGK.jpg";
+import "../scss/cart.scss";
+import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+const client = axios.create({
+  baseURL: "http://127.0.0.1:3001/",
+  //withCredentials: true,
+});
 
 const cartProduct = [
     {
@@ -45,10 +49,7 @@ const cartProduct = [
 ];
 
 function Cart() {
-    const client = axios.create({
-        baseURL: 'http://127.0.0.1:3001/',
-    });
-    const [cartBooks, setCart] = useState(cartProduct); //array of book product (can be changed)
+  const [cartBooks, setCart] = useState(cartProduct); //array of book product (can be changed)
 
     useEffect(() => {
         client

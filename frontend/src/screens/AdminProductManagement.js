@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import book from "../assets/SGK.jpg";
 import "../scss/admin.scss";
 import AdminAddProduct from "../components/AdminAddProduct";
 import AdminProductDetail from "../components/AdminProductDetail";
+import axios from "axios";
 
 const productList = [
   {
@@ -41,19 +42,33 @@ const productList = [
 ];
 
 function AdminProductManagement() {
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:3001/api/books?page=1&limit=50`)
+      .then((res) => {
+        setRecords(res.data.books);
+        console.log(res.data.books);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const [selectedProduct, setSelected] = useState(-1);
   const [showProduct, setOpenProduct] = useState(false);
   const [openProduct, setOpen] = useState(false);
   return (
     <>
       <div className="admin-product-management-container">
+        <AdminNavbar />
+
         <div className="product-search">
           <form>
             <input type="text" placeholder="Tên sản phẩm"></input>
             <button type="button">Tìm kiếm</button>
           </form>
         </div>
-        <AdminNavbar />
+
         <div className="product-add-button">
           <button
             className="add-button"
@@ -65,19 +80,19 @@ function AdminProductManagement() {
         </div>
 
         <div className="product-info">
-          {productList.map((product) => (
+          {records.map((product) => (
             <div className="product-data">
-              <img src={product.img} alt={product.book}></img>
+              <img src={product.image} alt="Book"></img>
               <div className="product-description">
-                <p>Mã sản phẩm: {product.id}</p>
-                <p>Tên sản phẩm: {product.book}</p>
-                <p>Giá hiện tại: {product.price}</p>
+                <p>Mã sản phẩm: {product.bookId}</p>
+                <p>Tên sản phẩm: {product.bookName}</p>
+                <p>Giá hiện tại: {product.discountedNumber}</p>
               </div>
               <button
                 type="button"
                 onClick={() => {
                   setOpenProduct(true);
-                  setSelected(product.id);
+                  setSelected(product.bookId);
                 }}
               >
                 Chi tiết
