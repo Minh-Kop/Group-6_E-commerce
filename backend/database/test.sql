@@ -7,7 +7,7 @@ delete from BOOK_DETAIL where BOOK_ID = 'BK00034'
 go
 delete from BOOK where BOOK_ID = 'BK00034'
 
-select BOOK_ID, STOCK from BOOK where BOOK_ID = 'BK00034'
+select BOOK_ID, STOCK, AVG_RATING, COUNT_RATING from BOOK where BOOK_ID = 'BK00034'
 select * from BOOK_DETAIL where BOOK_ID = 'BK00034'
 select w.*, a.AUTHOR_NAME from WRITTEN_BY w join AUTHOR a on w.AUTHOR_ID = a.AUTHOR_ID where BOOK_ID = 'BK00034'
 SELECT * from BOOK_IMAGES where BOOK_ID = 'BK00034'
@@ -68,4 +68,7 @@ delete from ORDER_REVIEW
 
 select * from CATEGORY
 
+SELECT FULLTEXTSERVICEPROPERTY('IsFullTextInstalled') AS [FULLTEXTSERVICE]
 
+EXEC sp_UpdateTier
+select * from HPOINT_ACCUMULATION_YEAR

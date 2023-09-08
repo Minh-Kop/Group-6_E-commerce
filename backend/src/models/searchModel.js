@@ -49,8 +49,8 @@ exports.getBooks = async ({
                 from BOOK b join CATEGORY c on b.CATE_ID = c.CATE_ID
                     join BOOK_DETAIL bd on b.BOOK_ID = bd.BOOK_ID
                     join CATEGORY pc on pc.CATE_ID = c.PARENT_ID
-                    WHERE (CONTAINS(b.BOOK_NAME, N'${keyword}') or CONTAINS(bd.BOOK_DESC, N'${keyword}') or CONTAINS(c.CATE_NAME, N'${keyword}') or CONTAINS(pc.CATE_NAME, N'${keyword}'))
-                        ${sqlString}`;
+                WHERE (CONTAINS(b.BOOK_NAME, N'${keyword}') or CONTAINS(bd.BOOK_DESC, N'${keyword}') or CONTAINS(c.CATE_NAME, N'${keyword}') or CONTAINS(pc.CATE_NAME, N'${keyword}'))
+                    ${sqlString}`;
 
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);

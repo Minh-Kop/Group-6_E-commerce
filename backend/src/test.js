@@ -8,18 +8,12 @@ const map = require('./utils/map');
 const moment = require('moment');
 
 (async () => {
-    const abc = {
-        a: { y: 2 },
-        b: 2,
-        c: 3,
-    };
     // const queryString = Object.keys(abc)
     //     .map((key) => `${key}=${abc[key]}`)
     //     .join('&');
     // console.log(queryString);
-    const customHeaders = { x: 1 };
-    console.log({
-        ...abc,
-        a: { ...customHeaders, ...abc.a },
-    });
+    const currentTime = moment();
+    console.log(currentTime);
+    console.log(currentTime.month());
+    console.log(currentTime.date());
 })();

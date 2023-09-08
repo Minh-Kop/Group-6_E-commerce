@@ -27,9 +27,6 @@ exports.getBooks = catchAsync(async (req, res, next) => {
     if (bookFormat) {
         bookFormat = bookFormat.split(',').map((el) => el.trim());
     }
-    if (limit) {
-        limit = +limit;
-    }
     sortType = sortType || 'BOOK_DISCOUNTED_PRICE';
 
     page = +page || 1;
