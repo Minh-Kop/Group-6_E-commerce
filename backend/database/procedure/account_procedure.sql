@@ -1,4 +1,47 @@
 GO
+IF OBJECT_ID('sp_VerifyAccount') IS NOT NULL
+	DROP PROC sp_VerifyAccount
+GO
+CREATE PROCEDURE sp_VerifyAccount (
+    @token char(64)
+)
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+		DECLARE @email NVARCHAR(100) = (SELECT EMAIL from ACCOUNT where TOKEN = @token)
+		IF @email is NULL
+		BEGIN
+			PRINT N'Token not found.'
+			ROLLBACK 
+			RETURN -1
+		END
+
+		-- Check if this newest account's HPoint accumulated year is older than current year
+		DECLARE @year INT
+		select @year = SAVED_YEAR
+		from HPOINT_ACCUMULATION_YEAR
+		where EMAIL = @email
+		ORDER by SAVED_YEAR
+
+		IF @year < YEAR(GETDATE())
+		BEGIN
+			INSERT into HPOINT_ACCUMULATION_YEAR (EMAIL, SAVED_YEAR, HPOINT) VALUES (@email, YEAR(GETDATE()), 0)
+		END
+
+		-- Update verified status
+		UPDATE ACCOUNT set VERIFIED = 1 where TOKEN = @token
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK  
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
+
+GO
 IF OBJECT_ID('sp_CreateAccount') IS NOT NULL
 	DROP PROC sp_CreateAccount
 GO

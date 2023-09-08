@@ -30,12 +30,16 @@ exports.getDetailedUser = async (userEntity) => {
     return result;
 };
 
-exports.createAccount = async (accountEntity) => {
-    const { email, phoneNumber, fullName, password, verified, token, role } =
-        accountEntity;
-
+exports.createAccount = async ({
+    email,
+    phoneNumber,
+    fullName,
+    password,
+    verified,
+    token,
+    role,
+}) => {
     const pool = await database.getConnectionPool();
-
     const request = new sql.Request(pool);
     request.input('email', sql.NVarChar, email);
     request.input('phoneNumber', sql.Char, phoneNumber);
@@ -49,11 +53,11 @@ exports.createAccount = async (accountEntity) => {
 };
 
 exports.verifyAccount = async (token) => {
-    const sqlString = `update ACCOUNT set VERIFIED = 1 where TOKEN = '${token}'`;
     const pool = await database.getConnectionPool();
     const request = new sql.Request(pool);
-    const result = await request.query(sqlString);
-    return result.rowsAffected[0];
+    request.input('token', sql.Char, token);
+    const result = await request.execute('sp_VerifyAccount');
+    return result.returnValue;
 };
 
 exports.updateAccount = async (userEntity) => {

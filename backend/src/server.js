@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const config = require('./config');
+const tierController = require('./controllers/tierController');
 
 process.on('uncaughtException', (err) => {
     console.log('UNCAUGHT EXCEPTION! Shutting down...');
@@ -11,8 +12,9 @@ process.on('uncaughtException', (err) => {
 const app = require('./app');
 
 const port = config.PORT || 3001;
-const server = app.listen(port, () => {
+const server = app.listen(port, async () => {
     console.log(`App is running on port ${port}...`);
+    await tierController.updateTier();
 });
 
 process.on('unhandledRejection', (err) => {

@@ -215,7 +215,7 @@ BEGIN TRANSACTION
         SET ORDER_DATE = GETDATE()
         WHERE ORDER_ID = @orderId
 
-        -- Update user HPoint if he/she used
+        -- Update user's HPoint if he/she used
         DECLARE @hPoint INT = (SELECT HPOINTS_REDEEMED from H_ORDER where ORDER_ID = @orderId)
         IF @hPoint is NOT NULL
         BEGIN

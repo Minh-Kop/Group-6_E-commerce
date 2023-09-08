@@ -63,13 +63,12 @@ exports.verify = catchAsync(async (req, res, next) => {
 
     const result = await accountModel.verifyAccount(token);
     if (result > 0) {
-        res.status(200).json({
+        return res.status(200).json({
             status: 'success',
             message: 'Verify successfully.',
         });
-    } else {
-        return next(new AppError('Verification code is not found.', 400));
     }
+    return next(new AppError('Verification code is not found.', 400));
 });
 
 const signToken = (email) => {
@@ -85,6 +84,7 @@ const createSendToken = (user, statusCode, req, res) => {
         expires: new Date(
             Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
         ),
+        domain: '127.0.0.1',
         httpOnly: true,
         // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
     });
@@ -170,6 +170,7 @@ exports.loginGoogle = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
+    console.log(req.headers);
 
     // 1) Get token and check if it's there
     if (

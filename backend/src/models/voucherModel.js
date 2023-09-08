@@ -3,18 +3,16 @@ const sql = require('mssql');
 
 const database = require('../utils/database');
 
-exports.createVoucher = async (entity) => {
+exports.createVoucher = async ({
+    voucherTypeId,
+    percentageDiscount,
+    minPrice,
+    maxDiscountPrice,
+    startDate,
+    endDate,
+    maxAmount,
+}) => {
     const pool = await database.getConnectionPool();
-    const {
-        voucherTypeId,
-        percentageDiscount,
-        minPrice,
-        maxDiscountPrice,
-        startDate,
-        endDate,
-        maxAmount,
-    } = entity;
-
     const request = new sql.Request(pool);
     request.input('voucherTypeId', sql.Char, voucherTypeId);
     request.input('percentageDiscount', sql.Int, percentageDiscount);
