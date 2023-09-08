@@ -6,9 +6,10 @@ import Footer from "../components/Footer";
 import CateSidebar from "../components/CateSidebar";
 
 import { Outlet, NavLink, useParams } from "react-router-dom";
+import config from "../config/config";
 
 const client = axios.create({
-  baseURL: "http://127.0.0.1:3001/",
+  baseURL: config.SERVER_PATH,
 });
 
 function ProductsByCategories() {
@@ -48,7 +49,7 @@ function ProductsByCategories() {
   return (
     <div className="category-container">
       <div className="category">
-        <Navbar />
+        <Navbar setRecords={setBooks} />
         <CateSidebar className="category__sidebar">
           {categoriesList.map((cate) => (
             <div className="category__main">

@@ -13,7 +13,7 @@ const HomePage = () => {
 
   const getID = (Id) => {
     setID(Id);
-    console.log(Id);
+    //console.log(Id);
   };
 
   const [id, setID] = useState("");
@@ -27,14 +27,14 @@ const HomePage = () => {
       )
       .then((res) => {
         setRecords(res.data.books);
-        console.log(res.data.books);
+        //console.log(res.data.books);
       })
       .catch((err) => console.log(err));
   }, [id]);
 
   return (
     <div className="homepage">
-      <Navbar />
+      <Navbar setRecords={setRecords} />
       <div className="homepage__banner"></div>
       <Sidebar getID={getID} />
 
