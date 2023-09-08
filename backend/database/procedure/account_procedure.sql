@@ -76,7 +76,8 @@ BEGIN TRANSACTION
         INSERT into ACCOUNT (EMAIL, PHONE_NUMBER, FULLNAME, ENC_PWD, VERIFIED, TOKEN, HROLE) values 
             (@email, @phoneNumber, @fullName, @password, @verified, @token, @role)
         INSERT into ACCOUNT_DETAIL (EMAIL, TIER, HPOINT) VALUES (@email, 1, 0)
-        INSERT into HPOINT_ACCUMULATION_YEAR (EMAIL, SAVED_YEAR, HPOINT) VALUES (@email, YEAR(GETDATE()), 0)
+        INSERT into HPOINT_ACCUMULATION_YEAR (EMAIL, SAVED_YEAR, HPOINT, ISRECEIVEDBIRTHDAYGIFT) VALUES 
+			(@email, YEAR(GETDATE()), 0, 0)
         INSERT into CART (CART_ID, EMAIL, CART_COUNT, CART_TOTAL) values (@cartId, @email, 0, 0)
 	END TRY
 
