@@ -224,6 +224,11 @@ BEGIN TRANSACTION
             where EMAIL = @email
         END
 
+        -- Delete user's vouchers
+        DELETE from USER_VOUCHER where EMAIL = @email and VOUCHER_ID IN (select uv.VOUCHER_ID 
+                                                                        from USER_VOUCHER uv join ORDER_VOUCHER ov on ov.VOUCHER_ID = uv.VOUCHER_ID 
+                                                                        where ORDER_ID = @orderId)
+
         -- Delete each book in cart
         DECLARE @cartId CHAR(10) = (select CART_ID from CART where EMAIL = @email)
         WHILE EXISTS (select 1 from CART_DETAIL where CART_ID = @cartId and IS_CLICKED = 1)

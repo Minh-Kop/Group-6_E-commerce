@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     6/9/2023 7:47:49 pm                          */
+/* Created on:     8/9/2023 1:02:15 pm                          */
 /*==============================================================*/
 USE master
 go
@@ -683,12 +683,12 @@ go
 /* Table: ACCOUNT                                               */
 /*==============================================================*/
 create table ACCOUNT (
-   EMAIL                nvarchar(100)         not null,
-   FULLNAME             nvarchar(50)          null,
+   EMAIL                varchar(100)         not null,
+   FULLNAME             varchar(50)          null,
    PHONE_NUMBER         char(10)             null,
-   ENC_PWD              nvarchar(300)         null,
-   AVATAR_PATH          nvarchar(500)         null,
-   AVATAR_FILENAME      nvarchar(100)         null,
+   ENC_PWD              varchar(300)         null,
+   AVATAR_PATH          varchar(500)         null,
+   AVATAR_FILENAME      varchar(100)         null,
    HROLE                int                  null,
    VERIFIED             bit                  null,
    TOKEN                char(64)             null,
@@ -701,7 +701,7 @@ go
 /* Table: ACCOUNT_DETAIL                                        */
 /*==============================================================*/
 create table ACCOUNT_DETAIL (
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    BIRTHDAY             datetime             null,
    GENDER               bit                  null,
    TIER                 int                  null,
@@ -715,7 +715,7 @@ go
 /*==============================================================*/
 create table AUTHOR (
    AUTHOR_ID            char(6)              not null,
-   AUTHOR_NAME          nvarchar(50)          null,
+   AUTHOR_NAME          varchar(50)          null,
    constraint PK_AUTHOR primary key nonclustered (AUTHOR_ID)
 )
 go
@@ -726,10 +726,10 @@ go
 create table BOOK (
    BOOK_ID              char(7)              not null,
    CATE_ID              char(4)              not null,
-   BOOK_NAME            nvarchar(100)         null,
+   BOOK_NAME            varchar(100)         null,
    BOOK_PRICE           int                  null,
-   BOOK_PATH            nvarchar(500)         null,
-   BOOK_FILENAME        nvarchar(100)         null,
+   BOOK_PATH            varchar(500)         null,
+   BOOK_FILENAME        varchar(100)         null,
    AVG_RATING           float                null,
    COUNT_RATING         int                  null,
    STOCK                int                  null,
@@ -755,11 +755,11 @@ go
 create table BOOK_DETAIL (
    BOOK_ID              char(7)              not null,
    PUB_ID               char(4)              not null,
-   BOOK_FORMAT          nvarchar(50)          null,
+   BOOK_FORMAT          varchar(50)          null,
    PUBLISHED_YEAR       int                  null,
    NUMBER_PAGE          int                  null,
    BOOK_WEIGHT          int                  null,
-   BOOK_DESC            nvarchar(2000)        null,
+   BOOK_DESC            varchar(2000)        null,
    constraint PK_BOOK_DETAIL primary key (BOOK_ID)
 )
 go
@@ -778,8 +778,8 @@ go
 create table BOOK_IMAGES (
    BOOK_ID              char(7)              not null,
    IMAGE_ID             int                  not null,
-   BOOK_FILENAME        nvarchar(100)         null,
-   BOOK_PATH            nvarchar(500)         null,
+   BOOK_FILENAME        varchar(100)         null,
+   BOOK_PATH            varchar(500)         null,
    constraint PK_BOOK_IMAGES primary key nonclustered (BOOK_ID, IMAGE_ID)
 )
 go
@@ -797,7 +797,7 @@ go
 /*==============================================================*/
 create table CART (
    CART_ID              char(10)             not null,
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    CART_TOTAL           int                  null,
    CART_COUNT           int                  null,
    constraint PK_CART primary key nonclustered (CART_ID)
@@ -847,8 +847,8 @@ go
 create table CATEGORY (
    CATE_ID              char(4)              not null,
    PARENT_ID            char(4)              null,
-   CATE_NAME            nvarchar(50)          null,
-   CATE_DESC            nvarchar(100)         null,
+   CATE_NAME            varchar(50)          null,
+   CATE_DESC            varchar(100)         null,
    constraint PK_CATEGORY primary key nonclustered (CATE_ID)
 )
 go
@@ -867,7 +867,7 @@ go
 create table DISTRICT (
    DIST_ID              char(6)              not null,
    PROV_ID              char(4)              not null,
-   DIST_NAME            nvarchar(50)          null,
+   DIST_NAME            varchar(50)          null,
    constraint PK_DISTRICT primary key nonclustered (DIST_ID)
 )
 go
@@ -884,9 +884,10 @@ go
 /* Table: HPOINT_ACCUMULATION_YEAR                              */
 /*==============================================================*/
 create table HPOINT_ACCUMULATION_YEAR (
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    SAVED_YEAR           int                  not null,
    HPOINT               int                  null,
+   ISRECEIVEDBIRTHDAYGIFT bit                  null,
    constraint PK_HPOINT_ACCUMULATION_YEAR primary key (EMAIL, SAVED_YEAR)
 )
 go
@@ -895,11 +896,11 @@ go
 /* Table: HPOINT_HISTORY                                        */
 /*==============================================================*/
 create table HPOINT_HISTORY (
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    CHANGED_TIME         datetime             not null,
    CHANGED_POINTS       int                  null,
    CHANGED_TYPE         int                  null,
-   CHANGED_REASON       nvarchar(100)         null,
+   CHANGED_REASON       varchar(100)         null,
    constraint PK_HPOINT_HISTORY primary key nonclustered (EMAIL, CHANGED_TIME)
 )
 go
@@ -917,7 +918,7 @@ go
 /*==============================================================*/
 create table H_ORDER (
    ORDER_ID             char(7)              not null,
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    ADDR_ID              char(10)             not null,
    PAYMENT_ID           char(4)              not null,
    ORDER_DATE           datetime             null,
@@ -990,7 +991,7 @@ create table ORDER_REVIEW (
    ORDER_ID             char(7)              not null,
    BOOK_ID              char(7)              not null,
    RATING               int                  null,
-   REVIEW               nvarchar(800)         null,
+   REVIEW               varchar(800)         null,
    CREATED_TIME         datetime             null,
    constraint PK_ORDER_REVIEW primary key (ORDER_ID, BOOK_ID)
 )
@@ -1062,7 +1063,7 @@ go
 /*==============================================================*/
 create table PAYMENT (
    PAYMENT_ID           char(4)              not null,
-   PAYMENT_PROVIDER     nvarchar(50)          null,
+   PAYMENT_PROVIDER     varchar(50)          null,
    constraint PK_PAYMENT primary key nonclustered (PAYMENT_ID)
 )
 go
@@ -1072,7 +1073,7 @@ go
 /*==============================================================*/
 create table PROVINCE (
    PROV_ID              char(4)              not null,
-   PROV_NAME            nvarchar(100)         null,
+   PROV_NAME            varchar(100)         null,
    constraint PK_PROVINCE primary key nonclustered (PROV_ID)
 )
 go
@@ -1082,7 +1083,7 @@ go
 /*==============================================================*/
 create table PUBLISHER (
    PUB_ID               char(4)              not null,
-   PUB_NAME             nvarchar(50)          null,
+   PUB_NAME             varchar(50)          null,
    constraint PK_PUBLISHER primary key nonclustered (PUB_ID)
 )
 go
@@ -1092,13 +1093,13 @@ go
 /*==============================================================*/
 create table SHIPPING_ADDRESS (
    ADDR_ID              char(10)             not null,
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    DIST_ID              char(6)              not null,
    WARD_ID              char(8)              not null,
    PROV_ID              char(4)              not null,
-   DETAILED_ADDR        nvarchar(100)         null,
+   DETAILED_ADDR        varchar(100)         null,
    IS_DEFAULT           bit                  null,
-   RECEIVER_NAME        nvarchar(60)          null,
+   RECEIVER_NAME        varchar(60)          null,
    RECEIVER_PHONE_NUMBER char(10)             null,
    LATITUDE             float                null,
    LONGITUDE            float                null,
@@ -1143,7 +1144,7 @@ go
 /*==============================================================*/
 create table USER_VOUCHER (
    VOUCHER_ID           char(7)              not null,
-   EMAIL                nvarchar(100)         not null,
+   EMAIL                varchar(100)         not null,
    constraint PK_USER_VOUCHER primary key (VOUCHER_ID, EMAIL)
 )
 go
@@ -1194,7 +1195,7 @@ go
 /*==============================================================*/
 create table VOUCHER_TYPE (
    VOUCHER_TYPE_ID      char(4)              not null,
-   VOUCHER_TYPE         nvarchar(100)         null,
+   VOUCHER_TYPE         varchar(100)         null,
    constraint PK_VOUCHER_TYPE primary key nonclustered (VOUCHER_TYPE_ID)
 )
 go
@@ -1205,7 +1206,7 @@ go
 create table WARD (
    WARD_ID              char(8)              not null,
    DIST_ID              char(6)              not null,
-   WARD_NAME            nvarchar(50)          null,
+   WARD_NAME            varchar(50)          null,
    constraint PK_WARD primary key nonclustered (WARD_ID)
 )
 go
