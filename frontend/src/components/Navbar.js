@@ -4,17 +4,25 @@ import CategoryPopUp from "./CategoryPopup";
 import axios from "axios";
 import { NavLink, Outlet } from "react-router-dom";
 
+import config from "../config/config";
+
 const client = axios.create({
-  baseURL: "http://127.0.0.1:3001/",
+  baseURL: config.SERVER_PATH,
 });
 
 let categoriesList = [];
 
-function Navbar() {
+function Navbar({ setRecords }) {
+  //category
   const [btnCategory, setBtnCategory] = useState(false);
   const [selectedSub, setSub] = useState(0);
+
+  //user dropdown
   const [openUserItem, setUserItem] = useState(false);
   const handleUserHover = () => setUserItem(!openUserItem);
+
+  //search
+  const [searchInput, setSearchInput] = useState("");
   const userItem = [
     {
       name: "Thông tin cá nhân",
@@ -39,13 +47,29 @@ function Navbar() {
   let name = "Mike";
   useEffect(() => {
     client.get("api/category").then((res) => {
-      console.log(res);
+      //console.log(res);
       if (res.data.status === "success") {
         categoriesList = res.data.categories;
-        console.log(categoriesList);
+        //console.log(categoriesList);
       }
     });
   }, []);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    //console.log(searchInput);
+    try {
+      const response = await client.get(`/api/search?keyword=${searchInput}`);
+      const { status, length, books } = response.data;
+      //console.log(books);
+
+      if (status === "success") {
+        setRecords(books);
+      }
+    } catch {
+      console.log("error api search");
+    }
+  };
 
   return (
     <nav className="navbar">
@@ -71,8 +95,15 @@ function Navbar() {
           >
             Category
           </button>
-          <input></input>
-          <button className="navbar-search-button" type="submit">
+          <input
+            type="text"
+            onChange={(e) => setSearchInput(e.target.value)}
+          ></input>
+          <button
+            className="navbar-search-button"
+            type="submit"
+            onClick={(e) => handleSearch(e)}
+          >
             <img src={require("../assets/search.png")} alt="Search" />
           </button>
         </form>
