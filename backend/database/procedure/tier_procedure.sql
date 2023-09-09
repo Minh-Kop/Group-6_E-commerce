@@ -74,3 +74,68 @@ BEGIN TRANSACTION
 COMMIT
 RETURN 1
 GO
+
+GO
+IF OBJECT_ID('sp_GiveBirthdayGift') IS NOT NULL
+	DROP PROC sp_GiveBirthdayGift
+GO
+CREATE PROCEDURE sp_GiveBirthdayGift
+AS
+BEGIN TRANSACTION
+	BEGIN TRY
+        -- Create temp table to store email and tier
+        DECLARE @ResultTable TABLE (
+            email nvarchar(100),
+            tier INT,
+            rn int
+        )
+        INSERT INTO @ResultTable (email, tier, rn)
+        SELECT EMAIL email, TIER tier, ROW_NUMBER() OVER(order by email) rn
+        from ACCOUNT_DETAIL
+        WHERE DAY(BIRTHDAY) = DAY(GETDATE()) AND MONTH(BIRTHDAY) = MONTH(GETDATE())
+
+        -- Create index i to loop all temp table
+        DECLARE @i int = 1
+        -- Loop for all temp table
+        WHILE EXISTS (select 1 from @ResultTable where rn = @i)
+        BEGIN
+            declare @email CHAR(7), @tier INT, @hpointGift INT = 0
+            SELECT @email = email, @tier = tier 
+            from @ResultTable 
+            where rn = @i
+
+            -- Calculate gift based on tier
+            IF @tier = 3
+            BEGIN
+                set @hpointGift = 300000
+                INSERT into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_TYPE, CHANGED_POINTS, CHANGED_REASON) VALUES
+                    (@email, GETDATE(), 1, @hpointGift, N'Tặng quà sinh nhật '+ @hpointGift + N' HPoint cho khách hàng HVIP.')
+            END
+            ELSE IF @tier = 2
+            BEGIN
+                set @hpointGift = 100000
+                INSERT into HPOINT_HISTORY (EMAIL, CHANGED_TIME, CHANGED_TYPE, CHANGED_POINTS, CHANGED_REASON) VALUES
+                    (@email, GETDATE(), 1, @hpointGift, N'Tặng quà sinh nhật '+ @hpointGift + N' HPoint cho khách hàng VIP.')
+            END
+            -- Add HPoint
+            UPDATE ACCOUNT_DETAIL
+            set HPOINT = HPOINT + @hpointGift
+            where EMAIL = @email
+            -- Update ISRECEIVEDBIRTHDAYGIFT status to 1
+            UPDATE HPOINT_ACCUMULATION_YEAR
+            set ISRECEIVEDBIRTHDAYGIFT = 1
+            WHERE EMAIL = @email and SAVED_YEAR = YEAR(GETDATE())
+
+            -- Increase index by 1
+            set @i = @i + 1
+        END
+	END TRY
+
+	BEGIN CATCH
+		PRINT N'Bị lỗi'
+		ROLLBACK 
+		RETURN 0
+	END CATCH
+COMMIT
+RETURN 1
+GO
