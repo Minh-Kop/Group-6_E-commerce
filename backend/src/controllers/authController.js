@@ -170,7 +170,6 @@ exports.loginGoogle = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
-    console.log(req.headers);
 
     // 1) Get token and check if it's there
     if (
