@@ -15,12 +15,12 @@ const router = require('./routes');
 // Start express app
 const app = express();
 
-// app.enable('trust proxy');
+app.enable('trust proxy');
 
 // 1) GLOBAL MIDDLEWARES
 // Implement CORS
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://group-6-e-commerce.vercel.app'],
     credentials: true,
 };
 app.use(cors(corsOptions));
