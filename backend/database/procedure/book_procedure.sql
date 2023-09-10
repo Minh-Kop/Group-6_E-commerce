@@ -214,7 +214,7 @@ BEGIN TRANSACTION
 			RETURN -1
 		END
 		
-		select [b].[BOOK_ID], [b].[CATE_ID], [b].[BOOK_NAME], [b].[BOOK_PRICE], [b].[BOOK_PATH], [b].[AVG_RATING], 
+		select [b].[BOOK_ID], [b].[CATE_ID], [b].[BOOK_NAME], [b].[BOOK_PRICE], [b].[BOOK_PATH], b.BOOK_FILENAME, [b].[AVG_RATING], 
 			[b].[COUNT_RATING], [b].[STOCK], [b].[DISCOUNTED_NUMBER], [b].[BOOK_DISCOUNTED_PRICE],
 			p.PUB_NAME, [bd].[BOOK_FORMAT], [bd].[PUBLISHED_YEAR], [bd].[NUMBER_PAGE], [bd].[BOOK_WEIGHT], [bd].[BOOK_DESC],
 			dbo.f_GetSoldNumber(b.BOOK_ID) as 'Sold_number'

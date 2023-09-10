@@ -90,9 +90,9 @@ BEGIN TRANSACTION
             rn int
         )
         INSERT INTO @ResultTable (email, tier, rn)
-        SELECT EMAIL email, TIER tier, ROW_NUMBER() OVER(order by email) rn
-        from ACCOUNT_DETAIL
-        WHERE DAY(BIRTHDAY) = DAY(GETDATE()) AND MONTH(BIRTHDAY) = MONTH(GETDATE())
+        SELECT ad.EMAIL email, TIER tier, ROW_NUMBER() OVER(order by ad.email) rn
+        from ACCOUNT_DETAIL ad join HPOINT_ACCUMULATION_YEAR y on ad.EMAIL = y.EMAIL
+        WHERE DAY(BIRTHDAY) = DAY(GETDATE()) AND MONTH(BIRTHDAY) = MONTH(GETDATE()) and y.ISRECEIVEDBIRTHDAYGIFT = 0
 
         -- Create index i to loop all temp table
         DECLARE @i int = 1

@@ -84,7 +84,7 @@ exports.deleteVoucher = catchAsync(async (req, res, next) => {
             status: 'success',
         });
     }
-    return next(new AppError('Voucher not found.', 400));
+    return next(new AppError('Voucher not found.', 404));
 });
 
 exports.getAllUserVouchers = catchAsync(async (req, res, next) => {

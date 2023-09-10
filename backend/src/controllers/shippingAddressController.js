@@ -77,7 +77,7 @@ exports.updateShippingAddress = catchAsync(async (req, res, next) => {
         lng,
     });
     if (result <= 0) {
-        return next(new AppError('Shipping address not found.', 400));
+        return next(new AppError('Shipping address not found.', 404));
     }
     res.status(200).json({
         status: 'success',
@@ -89,7 +89,7 @@ exports.deleteShippingAddress = catchAsync(async (req, res, next) => {
 
     const result = await shippingAddressModel.deleteShippingAddress(addrId);
     if (result <= 0) {
-        return next(new AppError('Shipping address not found.', 400));
+        return next(new AppError('Shipping address not found.', 404));
     }
     res.status(200).json({
         status: 'success',

@@ -38,7 +38,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
     // Check if this user exists
     if (detailedUser.returnValue === -1) {
-        return next(new AppError('The account is no longer exist.', 400));
+        return next(new AppError('The account is no longer exist.', 404));
     }
 
     res.status(200).json({

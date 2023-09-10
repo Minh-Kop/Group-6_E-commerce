@@ -21,6 +21,7 @@ api.interceptors.request.use(async (currentConfig) => {
         ...currentConfig,
         headers: {
             ...customHeaders, // Attach token
+            withCredentials: true,
             ...currentConfig.headers, // The remain data
         },
     };

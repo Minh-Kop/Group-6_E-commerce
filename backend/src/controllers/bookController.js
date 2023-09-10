@@ -184,6 +184,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
     const images = imageList.map((item) => ({
         id: item.IMAGE_ID,
         path: item.BOOK_PATH,
+        filename: item.BOOK_FILENAME,
     }));
 
     const category = await categoryModel.getAllCategory();
@@ -197,6 +198,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
             bookName: returnedBook.BOOK_NAME,
             category: selectedBranch,
             mainImage: returnedBook.BOOK_PATH,
+            mainImageFilename: returnedBook.BOOK_FILENAME,
             otherImages: images,
             originalPrice: returnedBook.BOOK_PRICE,
             discountedNumber: returnedBook.DISCOUNTED_NUMBER,
