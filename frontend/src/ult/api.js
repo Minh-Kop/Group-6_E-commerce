@@ -5,6 +5,7 @@ const { storageKeys } = config;
 
 const api = axios.create({
     baseURL: config.SERVER_PATH,
+    withCredentials: true,
 });
 
 api.interceptors.request.use(async (currentConfig) => {
@@ -19,7 +20,6 @@ api.interceptors.request.use(async (currentConfig) => {
         ...currentConfig,
         headers: {
             ...customHeaders, // Attach token
-            withCredentials: true,
             ...currentConfig.headers, // The remain data
         },
     };
