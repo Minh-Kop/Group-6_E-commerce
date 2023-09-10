@@ -86,7 +86,8 @@ const createSendToken = (user, statusCode, req, res) => {
         ),
         httpOnly: true,
         sameSite: 'none',
-        secure: req.secure || req.headers('x-forwarded-proto') === 'https',
+        // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
+        secure: true,
     });
 
     res.status(statusCode).json({
