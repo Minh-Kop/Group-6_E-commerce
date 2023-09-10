@@ -137,7 +137,7 @@ exports.createInitialOrder = catchAsync(async (req, res, next) => {
     if (isFailedList.includes(0) || isFailedList.includes(-1)) {
         await orderModel.deleteAllInitialOrders(email);
         return next(
-            new AppError(`There is at least 1 no longer existed book.`, 400),
+            new AppError(`There is at least 1 no longer existed book.`, 404),
         );
     }
 
@@ -228,7 +228,7 @@ exports.updateCheckout = catchAsync(async (req, res, next) => {
             paymentId,
         );
         if (!paymentProvider) {
-            return next(new AppError('Payment not found.', 400));
+            return next(new AppError('Payment not found.', 404));
         }
     }
 
@@ -251,7 +251,7 @@ exports.deleteInitialOrders = catchAsync(async (req, res, next) => {
     const { email } = req.user;
     const result = await orderModel.deleteAllInitialOrders(email);
     if (result <= 0) {
-        return next(new AppError('Order not found.', 400));
+        return next(new AppError('Order not found.', 404));
     }
     res.status(200).json({
         status: 'success',
@@ -266,14 +266,14 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     // Verify order ID
     const { totalPayment } = await orderModel.getTotalPayment(orderId);
     if (!totalPayment) {
-        return next(new AppError('Order not found.', 400));
+        return next(new AppError('Order not found.', 4));
     }
 
     // Get user information
     const { FULLNAME: fullName, PHONE_NUMBER: phoneNumber } =
         await accountModel.getByEmail(email);
     if (!fullName) {
-        return next(new AppError('Email not found.', 400));
+        return next(new AppError('Email not found.', 404));
     }
     const userInfo = {
         email,
@@ -285,7 +285,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     // Verify payment ID
     const { paymentProvider } = await paymentModel.getPaymentById(paymentId);
     if (!paymentProvider) {
-        return next(new AppError('Payment not found.', 400));
+        return next(new AppError('Payment not found.', 404));
     }
 
     // Create checkout provider

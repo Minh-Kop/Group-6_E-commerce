@@ -18,7 +18,7 @@ exports.getOrder = catchAsync(async (req, res, next) => {
     ] = await orderModel.getDetailedOrder(orderId);
 
     if (!deliveryInformation || !tempOrderStates.length) {
-        return next(new AppError('Order not found.', 400));
+        return next(new AppError('Order not found.', 404));
     }
 
     const orderStates = tempOrderStates.map((el) => ({
@@ -118,7 +118,7 @@ exports.updateState = catchAsync(async (req, res, next) => {
 
     const orderData = await orderModel.getDetailedOrder(orderId);
     if (!orderData[0] || !orderData[1].length) {
-        return next(new AppError('Order not found.', 400));
+        return next(new AppError('Order not found.', 404));
     }
     const { orderState: previousState } = orderData[1][0];
     const { email: orderEmail } = orderData[3][0];
@@ -242,7 +242,7 @@ exports.buyAgain = catchAsync(async (req, res, next) => {
 
     const books = await orderModel.getOrderDetail(orderId);
     if (!books.length) {
-        return next(new AppError('Order not found.', 400));
+        return next(new AppError('Order not found.', 404));
     }
 
     const cartResult = await cartModel.getCartByEmail(email);
@@ -296,7 +296,7 @@ exports.buyAgain = catchAsync(async (req, res, next) => {
     return next(
         new AppError(
             `There is at least 1 book that is no longer existed.`,
-            400,
+            404,
         ),
     );
 });

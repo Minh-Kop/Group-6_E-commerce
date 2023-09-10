@@ -13,7 +13,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
     // Check if order exists
     const orderData = await orderModel.getDetailedOrder(orderId);
     if (!orderData[0] || !orderData[1].length) {
-        return next(new AppError('Order not found.', 400));
+        return next(new AppError('Order not found.', 404));
     }
     const { orderState, createdTime } = orderData[1][0];
     const { email: orderEmail } = orderData[3][0];

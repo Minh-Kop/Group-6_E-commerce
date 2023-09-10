@@ -37,8 +37,10 @@ const createUploader = (folder, publicId) => {
 const deleteCloudinaryImage = async (publicId) => {
     try {
         await cloudinary.uploader.destroy(publicId);
+        return 1;
     } catch (err) {
         console.log(err);
+        return 0;
     }
 };
 

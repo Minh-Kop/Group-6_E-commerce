@@ -35,7 +35,7 @@ exports.addBookToCart = catchAsync(async (req, res, next) => {
 
     const book = await bookModel.getBookById(bookId);
     if (!book) {
-        return next(new AppError('Book not found.', 400));
+        return next(new AppError('Book not found.', 404));
     }
 
     const books = await bookModel.getBooksByCartId(cartId);
@@ -53,7 +53,7 @@ exports.addBookToCart = catchAsync(async (req, res, next) => {
                 await cartModel.deleteFromCart(cartId, bookId);
                 await cartModel.updateCartQuantityCartTotal(cartId);
                 return next(
-                    new AppError(`This book is no longer existed.`, 400),
+                    new AppError(`This book is no longer existed.`, 404),
                 );
             }
             await cartModel.updateCartQuantityCartTotal(cartId);
@@ -71,7 +71,7 @@ exports.addBookToCart = catchAsync(async (req, res, next) => {
         isClicked: isClicked || 0,
     });
     if (returnValue !== 1) {
-        return next(new AppError(`This book is no longer existed.`, 400));
+        return next(new AppError(`This book is no longer existed.`, 404));
     }
 
     await cartModel.updateCartQuantityCartTotal(cartId);
@@ -103,7 +103,7 @@ exports.updateBookInCart = catchAsync(async (req, res, next) => {
     }
     await cartModel.deleteFromCart(cartId, bookId);
     await cartModel.updateCartQuantityCartTotal(cartId);
-    return next(new AppError(`This book is no longer existed.`, 400));
+    return next(new AppError(`This book is no longer existed.`, 404));
 });
 
 exports.deleteBookFromCart = catchAsync(async (req, res, next) => {
@@ -121,6 +121,6 @@ exports.deleteBookFromCart = catchAsync(async (req, res, next) => {
             status: 'success',
         });
     } else {
-        return next(new AppError('Book not found.', 400));
+        return next(new AppError('Book not found.', 404));
     }
 });

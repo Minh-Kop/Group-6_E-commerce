@@ -84,7 +84,6 @@ const createSendToken = (user, statusCode, req, res) => {
         expires: new Date(
             Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
         ),
-        domain: '127.0.0.1',
         httpOnly: true,
         // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
     });
@@ -170,6 +169,8 @@ exports.loginGoogle = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
+    console.log(req.headers);
+    console.log(req.socket.remoteAddress);
 
     // 1) Get token and check if it's there
     if (
@@ -260,10 +261,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 exports.logOut = (req, res) => {
-    res.cookie('jwt', 'logged-out', {
-        expires: new Date(Date.now() + 10 * 1000),
-        httpOnly: true,
-    });
+    res.clearCookie('jwt');
     res.status(200).json({
         status: 'success',
         token: '',
