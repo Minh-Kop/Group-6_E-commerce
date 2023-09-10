@@ -15,8 +15,6 @@ api.interceptors.request.use(async (currentConfig) => {
         customHeaders.authorization = `Bearer ${accessToken}`;
     }
 
-    console.log('a ' + accessToken + ' a');
-
     return {
         ...currentConfig,
         headers: {
