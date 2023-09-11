@@ -5,12 +5,14 @@ const rateLimit = require('express-rate-limit');
 // const helmet = require('helmet');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const router = require('./routes');
+const config = require('./config');
 
 // Start express app
 const app = express();
@@ -45,7 +47,21 @@ app.use('/api', limiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
-app.use(cookieParser());
+// app.use(cookieParser());
+
+// Parse cookie
+app.use(
+    session({
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+            sameSite: 'none',
+            secure: true,
+            httpOnly: true,
+        },
+    }),
+);
 
 // Data sanitization against XSS
 app.use(xss());
