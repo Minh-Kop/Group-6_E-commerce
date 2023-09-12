@@ -80,16 +80,14 @@ const signToken = (email) => {
 const createSendToken = (user, statusCode, req, res) => {
     const token = signToken(user.email);
 
-    // res.cookie('jwt', token, {
-    //     expires: new Date(
-    //         Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
-    //     ),
-    //     httpOnly: true,
-    //     sameSite: 'none',
-    //     // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
-    //     secure: true,
-    // });
-    req.session.jwt = token;
+    res.cookie('jwt', token, {
+        maxAge: config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'none',
+        // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
+        secure: true,
+    });
+    // req.session.jwt = token;
 
     res.status(statusCode).json({
         status: 'success',
@@ -172,8 +170,6 @@ exports.loginGoogle = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
-    console.log(req.headers);
-    console.log(req.socket.remoteAddress);
 
     // 1) Get token and check if it's there
     if (
@@ -185,6 +181,9 @@ exports.protect = catchAsync(async (req, res, next) => {
         token = req.cookies.jwt;
     }
 
+    // if (req.session.jwt) {
+    //     token = req.session.jwt;
+    // }
     if (!token) {
         return next(
             new AppError(
