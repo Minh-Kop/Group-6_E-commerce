@@ -172,8 +172,6 @@ exports.loginGoogle = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
-    console.log(req.headers);
-    console.log(req.socket.remoteAddress);
 
     // 1) Get token and check if it's there
     if (
@@ -185,6 +183,9 @@ exports.protect = catchAsync(async (req, res, next) => {
         token = req.cookies.jwt;
     }
 
+    // if (req.session.jwt) {
+    //     token = req.session.jwt;
+    // }
     if (!token) {
         return next(
             new AppError(
