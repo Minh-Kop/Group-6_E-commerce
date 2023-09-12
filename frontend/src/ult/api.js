@@ -6,6 +6,7 @@ const { storageKeys } = config;
 const api = axios.create({
     baseURL: config.SERVER_PATH,
     withCredentials: true,
+    credentials: 'include',
 });
 
 api.interceptors.request.use(async (currentConfig) => {
